@@ -369,6 +369,118 @@ export default function Home() {
           </div>
         </section>
 
+        {/* ===== CREATOR & ENGINEERING SPOTLIGHT ===== */}
+        <section className="max-w-7xl mx-auto px-6 pb-20">
+          <div className="p-8 sm:p-12 rounded-3xl bg-gradient-to-br from-emerald-500/[0.08] via-white/[0.02] to-transparent border border-emerald-500/25 backdrop-blur-xl relative overflow-hidden shadow-2xl">
+            <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/10 rounded-full blur-[100px] pointer-events-none" />
+
+            <div className="relative z-10 grid lg:grid-cols-12 gap-8 items-center">
+              {/* Left Column: Creator Identity & UptimeRobot Feature */}
+              <div className="lg:col-span-7 space-y-5">
+                <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 text-xs font-semibold tracking-wide uppercase">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  <span>Featured by UptimeRobot &middot; Global Community Spotlight</span>
+                </div>
+
+                <div className="space-y-1.5">
+                  <h2 className="text-2xl sm:text-4xl font-black text-white tracking-tight">
+                    Architected by <span className="bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent">Ambuj Kumar Tripathi</span>
+                  </h2>
+                  <p className="text-xs sm:text-sm text-gray-400 font-mono">
+                    Independent GenAI Engineer &middot; Ex-British Telecom Automation &middot; Gorakhpur, India
+                  </p>
+                </div>
+
+                <blockquote className="p-4 rounded-xl bg-black/40 border-l-2 border-emerald-400 text-xs sm:text-sm text-gray-300 italic leading-relaxed">
+                  &ldquo;The LLM is the least reliable part of your entire stack. That is why CoverCraft was engineered with deterministic ATS keyword math, circuit breakers, and MCP tool verification instead of trusting raw generative models.&rdquo;
+                </blockquote>
+
+                <p className="text-xs text-gray-400 leading-relaxed">
+                  CoverCraft was developed as an open-source, evidence-grounded alternative to superficial AI wrappers. Ambuj&apos;s architectural work on production GenAI reliability, agentic RAG workflows, and multi-stage verification has been officially featured in UptimeRobot&apos;s global engineering spotlight.
+                </p>
+
+                <div className="flex flex-wrap items-center gap-3 pt-2">
+                  <a
+                    href="https://uptimerobot.com/blog/community-spotlight-ambuj-kumar-tripathi/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs shadow-lg shadow-emerald-500/20 transition-all hover:scale-[1.02]"
+                  >
+                    <span>Read UptimeRobot Feature Article</span>
+                    <span>↗</span>
+                  </a>
+                  <a
+                    href="https://github.com/Ambuj123-lab"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-gray-200 text-xs font-semibold transition-colors"
+                  >
+                    <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                    <span>GitHub Profile</span>
+                  </a>
+                  <a
+                    href="https://www.linkedin.com/in/ambuj-tripathi-042b4a118/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-gray-200 text-xs font-semibold transition-colors"
+                  >
+                    <span>LinkedIn</span>
+                    <span>↗</span>
+                  </a>
+                </div>
+              </div>
+
+              {/* Right Column: Live Ecosystem Stats & Badges */}
+              <div className="lg:col-span-5 space-y-3">
+                <div className="p-5 rounded-2xl bg-black/40 border border-white/10 space-y-3">
+                  <div className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">
+                    Ecosystem &amp; Featured Projects
+                  </div>
+                  <div className="space-y-2.5">
+                    <a
+                      href="https://github.com/Ambuj123-lab/agentic-rag-financial-parser"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block p-3.5 rounded-xl bg-white/[0.02] hover:bg-white/5 border border-white/5 transition-colors group"
+                    >
+                      <div className="flex items-center justify-between text-xs font-bold text-white group-hover:text-emerald-400">
+                        <span>Agentic Financial Parser</span>
+                        <span>↗</span>
+                      </div>
+                      <p className="text-[11px] text-gray-400 mt-1 leading-relaxed">
+                        Featured in UptimeRobot Spotlight. Multi-agent hybrid RAG system designed for complex Indian financial &amp; tax circulars.
+                      </p>
+                    </a>
+
+                    <a
+                      href="https://ambuj-ai-portfolio.vercel.app"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block p-3.5 rounded-xl bg-white/[0.02] hover:bg-white/5 border border-white/5 transition-colors group"
+                    >
+                      <div className="flex items-center justify-between text-xs font-bold text-white group-hover:text-cyan-400">
+                        <span>Personal AI Portfolio</span>
+                        <span>↗</span>
+                      </div>
+                      <p className="text-[11px] text-gray-400 mt-1 leading-relaxed">
+                        Production micro-frontends, LLM evals, agentic workflows, and live interactive AI demonstrations.
+                      </p>
+                    </a>
+                  </div>
+                </div>
+
+                <div className="p-3.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-xs text-emerald-300 flex items-center justify-between">
+                  <span className="font-semibold flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-emerald-400" />
+                    <span>UptimeRobot Monitored SLA</span>
+                  </span>
+                  <span className="font-mono font-bold text-emerald-400">99.9% Uptime Verified</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* ===== CTA ===== */}
         <section className="max-w-7xl mx-auto px-6 pb-24">
           <div className="glass-card p-12 md:p-16 text-center relative overflow-hidden">
@@ -451,6 +563,17 @@ export default function Home() {
             <div>
               <h4 className="text-sm font-bold text-gray-300 mb-4 uppercase tracking-wider">Builder</h4>
               <ul className="space-y-3">
+                <li>
+                  <a
+                    href="https://uptimerobot.com/blog/community-spotlight-ambuj-kumar-tripathi/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs text-emerald-400 hover:text-emerald-300 transition-colors flex items-center gap-1.5 font-semibold"
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                    <span>UptimeRobot Spotlight ↗</span>
+                  </a>
+                </li>
                 <li><a href="https://github.com/Ambuj123-lab" target="_blank" rel="noopener noreferrer" className="text-sm text-gray-500 hover:text-white transition-colors flex items-center gap-1.5">
                   <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
                   GitHub</a></li>

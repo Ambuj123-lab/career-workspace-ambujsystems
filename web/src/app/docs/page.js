@@ -875,6 +875,60 @@ export default function DocsPage() {
               </div>
             </div>
 
+            {/* Architect & Creator Spotlight Card */}
+            <div className="p-6 sm:p-8 rounded-2xl bg-gradient-to-r from-emerald-500/[0.08] via-white/[0.02] to-transparent border border-emerald-500/25 space-y-4">
+              <div className="flex items-center justify-between flex-wrap gap-2">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 text-xs font-semibold">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  <span>Architect Spotlight &middot; Featured by UptimeRobot</span>
+                </div>
+                <a
+                  href="https://uptimerobot.com/blog/community-spotlight-ambuj-kumar-tripathi/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs text-emerald-400 hover:text-emerald-300 font-semibold underline flex items-center gap-1"
+                >
+                  <span>Read Official Feature Article</span>
+                  <span>↗</span>
+                </a>
+              </div>
+
+              <div className="space-y-1">
+                <h3 className="text-base sm:text-lg font-bold text-white">
+                  Engineered by Ambuj Kumar Tripathi
+                </h3>
+                <p className="text-xs text-gray-400 font-mono">
+                  Independent GenAI Engineer &middot; Ex-British Telecom Automation &middot; Gorakhpur, India
+                </p>
+              </div>
+
+              <blockquote className="text-xs sm:text-sm text-gray-300 italic border-l-2 border-emerald-400 pl-3 leading-relaxed">
+                &ldquo;The LLM is the least reliable part of your entire stack. That is why CoverCraft was engineered with deterministic ATS scoring, circuit breakers, and MCP tool verification instead of trusting raw generative models.&rdquo;
+              </blockquote>
+
+              <div className="flex flex-wrap items-center gap-4 text-xs text-gray-400 pt-1 border-t border-white/5">
+                <a href="https://github.com/Ambuj123-lab" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors flex items-center gap-1">
+                  <span>GitHub: @Ambuj123-lab</span>
+                  <span>↗</span>
+                </a>
+                <span>&middot;</span>
+                <a href="https://www.linkedin.com/in/ambuj-tripathi-042b4a118/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors flex items-center gap-1">
+                  <span>LinkedIn</span>
+                  <span>↗</span>
+                </a>
+                <span>&middot;</span>
+                <a href="https://ambuj-ai-portfolio.vercel.app" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors flex items-center gap-1">
+                  <span>AI Portfolio</span>
+                  <span>↗</span>
+                </a>
+                <span>&middot;</span>
+                <a href="https://github.com/Ambuj123-lab/agentic-rag-financial-parser" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-400 transition-colors flex items-center gap-1">
+                  <span>Agentic Financial Parser (Spotlighted Project)</span>
+                  <span>↗</span>
+                </a>
+              </div>
+            </div>
+
             {/* Launch CTA */}
             <div className="p-6 sm:p-8 rounded-2xl bg-gradient-to-r from-rose-500/20 via-orange-500/10 to-transparent border border-rose-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div>
