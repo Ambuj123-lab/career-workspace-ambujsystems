@@ -297,14 +297,22 @@ export default function InputForm({ onGenerate }) {
             </span>
             Your Experience / Resume *
           </h3>
-          <span className="text-[11px] text-gray-500">PDF, DOCX, TXT (Max 5MB)</span>
+          <span className="text-[11px] text-gray-400">PDF, DOCX, TXT (Max 5MB &middot; Single File Only)</span>
         </div>
 
         {/* Drag & Drop File Upload Box */}
         <div
           onDragOver={(e) => { e.preventDefault(); setDragActive(true); }}
           onDragLeave={() => setDragActive(false)}
-          onDrop={(e) => { e.preventDefault(); setDragActive(false); processFile(e.dataTransfer.files[0]); }}
+          onDrop={(e) => {
+            e.preventDefault();
+            setDragActive(false);
+            if (e.dataTransfer.files && e.dataTransfer.files.length > 1) {
+              setUploadError("Single document only. Multiple files (Ctrl+Click selection) are blocked for security.");
+              return;
+            }
+            processFile(e.dataTransfer.files[0]);
+          }}
           onClick={() => fileInputRef.current?.click()}
           className={`p-6 rounded-xl border-2 border-dashed transition-all cursor-pointer text-center ${
             dragActive
@@ -317,8 +325,17 @@ export default function InputForm({ onGenerate }) {
           <input
             ref={fileInputRef}
             type="file"
+            multiple={false}
             accept=".pdf,.docx,.txt,.md"
-            onChange={(e) => processFile(e.target.files[0])}
+            onChange={(e) => {
+              if (e.target.files && e.target.files.length > 1) {
+                setUploadError("Single document only. Multiple files (Ctrl+Click selection) are blocked for security.");
+                e.target.value = "";
+                return;
+              }
+              processFile(e.target.files[0]);
+              e.target.value = "";
+            }}
             className="hidden"
           />
 
