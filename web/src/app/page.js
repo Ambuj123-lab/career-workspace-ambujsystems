@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import AuthButton from "@/components/AuthButton";
 
 export default function Home() {
@@ -23,11 +24,18 @@ export default function Home() {
             </span>
           </div>
           <div className="flex items-center gap-6">
+            <Link
+              href="/docs"
+              className="text-sm font-semibold text-cyan-400 hover:text-cyan-300 transition-colors flex items-center gap-1.5"
+            >
+              <span>🏛️</span>
+              <span>Docs</span>
+            </Link>
             <a
               href="https://github.com/Ambuj123-lab"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sm text-gray-400 hover:text-white transition-colors"
+              className="text-sm text-gray-400 hover:text-white transition-colors hidden sm:inline"
             >
               GitHub
             </a>
@@ -82,12 +90,13 @@ export default function Home() {
               >
                 Generate Your Letter &rarr;
               </a>
-              <a
-                href="#how-it-works"
-                className="px-8 py-4 rounded-xl border border-white/10 text-gray-300 font-semibold text-lg hover:bg-white/5 transition-colors"
+              <Link
+                href="/docs"
+                className="px-8 py-4 rounded-xl border border-white/10 text-gray-300 font-semibold text-lg hover:bg-white/5 hover:border-cyan-500/30 transition-all flex items-center justify-center gap-2"
               >
-                See How It Works
-              </a>
+                <span>🏛️</span>
+                <span>Architecture &amp; Docs</span>
+              </Link>
             </div>
           </div>
         </section>
@@ -306,6 +315,7 @@ export default function Home() {
               <h4 className="text-sm font-bold text-gray-300 mb-4 uppercase tracking-wider">Product</h4>
               <ul className="space-y-3">
                 <li><a href="/generate" className="text-sm text-gray-500 hover:text-white transition-colors">Generate Letter</a></li>
+                <li><Link href="/docs" className="text-sm text-cyan-400 hover:text-cyan-300 transition-colors">Architecture Docs</Link></li>
                 <li><a href="#how-it-works" className="text-sm text-gray-500 hover:text-white transition-colors">How It Works</a></li>
                 <li><span className="text-sm text-gray-600">JD Analyzer</span></li>
                 <li><span className="text-sm text-gray-600">Company Research</span></li>

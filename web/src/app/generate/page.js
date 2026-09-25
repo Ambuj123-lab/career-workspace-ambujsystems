@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 
 import { useState } from "react";
 import InputForm from "@/components/generator/InputForm";
@@ -292,6 +293,13 @@ export default function GeneratePage() {
             </span>
           </a>
           <div className="flex items-center gap-3">
+            <Link
+              href="/docs"
+              className="text-xs font-semibold text-cyan-400 hover:text-cyan-300 transition-colors px-2.5 py-1 border border-cyan-500/20 rounded-lg bg-cyan-500/10 flex items-center gap-1.5"
+            >
+              <span>🏛️</span>
+              <span>Docs</span>
+            </Link>
             <AuthButton />
             {step === "results" && (
               <button
