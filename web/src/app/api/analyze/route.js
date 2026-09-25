@@ -1,3 +1,4 @@
+import { checkRateLimit, getClientIp } from "@/lib/rateLimit";
 import { generateWithFallback } from "@/lib/gemini";
 import { NextResponse } from "next/server";
 import {
@@ -7,6 +8,15 @@ import {
 
 export async function POST(req) {
   try {
+    const clientIp = getClientIp(req);
+    const rateCheck = checkRateLimit(clientIp, { limit: 15, windowMs: 60000 });
+    if (!rateCheck.allowed) {
+      return NextResponse.json(
+        { error: `Rate limit exceeded. Please wait ${rateCheck.resetSeconds}s before analyzing another job.` },
+        { status: 429, headers: { "Retry-After": String(rateCheck.resetSeconds) } }
+      );
+    }
+
     const { jd_text, resume_text } = await req.json();
 
     if (!jd_text || !resume_text) {

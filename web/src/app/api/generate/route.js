@@ -4,9 +4,21 @@ import {
   COVER_LETTER_SYSTEM_INSTRUCTION,
   buildCoverLetterUserContent,
 } from "@/prompts/cover-letter.system";
+import { checkRateLimit, getClientIp } from "@/lib/rateLimit";
+import { logGenerationTelemetry } from "@/lib/mongodb";
 
 export async function POST(req) {
   try {
+    // 1. IP Rate Limiting Guard
+    const clientIp = getClientIp(req);
+    const rateCheck = checkRateLimit(clientIp, { limit: 10, windowMs: 60000 });
+    if (!rateCheck.allowed) {
+      return NextResponse.json(
+        { error: `Rate limit exceeded. Please wait ${rateCheck.resetSeconds}s before generating another letter.` },
+        { status: 429, headers: { "Retry-After": String(rateCheck.resetSeconds) } }
+      );
+    }
+
     const body = await req.json();
     const { name, email, phone, linkedin, role, company, resume, jd, tone, analysis, company_info } = body;
 
@@ -38,8 +50,8 @@ export async function POST(req) {
       jd,
     });
 
-    // Call Gemini with strict systemInstruction
-    const { text, model } = await generateWithFallback(
+    // Call Gemini with Circuit Breaker, Exponential Retries, and Fallback
+    const { text, model, tokenUsage } = await generateWithFallback(
       { temperature: 0.35, responseMimeType: "application/json" },
       userContent,
       COVER_LETTER_SYSTEM_INSTRUCTION
@@ -48,7 +60,6 @@ export async function POST(req) {
     const data = JSON.parse(text);
 
     // DETERMINISTIC APPLICATION-LAYER METRICS
-    // Calculate metrics and confidence notes in code, not LLM imagination
     const strongSkillsCount = (analysis?.required_skills || []).filter(
       (s) => s.status === "STRONG_MATCH"
     ).length;
@@ -71,6 +82,19 @@ export async function POST(req) {
       .join(" ");
     data.word_count = fullText.split(/\s+/).filter(Boolean).length;
     data._model_used = model;
+    data._token_usage = tokenUsage || null;
+
+    // Asynchronously log telemetry to MongoDB (non-blocking)
+    logGenerationTelemetry({
+      userEmail: email || null,
+      userName: name || null,
+      company,
+      role,
+      modelUsed: model,
+      wordCount: data.word_count,
+      tokens: tokenUsage,
+      clientIp,
+    });
 
     return NextResponse.json(data);
   } catch (err) {

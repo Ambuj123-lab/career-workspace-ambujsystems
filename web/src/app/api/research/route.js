@@ -1,3 +1,4 @@
+import { checkRateLimit, getClientIp } from "@/lib/rateLimit";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { NextResponse } from "next/server";
 
@@ -8,6 +9,15 @@ const TAVILY_API_KEY = process.env.TAVILY_API_KEY || "";
 
 export async function POST(req) {
   try {
+    const clientIp = getClientIp(req);
+    const rateCheck = checkRateLimit(clientIp, { limit: 12, windowMs: 60000 });
+    if (!rateCheck.allowed) {
+      return NextResponse.json(
+        { error: `Rate limit exceeded. Please wait ${rateCheck.resetSeconds}s before conducting company research.` },
+        { status: 429, headers: { "Retry-After": String(rateCheck.resetSeconds) } }
+      );
+    }
+
     const { company_name, role } = await req.json();
     if (!company_name) {
       return NextResponse.json({ error: "Company name required" }, { status: 400 });

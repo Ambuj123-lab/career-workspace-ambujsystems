@@ -1,5 +1,6 @@
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
+import { logUserTelemetry } from "@/lib/mongodb";
 
 const handler = NextAuth({
   providers: [
@@ -9,6 +10,12 @@ const handler = NextAuth({
     }),
   ],
   callbacks: {
+    async signIn({ user }) {
+      if (user?.email) {
+        logUserTelemetry(user);
+      }
+      return true;
+    },
     async session({ session, token }) {
       if (session.user) {
         session.user.id = token.sub;

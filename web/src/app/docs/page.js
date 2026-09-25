@@ -157,7 +157,8 @@ export default function DocsPage() {
     { id: "company-intelligence", label: "5. Real-Time Web Grounding" },
     { id: "mcp-protocol", label: "6. Model Context Protocol (MCP)" },
     { id: "interview-defense", label: "7. Adversarial Interview Defense" },
-    { id: "code-audit", label: "8. Codebase & File Verification" },
+    { id: "generative-ui", label: "8. Generative UI Architecture" },
+    { id: "code-audit", label: "9. Codebase & File Verification" },
   ];
 
   return (
@@ -772,10 +773,73 @@ export default function DocsPage() {
             </div>
           </section>
 
-          {/* SECTION 8: Codebase & File Verification */}
-          <section id="code-audit" className="space-y-6 scroll-mt-24 border-t border-white/10 pt-8">
+          {/* SECTION 8: Generative UI Architecture */}
+          <section id="generative-ui" className="space-y-6 scroll-mt-24 border-t border-white/10 pt-8">
             <div className="flex items-center gap-3">
               <span className="text-rose-400 font-mono text-sm font-bold">08</span>
+              <h2 className="text-xl sm:text-2xl font-bold text-white">Generative UI Architecture &amp; Component Hydration</h2>
+            </div>
+
+            <p className="text-sm text-gray-300 leading-relaxed">
+              Legacy AI applications suffer from the <span className="text-white font-semibold">"Markdown Wall" anti-pattern</span> — returning unstructured text blocks that force users to copy-paste into an external editor. CoverCraft rejects this paradigm by implementing a full <span className="text-rose-400 font-semibold">Generative UI Architecture</span>. Instead of raw prose, the LLM emits structured telemetry payloads that the Next.js frontend dynamically compiles into interactive, stateful React components on the fly.
+            </p>
+
+            {/* The 4 Generative UI Primitives */}
+            <div className="grid sm:grid-cols-2 gap-4">
+              <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5 space-y-2 hover:border-cyan-500/30 transition-colors">
+                <div className="flex items-center gap-2 text-cyan-400 font-bold text-xs">
+                  <span className="p-1 rounded bg-cyan-500/10">01</span>
+                  <span>Interactive In-Text Citation Badges</span>
+                </div>
+                <p className="text-xs text-gray-400 leading-relaxed">
+                  Footnote tags like <code className="text-cyan-300 font-mono bg-cyan-950/40 px-1 py-0.5 rounded">[1]</code> and <code className="text-cyan-300 font-mono bg-cyan-950/40 px-1 py-0.5 rounded">[2]</code> within the synthesized letter are not plain text. The client-side parser parses regex tokens and mounts clickable interactive badges that trigger an Evidence Drawer displaying domain attribution, publication dates, and verbatim source quotations.
+                </p>
+              </div>
+
+              <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5 space-y-2 hover:border-rose-500/30 transition-colors">
+                <div className="flex items-center gap-2 text-rose-400 font-bold text-xs">
+                  <span className="p-1 rounded bg-rose-500/10">02</span>
+                  <span>Human-in-the-Loop Approval Gate</span>
+                </div>
+                <p className="text-xs text-gray-400 leading-relaxed">
+                  Before synthesis begins, the pipeline renders live curation checkboxes across 4 intelligence cards. Users can inspect extracted Tavily search signals, veto any hallucinated or irrelevant company facts, and dictate exactly what evidence the letter synthesizer is permitted to cite.
+                </p>
+              </div>
+
+              <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5 space-y-2 hover:border-emerald-500/30 transition-colors">
+                <div className="flex items-center gap-2 text-emerald-400 font-bold text-xs">
+                  <span className="p-1 rounded bg-emerald-500/10">03</span>
+                  <span>Editable Paragraph Accordion &amp; Live PDF Engine</span>
+                </div>
+                <p className="text-xs text-gray-400 leading-relaxed">
+                  Generated paragraphs hydrate into individual modular sections with real-time word counting, inline rich-text editing, and instant LaTeX-formatted PDF compilation via <code className="text-emerald-300 font-mono text-[11px]">react-to-print</code>. Candidates can customize tone sentence-by-sentence with zero layout shift.
+                </p>
+              </div>
+
+              <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5 space-y-2 hover:border-purple-500/30 transition-colors">
+                <div className="flex items-center gap-2 text-purple-400 font-bold text-xs">
+                  <span className="p-1 rounded bg-purple-500/10">04</span>
+                  <span>Collapsible Adversarial Defense Flashcards</span>
+                </div>
+                <p className="text-xs text-gray-400 leading-relaxed">
+                  The interview defense harness generates reactive flashcards equipped with risk tier badges (HIGH, MEDIUM, LOW), recruiter psychological intent analysis, and expandable "Anchored Resume Proof" snippets so candidates can rehearse live interview answers before walking into the room.
+                </p>
+              </div>
+            </div>
+
+            {/* Architecture Pipeline Callout */}
+            <div className="p-4 rounded-xl bg-gradient-to-r from-rose-500/10 via-purple-500/10 to-transparent border border-white/10 text-xs text-gray-300 flex items-center gap-3">
+              <span className="text-2xl">⚡</span>
+              <div>
+                <span className="font-bold text-white">Full Stack React 19 Client Hydration:</span> Structured JSON schemas emitted by Gemini &rarr; Client-side state machine (<code className="text-rose-400 font-mono">step: approval_gate &rarr; generating &rarr; results</code>) &rarr; Interactive Generative UI components. Zero page refreshes.
+              </div>
+            </div>
+          </section>
+
+          {/* SECTION 9: Codebase & File Verification */}
+          <section id="code-audit" className="space-y-6 scroll-mt-24 border-t border-white/10 pt-8">
+            <div className="flex items-center gap-3">
+              <span className="text-rose-400 font-mono text-sm font-bold">09</span>
               <h2 className="text-xl sm:text-2xl font-bold text-white">Codebase Audit &amp; Technical Verification Directory</h2>
             </div>
 
