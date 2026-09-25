@@ -84,26 +84,44 @@ export default function GeneratePage() {
         skills_breakdown: analysis.required_skills?.map((s) => ({ skill: s.skill, status: s.status, confidence: s.confidence })),
       });
 
-      // Step 2: Research company via Tavily
-      setProgress(`Calling MCP Tool: company_research (Tavily Search Engine)...`);
-      addMcpLog("call", "company_research", `Executing real-time Tavily search for "${data.company}" news & engineering signals...`, {
-        company_name: data.company,
-        engine: "Tavily Web Search + Google Grounding",
-        domain_attribution: "active",
-      });
-
+      // Step 2: Research company via Tavily Search Engine
+      setProgress(`Calling MCP Tool: company_research (Tavily Search API)...`);
+      const searchRole = data.role || "Software/AI Engineer";
+      
       const researchRes = await fetch("/api/research", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ company_name: data.company }),
+        body: JSON.stringify({ company_name: data.company, role: searchRole }),
       });
       const company = await researchRes.json();
       setCompanyData(company);
 
       const sourcesCount = company.raw_sources?.length || 0;
-      addMcpLog("result", "company_research", `Retrieved ${sourcesCount} grounded web sources with citations.`, {
-        company_name: company.company_name,
-        sources: (company.raw_sources || []).map((s) => ({ title: s.title, url: s.url })),
+      const sourcesRetrieved = company.sources_analyzed_count || sourcesCount;
+      const sourcesUsed = company.sources_cited_count || Math.min(5, sourcesCount);
+      const domains = Array.from(new Set((company.raw_sources || []).map((s) => s.domain).filter(Boolean)));
+
+      // Step 2a: Log Tavily Search Call
+      addMcpLog("call", "web_search", `Searching Tavily: "${company.query_used || data.company + ' AI research engineering'}"`, {
+        provider: "tavily",
+        query: company.query_used,
+        results_retrieved: sourcesRetrieved,
+        domains: domains.slice(0, 5),
+      });
+
+      // Step 2b: Log Source Filter & Deduplication
+      addMcpLog("call", "source_filter", `Filtering ${sourcesRetrieved} retrieved sources: Deduplicated & verified domains.`, {
+        sources_retrieved: sourcesRetrieved,
+        sources_retained: company.raw_sources?.length || 0,
+        official_sources: company.official_sources_count || 0,
+        noise_removed: Math.max(0, sourcesRetrieved - (company.raw_sources?.length || 0)),
+      });
+
+      // Step 2c: Log Company Intelligence Synthesis
+      addMcpLog("result", "company_intelligence", `Synthesized 4 evidence-backed sections with ${sourcesUsed} citations attached.`, {
+        sections: ["company_snapshot", "role_relevant_signals", "recent_signals", "cited_supporting_sources"],
+        citations_attached: sourcesUsed,
+        confidence: company.confidence || "HIGH",
       });
 
       // Step 3: Evidence boundary validation

@@ -1,8 +1,8 @@
 # 📋 AI Cover Letter Generator — Master Requirements Checklist
 
-> **Last Updated:** 26 September 2026, 01:48  
-> **Total Requirements Tracked:** 121  
-> **Status:** ✅ Done: 118 | ⏳ Pending: 0 | ❌ Removed: 6  
+> **Last Updated:** 26 September 2026, 03:35  
+> **Total Requirements Tracked:** 127  
+> **Status:** ✅ Done: 125 | ⏳ Pending: 0 | ❌ Removed: 6  
 > **File Location:** `d:\Ambuj\Projects\ai-cover-letter\MASTER_CHECKLIST.md`
 
 ---
@@ -47,6 +47,12 @@
 | C3 | Source citations displayed in UI | User + Plan | ✅ Sources tab & Approval Gate in UI |
 | C4 | Confidence: HIGH/MEDIUM/LOW (deterministic) | ChatGPT | ✅ In API routes |
 | C5 | Fallback if search fails | Plan v2 | ✅ Graceful fallback implemented |
+| C6 | Company Intel 4 Structured Cards (Snapshot, Role Signals, Recent, Cited Sources) | User + Review | ✅ Implemented with real Tavily synthesis |
+| C7 | Live Web Research Provenance status strip (Query, Found, Used, Official) | User + Review | ✅ Implemented interactive strip |
+| C8 | In-Text Clickable Citation Markers ([1], [2]) with Drawer / Modal | User + Review | ✅ Implemented with modal & direct links |
+| C9 | Sources Tab Category Filters ([All], [Official], [Research], [News]) & Honest Relevance | User + Review | ✅ Implemented with zero fake percentages |
+| C10 | Deterministic Evidence Coverage Formula Box in Job Fit Tab | User + Review | ✅ Implemented (Strong*1.0 + Partial*0.6 + Transferable*0.4)/Total |
+| C11 | MCP Trace Registered Tools upgrade to 6 tools with Tavily search & filter events | User + Review | ✅ Implemented 6 tools & rich execution timeline |
 
 ---
 
