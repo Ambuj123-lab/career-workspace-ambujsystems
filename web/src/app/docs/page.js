@@ -894,9 +894,23 @@ export default function DocsPage() {
               </div>
 
               <div className="space-y-1">
-                <h3 className="text-base sm:text-lg font-bold text-white">
-                  Engineered by Ambuj Kumar Tripathi
-                </h3>
+                <div className="flex items-center justify-between flex-wrap gap-2">
+                  <h3 className="text-base sm:text-lg font-bold text-white">
+                    Engineered by Ambuj Kumar Tripathi
+                  </h3>
+                  <a
+                    href="https://stats.uptimerobot.com/4tYmSQnuBE?utm_source=status_badge&utm_medium=referral"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Ambuj's Cloud Environment Live Status"
+                  >
+                    <img
+                      src="https://badge.uptimerobot.com/psp/6d03dcfe5d5c495465fe9a459d7f778b.svg?style=logo&theme=dark"
+                      alt="Ambuj's Cloud Environment: Up"
+                      className="h-5 w-auto"
+                    />
+                  </a>
+                </div>
                 <p className="text-xs text-gray-400 font-mono">
                   Independent GenAI Engineer &middot; Ex-British Telecom Automation &middot; Gorakhpur, India
                 </p>
