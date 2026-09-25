@@ -2,7 +2,7 @@
 
 > **Last Updated:** 26 September 2026, 01:48  
 > **Total Requirements Tracked:** 121  
-> **Status:** ✅ Done: 108 | ⏳ Pending: 7 | ❌ Removed: 6  
+> **Status:** ✅ Done: 114 | ⏳ Pending: 3 | ❌ Removed: 6  
 > **File Location:** `d:\Ambuj\Projects\ai-cover-letter\MASTER_CHECKLIST.md`
 
 ---
@@ -166,7 +166,10 @@
 | E2a | Input: Name, Email, Phone, LinkedIn | Plan v3 | ✅ InputForm.jsx |
 | E2b | Input: Target Role | Plan v3 | ✅ InputForm.jsx |
 | E2c | Input: Target Company | Plan v3 | ✅ InputForm.jsx |
-| E2d | Input: Resume textarea (max 15000) | Plan v3 | ✅ InputForm.jsx |
+| E2d | Input: Resume textarea (max 15000) | Plan v3 | ✅ InputForm.jsx with live char/word counters |
+| E2j | Resume File Upload (PDF, DOCX, TXT) | User | ✅ Drag & Drop / Browse upload with 5MB limit |
+| E2k | Document Security & Sanitization Scanner | User | ✅ Injection checks, null-byte strip, PII scan |
+| E2l | Live Document Audit Card & Metadata | User | ✅ Section detection, metrics count, clean scan badge |
 | E2e | Input: JD textarea (max 10000) | Plan v3 | ✅ InputForm.jsx |
 | E2f | Tone selector (Professional/Confident/Conversational) | Plan v3 | ✅ InputForm.jsx |
 | E2g | "Generate Letter" button | Plan v3 | ✅ InputForm.jsx |

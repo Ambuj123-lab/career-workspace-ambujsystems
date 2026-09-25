@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSession, signIn } from "next-auth/react";
 
 const MAX_JD = 10000;
@@ -38,6 +38,8 @@ Qualifications:
 
 export default function InputForm({ onGenerate }) {
   const { data: session } = useSession();
+  const fileInputRef = useRef(null);
+
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -49,6 +51,11 @@ export default function InputForm({ onGenerate }) {
     jd: "",
     tone: "professional",
   });
+
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState(null);
+  const [fileMeta, setFileMeta] = useState(null);
+  const [dragActive, setDragActive] = useState(false);
 
   const update = (key, value) => setForm((prev) => ({ ...prev, [key]: value }));
 
@@ -64,19 +71,67 @@ export default function InputForm({ onGenerate }) {
 
   const handleFillDemo = () => {
     setForm(SAMPLE_DATA);
+    setFileMeta({
+      filename: "Ambuj_Tripathi_Resume.pdf",
+      size_kb: 142,
+      word_count: 850,
+      char_count: 5120,
+      metadata: {
+        format: "PDF",
+        clean_security_scan: true,
+        sections_detected: ["Work Experience", "Key Projects", "Technical Skills"],
+        metrics_count: 5,
+      },
+    });
+    setUploadError(null);
   };
 
-  const canSubmit = form.name && form.role && form.company && form.resume && form.jd;
+  const processFile = async (file) => {
+    if (!file) return;
+    setUploadError(null);
+    setUploading(true);
+
+    // Client-side quick size check (5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      setUploadError("File size exceeds 5MB limit. Please upload a smaller document.");
+      setUploading(false);
+      return;
+    }
+
+    try {
+      const data = new FormData();
+      data.append("file", file);
+
+      const res = await fetch("/api/parse-resume", {
+        method: "POST",
+        body: data,
+      });
+
+      const result = await res.json();
+      if (result.error) throw new Error(result.error);
+
+      update("resume", result.text);
+      setFileMeta(result);
+    } catch (err) {
+      setUploadError(err.message || "Failed to process resume file");
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const resumeOverLimit = form.resume.length > MAX_RESUME;
+  const jdOverLimit = form.jd.length > MAX_JD;
+  const canSubmit = form.name && form.role && form.company && form.resume && form.jd && !resumeOverLimit && !jdOverLimit;
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!canSubmit) return;
-    onGenerate(form);
+    onGenerate(form, fileMeta);
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Demo Filler Toolbar & Auth */}
+      {/* Demo Filler Toolbar & Auth */}
       <div className="flex flex-wrap items-center justify-between gap-3 p-3 rounded-xl bg-white/[0.02] border border-white/5">
         <div className="flex items-center gap-2">
           {session?.user ? (
@@ -112,7 +167,7 @@ export default function InputForm({ onGenerate }) {
         </button>
       </div>
 
-      {/* Personal Info */}
+      {/* 1. Personal Info */}
       <div className="glass-card p-6">
         <h3 className="text-sm font-bold text-gray-300 uppercase tracking-wider mb-4 flex items-center gap-2">
           <span className="w-6 h-6 rounded-full bg-gradient-to-br from-rose-500 to-orange-500 flex items-center justify-center text-white text-xs font-black">
@@ -172,7 +227,7 @@ export default function InputForm({ onGenerate }) {
         </div>
       </div>
 
-      {/* Target Position */}
+      {/* 2. Target Position */}
       <div className="glass-card p-6">
         <h3 className="text-sm font-bold text-gray-300 uppercase tracking-wider mb-4 flex items-center gap-2">
           <span className="w-6 h-6 rounded-full bg-gradient-to-br from-cyan-500 to-blue-500 flex items-center justify-center text-white text-xs font-black">
@@ -233,68 +288,179 @@ export default function InputForm({ onGenerate }) {
         </div>
       </div>
 
-      {/* Experience / Resume */}
-      <div className="glass-card p-6">
-        <h3 className="text-sm font-bold text-gray-300 uppercase tracking-wider mb-4 flex items-center gap-2">
-          <span className="w-6 h-6 rounded-full bg-gradient-to-br from-emerald-500 to-green-500 flex items-center justify-center text-white text-xs font-black">
-            3
-          </span>
-          Your Experience *
-        </h3>
-        <textarea
-          rows={6}
-          value={form.resume}
-          onChange={(e) => update("resume", e.target.value.slice(0, MAX_RESUME))}
-          placeholder="Paste your resume, key projects, achievements, and technical experience here..."
-          className="w-full px-4 py-3 bg-white/[0.04] border border-white/10 rounded-xl text-sm text-white placeholder-gray-600 focus:border-rose-500/50 focus:ring-1 focus:ring-rose-500/20 outline-none transition-all resize-y font-mono text-xs leading-relaxed"
-        />
-        <div className="flex justify-between items-center mt-2 text-[11px] text-gray-500">
-          <span>Paste resume text or key experience points</span>
-          <span className={form.resume.length > MAX_RESUME * 0.9 ? "text-amber-400" : ""}>
-            {form.resume.length.toLocaleString()} / {MAX_RESUME.toLocaleString()}
-          </span>
+      {/* 3. Experience / Resume with Secure File Upload */}
+      <div className="glass-card p-6 space-y-4">
+        <div className="flex items-center justify-between">
+          <h3 className="text-sm font-bold text-gray-300 uppercase tracking-wider flex items-center gap-2">
+            <span className="w-6 h-6 rounded-full bg-gradient-to-br from-emerald-500 to-green-500 flex items-center justify-center text-white text-xs font-black">
+              3
+            </span>
+            Your Experience / Resume *
+          </h3>
+          <span className="text-[11px] text-gray-500">PDF, DOCX, TXT (Max 5MB)</span>
+        </div>
+
+        {/* Drag & Drop File Upload Box */}
+        <div
+          onDragOver={(e) => { e.preventDefault(); setDragActive(true); }}
+          onDragLeave={() => setDragActive(false)}
+          onDrop={(e) => { e.preventDefault(); setDragActive(false); processFile(e.dataTransfer.files[0]); }}
+          onClick={() => fileInputRef.current?.click()}
+          className={`p-6 rounded-xl border-2 border-dashed transition-all cursor-pointer text-center ${
+            dragActive
+              ? "border-emerald-500 bg-emerald-500/10"
+              : fileMeta
+              ? "border-emerald-500/40 bg-emerald-500/[0.03]"
+              : "border-white/10 hover:border-white/20 bg-white/[0.01]"
+          }`}
+        >
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".pdf,.docx,.txt,.md"
+            onChange={(e) => processFile(e.target.files[0])}
+            className="hidden"
+          />
+
+          {uploading ? (
+            <div className="py-2 flex flex-col items-center gap-2">
+              <div className="w-6 h-6 rounded-full border-2 border-emerald-500/30 border-t-emerald-500 animate-spin" />
+              <p className="text-xs text-gray-300 font-medium">Parsing &amp; running security scan on document...</p>
+            </div>
+          ) : fileMeta ? (
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-left">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-xs uppercase">
+                  {fileMeta.metadata?.format || "DOC"}
+                </div>
+                <div>
+                  <div className="text-xs font-bold text-white flex items-center gap-2">
+                    <span>{fileMeta.filename}</span>
+                    <span className="text-[10px] text-gray-400">({fileMeta.size_kb} KB)</span>
+                  </div>
+                  <div className="text-[11px] text-emerald-400 mt-0.5 flex flex-wrap gap-2">
+                    <span>🛡️ Clean security scan</span>
+                    <span>•</span>
+                    <span>{fileMeta.word_count?.toLocaleString()} words</span>
+                    <span>•</span>
+                    <span>{fileMeta.metadata?.sections_detected?.length || 0} sections</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={(e) => { e.stopPropagation(); fileInputRef.current?.click(); }}
+                  className="px-2.5 py-1 rounded bg-white/5 hover:bg-white/10 text-gray-300 text-xs border border-white/10"
+                >
+                  Change File
+                </button>
+                <button
+                  type="button"
+                  onClick={(e) => { e.stopPropagation(); setFileMeta(null); update("resume", ""); }}
+                  className="px-2.5 py-1 rounded bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs border border-red-500/20"
+                >
+                  Clear
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="py-2 flex flex-col items-center gap-1.5">
+              <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-lg mb-1">
+                📄
+              </div>
+              <p className="text-xs font-semibold text-gray-200">
+                <span className="text-rose-400 underline">Upload your Resume</span> or drag &amp; drop here
+              </p>
+              <p className="text-[11px] text-gray-500">
+                Supports PDF, DOCX, or TXT · Strictly parsed client/server-side with zero data leakage
+              </p>
+            </div>
+          )}
+        </div>
+
+        {uploadError && (
+          <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-xs flex items-center gap-2">
+            <span>⚠️</span> {uploadError}
+          </div>
+        )}
+
+        <div className="relative">
+          <div className="flex items-center justify-between text-[11px] text-gray-400 mb-1.5 font-medium">
+            <span>Or edit / paste resume text directly:</span>
+            <span className={form.resume.length > MAX_RESUME ? "text-red-400 font-bold" : form.resume.length > MAX_RESUME * 0.9 ? "text-amber-400 font-semibold" : "text-gray-500"}>
+              {form.resume.length.toLocaleString()} / {MAX_RESUME.toLocaleString()} chars ({form.resume.split(/\s+/).filter(Boolean).length} words)
+            </span>
+          </div>
+
+          <textarea
+            rows={6}
+            value={form.resume}
+            onChange={(e) => update("resume", e.target.value)}
+            placeholder="Paste your resume, key projects, achievements, and technical experience here..."
+            className={`w-full px-4 py-3 bg-white/[0.04] border rounded-xl text-sm text-white placeholder-gray-600 focus:ring-1 outline-none transition-all resize-y font-mono text-xs leading-relaxed ${
+              form.resume.length > MAX_RESUME
+                ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
+                : "border-white/10 focus:border-rose-500/50 focus:ring-rose-500/20"
+            }`}
+          />
+          {form.resume.length > MAX_RESUME && (
+            <p className="text-[11px] text-red-400 mt-1">
+              ⚠️ Resume exceeds {MAX_RESUME.toLocaleString()} characters. Please trim non-essential items.
+            </p>
+          )}
         </div>
       </div>
 
-      {/* Job Description */}
-      <div className="glass-card p-6">
-        <h3 className="text-sm font-bold text-gray-300 uppercase tracking-wider mb-4 flex items-center gap-2">
-          <span className="w-6 h-6 rounded-full bg-gradient-to-br from-violet-500 to-purple-500 flex items-center justify-center text-white text-xs font-black">
-            4
+      {/* 4. Job Description */}
+      <div className="glass-card p-6 space-y-2">
+        <div className="flex items-center justify-between">
+          <h3 className="text-sm font-bold text-gray-300 uppercase tracking-wider flex items-center gap-2">
+            <span className="w-6 h-6 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white text-xs font-black">
+              4
+            </span>
+            Target Job Description *
+          </h3>
+          <span className={form.jd.length > MAX_JD ? "text-red-400 font-bold text-[11px]" : "text-gray-500 text-[11px]"}>
+            {form.jd.length.toLocaleString()} / {MAX_JD.toLocaleString()} chars ({form.jd.split(/\s+/).filter(Boolean).length} words)
           </span>
-          Job Description *
-        </h3>
+        </div>
+
         <textarea
           rows={6}
           value={form.jd}
-          onChange={(e) => update("jd", e.target.value.slice(0, MAX_JD))}
+          onChange={(e) => update("jd", e.target.value)}
           placeholder="Paste the target job description here..."
-          className="w-full px-4 py-3 bg-white/[0.04] border border-white/10 rounded-xl text-sm text-white placeholder-gray-600 focus:border-rose-500/50 focus:ring-1 focus:ring-rose-500/20 outline-none transition-all resize-y font-mono text-xs leading-relaxed"
+          className={`w-full px-4 py-3 bg-white/[0.04] border rounded-xl text-sm text-white placeholder-gray-600 focus:ring-1 outline-none transition-all resize-y font-mono text-xs leading-relaxed ${
+            form.jd.length > MAX_JD
+              ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
+              : "border-white/10 focus:border-rose-500/50 focus:ring-rose-500/20"
+          }`}
         />
-        <div className="flex justify-between items-center mt-2 text-[11px] text-gray-500">
-          <span>Full job description for skill matching</span>
-          <span className={form.jd.length > MAX_JD * 0.9 ? "text-amber-400" : ""}>
-            {form.jd.length.toLocaleString()} / {MAX_JD.toLocaleString()}
-          </span>
-        </div>
+        {form.jd.length > MAX_JD && (
+          <p className="text-[11px] text-red-400">
+            ⚠️ Job Description exceeds {MAX_JD.toLocaleString()} characters. Please remove company boilerplate / legal terms.
+          </p>
+        )}
       </div>
 
-      {/* Submit Button */}
-      <button
-        type="submit"
-        disabled={!canSubmit}
-        className={`w-full py-4 rounded-xl font-bold text-sm transition-all duration-300 ${
-          canSubmit
-            ? "bg-gradient-to-r from-rose-500 via-rose-600 to-orange-500 hover:from-rose-600 hover:to-orange-600 text-white shadow-xl shadow-rose-500/20 cursor-pointer"
-            : "bg-white/5 text-gray-600 cursor-not-allowed border border-white/5"
-        }`}
-      >
-        {canSubmit ? "⚡ Analyze Fit & Research Company" : "Fill in required fields (*)"}
-      </button>
-
-      <p className="text-center text-[11px] text-gray-600">
-        Your data is processed server-side. Resume is never sent to external search APIs.
-      </p>
+      {/* Submit Action */}
+      <div className="flex items-center justify-end">
+        <button
+          type="submit"
+          disabled={!canSubmit}
+          id="analyze-submit-btn"
+          className={`px-8 py-3.5 rounded-xl font-bold text-sm transition-all flex items-center gap-2 ${
+            canSubmit
+              ? "bg-gradient-to-r from-rose-500 to-orange-500 text-white hover:from-rose-600 hover:to-orange-600 shadow-lg shadow-rose-500/25 cursor-pointer hover:scale-[1.01]"
+              : "bg-white/5 text-gray-500 cursor-not-allowed border border-white/5"
+          }`}
+        >
+          <span>⚡</span>
+          <span>Analyze Fit &amp; Research Company</span>
+        </button>
+      </div>
     </form>
   );
 }

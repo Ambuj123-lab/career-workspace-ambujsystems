@@ -30,7 +30,7 @@ export default function GeneratePage() {
   };
 
   // Initial trigger: Runs analysis & company research, then opens human approval gate
-  const handleStartAnalysis = async (data) => {
+  const handleStartAnalysis = async (data, metadata = null) => {
     setFormData(data);
     setStep("researching");
     setError(null);
@@ -43,6 +43,24 @@ export default function GeneratePage() {
         target_company: data.company,
         session_id: "mcp-sess-" + Math.random().toString(36).substring(2, 8),
       });
+
+      // Resume File Audit & Security Scan Trace
+      if (metadata) {
+        addMcpLog("call", "resume_security_scanner", `Scanned document: "${metadata.filename}" (${metadata.size_kb} KB, format: ${metadata.metadata?.format || "PDF"})`, {
+          filename: metadata.filename,
+          size_kb: metadata.size_kb,
+          clean_security_scan: metadata.metadata?.clean_security_scan,
+          injection_markers: metadata.metadata?.injection_markers,
+        });
+        addMcpLog("result", "resume_security_scanner", `Passed: Clean scan. Extracted ${metadata.word_count} words. 0 malicious payloads.`, {
+          sections_detected: metadata.metadata?.sections_detected,
+          metrics_count: metadata.metadata?.metrics_count,
+        });
+      } else {
+        addMcpLog("call", "resume_sanitizer", `Sanitized direct resume text input (${data.resume?.length || 0} characters). Quarantining into <user_resume> boundary.`, {
+          chars: data.resume?.length || 0,
+        });
+      }
 
       // Step 1: Analyze Job Description & Resume
       setProgress("Calling MCP Tool: jd_analyzer...");

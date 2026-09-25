@@ -11,8 +11,10 @@
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
     "framer-motion": "^13.4.4",
+    "mammoth": "^1.12.3",
     "next": "16.3.6",
     "next-auth": "^4.24.15",
+    "pdf-parse": "^2.4.5",
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "react-to-print": "^3.3.0",
