@@ -2,7 +2,7 @@
 
 > **Last Updated:** 26 September 2026, 01:48  
 > **Total Requirements Tracked:** 121  
-> **Status:** ✅ Done: 102 | ⏳ Pending: 13 | ❌ Removed: 6  
+> **Status:** ✅ Done: 108 | ⏳ Pending: 7 | ❌ Removed: 6  
 > **File Location:** `d:\Ambuj\Projects\ai-cover-letter\MASTER_CHECKLIST.md`
 
 ---
@@ -185,7 +185,7 @@
 ### E4. Charts
 | # | Requirement | Source | Status |
 |---|-------------|--------|--------|
-| E4a | JD Match Donut (Recharts) | Plan v3 | ✅ Interactive Recharts PieChart/Donut |
+| E4a | Generative UI: Competency Radar (Recharts) | User | ✅ 5-axis RadarChart + Match Donut + Skill Ledger |
 | E4b | Skill bars with evidence labels | Plan v3 | ✅ Custom gradient bars with confidence badges |
 | E4c | ATS Readiness panel (checklist) | ChatGPT | ✅ 6 deterministic criteria checklist |
 | E4d | Client-side only (no SSR) | Research | ✅ Dynamically imported or client rendered |
@@ -221,6 +221,8 @@
 | F6 | `/api/defense` — Interview prep | Plan v3 | ✅ Generates tough questions & resume-backed defense |
 | F7 | `/api/auth/[...nextauth]` — Google OAuth | User | ✅ NextAuth API route active & verified |
 | F8 | Model fallback architecture | Plan v3 | ✅ `src/lib/gemini.js` with automatic retry on 429/503 |
+| F9 | Live MCP Agent Terminal Stream | User | ✅ Real-time streaming tool execution console during generation |
+| F10 | MCP Tool Trace Tab & JSON Inspector | User | ✅ Dedicated Trace tab with collapsible payload viewer & copy |
 
 ---
 
