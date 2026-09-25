@@ -3,7 +3,7 @@
 import { useSession, signIn, signOut } from "next-auth/react";
 import { useState, useRef, useEffect } from "react";
 
-export default function AuthButton({ className = "" }) {
+export default function AuthButton({ className = "", hideUnauthenticated = false }) {
   const { data: session, status } = useSession();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -68,6 +68,11 @@ export default function AuthButton({ className = "" }) {
         )}
       </div>
     );
+  }
+
+  // If inside internal pages where unauthenticated login button should not be rendered
+  if (hideUnauthenticated) {
+    return null;
   }
 
   return (

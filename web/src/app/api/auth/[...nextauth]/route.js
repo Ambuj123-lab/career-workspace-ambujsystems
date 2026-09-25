@@ -8,9 +8,6 @@ const handler = NextAuth({
       clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
     }),
   ],
-  pages: {
-    signIn: "/generate",
-  },
   callbacks: {
     async session({ session, token }) {
       if (session.user) {
