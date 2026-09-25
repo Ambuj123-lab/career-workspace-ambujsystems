@@ -2,7 +2,7 @@
 
 > **Last Updated:** 26 September 2026, 01:48  
 > **Total Requirements Tracked:** 121  
-> **Status:** ✅ Done: 114 | ⏳ Pending: 3 | ❌ Removed: 6  
+> **Status:** ✅ Done: 118 | ⏳ Pending: 0 | ❌ Removed: 6  
 > **File Location:** `d:\Ambuj\Projects\ai-cover-letter\MASTER_CHECKLIST.md`
 
 ---
@@ -230,6 +230,13 @@
 ---
 
 ## ✍️ G. LLM Tone & Prompting
+
+| # | Requirement | Source | Status |
+|---|-------------|--------|--------|
+| G15 | Decoupled Prompt Modules (`src/prompts/`) | ChatGPT review | ✅ `cover-letter.system.js`, `job-analysis.system.js`, `interview-defense.system.js` |
+| G16 | Native `systemInstruction` in Gemini SDK | ChatGPT review | ✅ Separated developer policy from untrusted user content |
+| G17 | Deterministic Application-Layer Scoring | ChatGPT review | ✅ Calculated in code from evidence weights, not LLM imagination |
+| G18 | Claim Verification & Anti-Fabrication in Defense | ChatGPT review | ✅ Explicit VERIFIED / PARTIAL / UNSUPPORTED audit with risk levels |
 
 | # | Requirement | Source | Status |
 |---|-------------|--------|--------|
