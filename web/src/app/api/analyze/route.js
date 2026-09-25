@@ -1,5 +1,9 @@
 import { generateWithFallback } from "@/lib/gemini";
 import { NextResponse } from "next/server";
+import {
+  JOB_ANALYSIS_SYSTEM_INSTRUCTION,
+  buildJobAnalysisUserContent,
+} from "@/prompts/job-analysis.system";
 
 export async function POST(req) {
   try {
@@ -9,46 +13,56 @@ export async function POST(req) {
       return NextResponse.json({ error: "Missing jd_text or resume_text" }, { status: 400 });
     }
 
-    const prompt = `Analyze this job description against the candidate's resume.
-For each required skill in the JD, determine if the candidate has:
-- STRONG_MATCH (directly demonstrated with evidence)
-- PARTIAL_MATCH (related but not exact)
-- TRANSFERABLE (different domain but applicable skill)
-- MISSING (not found in resume)
+    const userContent = buildJobAnalysisUserContent(jd_text, resume_text);
 
-=== JOB DESCRIPTION ===
-${jd_text}
-
-=== RESUME ===
-${resume_text}
-
-Return JSON:
-{
-  "role_title": "Extracted role title from JD",
-  "overall_match": 75,
-  "required_skills": [
-    {
-      "skill": "Skill name",
-      "status": "STRONG_MATCH",
-      "confidence": 0.9,
-      "evidence": "Exact quote or reference from resume"
-    }
-  ],
-  "chart_data": {
-    "strong_match": 3,
-    "partial_match": 2,
-    "transferable": 1,
-    "missing": 1
-  }
-}`;
-
+    // Call Gemini with strict systemInstruction policy
     const { text, model } = await generateWithFallback(
       { temperature: 0.2, responseMimeType: "application/json" },
-      prompt
+      userContent,
+      JOB_ANALYSIS_SYSTEM_INSTRUCTION
     );
 
     const data = JSON.parse(text);
+    const skills = data.required_skills || [];
+    const totalSkills = Math.max(skills.length, 1);
+
+    // DETERMINISTIC APPLICATION-LAYER SCORING
+    // LLM classifies evidence; Application layer calculates the final score
+    const weights = {
+      STRONG_MATCH: 1.0,
+      PARTIAL_MATCH: 0.6,
+      TRANSFERABLE: 0.4,
+      MISSING: 0.0,
+    };
+
+    const rawScore =
+      skills.reduce((sum, item) => sum + (weights[item.status] ?? 0), 0) / totalSkills;
+    data.overall_match = Math.round(rawScore * 100);
+
+    // Deterministic chart distribution
+    data.chart_data = {
+      strong_match: skills.filter((s) => s.status === "STRONG_MATCH").length,
+      partial_match: skills.filter((s) => s.status === "PARTIAL_MATCH").length,
+      transferable: skills.filter((s) => s.status === "TRANSFERABLE").length,
+      missing: skills.filter((s) => s.status === "MISSING").length,
+    };
+
+    // Deterministic confidence mapping from evidence_strength
+    skills.forEach((s) => {
+      if (s.evidence_strength === "HIGH" || s.status === "STRONG_MATCH") {
+        s.confidence = 0.95;
+      } else if (s.evidence_strength === "MEDIUM" || s.status === "PARTIAL_MATCH") {
+        s.confidence = 0.65;
+      } else if (s.status === "TRANSFERABLE") {
+        s.confidence = 0.45;
+      } else {
+        s.confidence = 0.0;
+      }
+    });
+
     data._model_used = model;
+    data._scoring_method = "deterministic_application_layer";
+
     return NextResponse.json(data);
   } catch (err) {
     console.error("Analyze error:", err);

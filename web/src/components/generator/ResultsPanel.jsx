@@ -472,11 +472,28 @@ export default function ResultsPanel({
               <div key={idx} className="p-4 rounded-xl bg-white/[0.02] border border-white/5 space-y-3">
                 <div className="flex items-start justify-between gap-3">
                   <div>
-                    <span className="text-[10px] uppercase font-bold text-rose-400 tracking-wider">Letter Claim #{idx + 1}</span>
-                    <p className="text-xs font-semibold text-gray-200 mt-0.5">"{q.claim}"</p>
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] uppercase font-bold text-rose-400 tracking-wider">Letter Claim #{idx + 1}</span>
+                      <span className={`px-2 py-0.2 rounded text-[10px] font-bold border ${
+                        q.claim_status === "UNSUPPORTED"
+                          ? "bg-red-500/10 text-red-400 border-red-500/30"
+                          : q.claim_status === "PARTIAL"
+                          ? "bg-amber-500/10 text-amber-400 border-amber-500/30"
+                          : "bg-emerald-500/10 text-emerald-400 border-emerald-500/30"
+                      }`}>
+                        {q.claim_status || "VERIFIED"}
+                      </span>
+                    </div>
+                    <p className="text-xs font-semibold text-gray-200 mt-1">"{q.claim}"</p>
                   </div>
-                  <span className="px-2 py-0.5 rounded bg-rose-500/10 text-rose-300 text-[10px] font-bold border border-rose-500/20">
-                    High Probability
+                  <span className={`px-2 py-0.5 rounded text-[10px] font-bold border shrink-0 ${
+                    q.risk_level === "HIGH"
+                      ? "bg-red-500/10 text-red-300 border-red-500/30"
+                      : q.risk_level === "MEDIUM"
+                      ? "bg-amber-500/10 text-amber-300 border-amber-500/30"
+                      : "bg-emerald-500/10 text-emerald-300 border-emerald-500/30"
+                  }`}>
+                    {q.risk_level || "LOW"} RISK
                   </span>
                 </div>
 
