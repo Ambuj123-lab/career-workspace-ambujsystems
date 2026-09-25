@@ -1,13 +1,143 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useRef } from "react";
 import Link from "next/link";
+
+function ZoomableDiagram({ title, subtitle, badge = "ARCHITECTURE DIAGRAM", children }) {
+  const [scale, setScale] = useState(1);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  const zoomIn = () => setScale((prev) => Math.min(prev + 0.25, 2.5));
+  const zoomOut = () => setScale((prev) => Math.max(prev - 0.25, 0.6));
+  const resetZoom = () => setScale(1);
+
+  return (
+    <div className="p-4 sm:p-6 rounded-2xl bg-white/[0.02] border border-white/10 space-y-3 relative group">
+      {/* Top Header & Zoom Toolbar */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-white/5">
+        <div>
+          <span className="text-xs font-bold uppercase tracking-wider text-rose-400 flex items-center gap-1.5">
+            <span>🏛️</span> {badge}: {title}
+          </span>
+          {subtitle && <p className="text-[11px] text-gray-400 mt-0.5">{subtitle}</p>}
+        </div>
+
+        {/* Zoom Controls Bar */}
+        <div className="flex items-center gap-1 self-end sm:self-auto p-1 rounded-xl bg-black/60 border border-white/10 text-xs">
+          <button
+            onClick={zoomOut}
+            title="Zoom Out"
+            className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-white/10 text-gray-300 hover:text-white transition-all font-bold text-sm"
+          >
+            −
+          </button>
+          <span className="px-2 font-mono text-[11px] text-cyan-300 select-none min-w-[42px] text-center">
+            {Math.round(scale * 100)}%
+          </span>
+          <button
+            onClick={zoomIn}
+            title="Zoom In"
+            className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-white/10 text-gray-300 hover:text-white transition-all font-bold text-sm"
+          >
+            +
+          </button>
+          <button
+            onClick={resetZoom}
+            title="Reset Zoom"
+            className="px-2 h-7 flex items-center justify-center rounded-lg hover:bg-white/10 text-[11px] text-gray-400 hover:text-white transition-all"
+          >
+            Reset
+          </button>
+          <button
+            onClick={() => setIsFullscreen(true)}
+            title="Fullscreen Modal"
+            className="px-2.5 h-7 flex items-center gap-1 rounded-lg bg-cyan-500/10 hover:bg-cyan-500/20 text-[11px] text-cyan-300 border border-cyan-500/30 transition-all font-medium"
+          >
+            <span>⛶</span>
+            <span className="hidden sm:inline">Expand</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Diagram Container */}
+      <div className="w-full overflow-x-auto py-4 flex justify-center bg-black/20 rounded-xl border border-white/5 cursor-grab active:cursor-grabbing">
+        <div
+          style={{ transform: `scale(${scale})`, transformOrigin: "top center", transition: "transform 0.2s ease-out" }}
+          className="w-full flex justify-center py-2"
+        >
+          {children}
+        </div>
+      </div>
+
+      <div className="flex items-center justify-between text-[10px] text-gray-500 pt-1">
+        <span>Tip: Use zoom controls above or expand to inspect nodes on mobile/laptop.</span>
+        <span className="hidden sm:inline">Vector Scalable SVG</span>
+      </div>
+
+      {/* Fullscreen Expand Modal */}
+      {isFullscreen && (
+        <div className="fixed inset-0 z-50 flex flex-col p-4 sm:p-6 bg-black/95 backdrop-blur-xl animate-in fade-in duration-200">
+          <div className="flex items-center justify-between pb-4 border-b border-white/10">
+            <div>
+              <h3 className="text-base font-bold text-white flex items-center gap-2">
+                <span className="text-rose-400">🏛️</span> {title}
+              </h3>
+              <p className="text-xs text-gray-400">Fullscreen High-Resolution Architectural Inspection</p>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1 p-1 rounded-xl bg-black/60 border border-white/10 text-xs">
+                <button
+                  onClick={zoomOut}
+                  className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/10 text-gray-200 font-bold"
+                >
+                  −
+                </button>
+                <span className="px-2 font-mono text-xs text-cyan-300 min-w-[45px] text-center">
+                  {Math.round(scale * 100)}%
+                </span>
+                <button
+                  onClick={zoomIn}
+                  className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/10 text-gray-200 font-bold"
+                >
+                  +
+                </button>
+                <button
+                  onClick={resetZoom}
+                  className="px-2.5 h-8 rounded-lg hover:bg-white/10 text-xs text-gray-300"
+                >
+                  Reset
+                </button>
+              </div>
+
+              <button
+                onClick={() => setIsFullscreen(false)}
+                className="w-9 h-9 rounded-xl bg-white/10 hover:bg-white/20 text-white flex items-center justify-center font-bold text-base transition-all"
+              >
+                ✕
+              </button>
+            </div>
+          </div>
+
+          <div className="flex-1 overflow-auto p-4 flex items-center justify-center">
+            <div
+              style={{ transform: `scale(${scale * 1.2})`, transformOrigin: "center center", transition: "transform 0.15s ease-out" }}
+              className="max-w-5xl w-full"
+            >
+              {children}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function DocsPage() {
   const [activeSection, setActiveSection] = useState("overview");
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
 
-  // Interactive Live Formula Calculator state for Chapter 3
+  // Interactive Live Formula Calculator state for Chapter 4
   const [calcStrong, setCalcStrong] = useState(5);
   const [calcPartial, setCalcPartial] = useState(1);
   const [calcTransferable, setCalcTransferable] = useState(1);
@@ -40,22 +170,33 @@ export default function DocsPage() {
       </div>
 
       {/* Top Navbar */}
-      <nav className="sticky top-0 z-50 border-b border-white/5 bg-[#030712]/80 backdrop-blur-xl">
-        <div className="max-w-7xl mx-auto px-6 py-3.5 flex items-center justify-between">
+      <nav className="sticky top-0 z-50 border-b border-white/5 bg-[#030712]/90 backdrop-blur-xl">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between">
           <div className="flex items-center gap-3">
+            {/* Mobile Hamburger Drawer Trigger */}
+            <button
+              onClick={() => setMobileDrawerOpen(!mobileDrawerOpen)}
+              className="lg:hidden p-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-gray-300"
+              aria-label="Toggle Chapters Menu"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+
             <Link href="/" className="flex items-center gap-2.5">
               <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-rose-500 to-orange-400 flex items-center justify-center text-white font-bold text-sm shadow-lg shadow-rose-500/20">
                 CL
               </div>
               <span className="text-base font-bold text-white tracking-tight">CoverCraft</span>
             </Link>
-            <span className="text-gray-500 text-sm">/</span>
-            <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-rose-500/10 text-rose-400 border border-rose-500/20">
-              Architecture & Engineering Docs
+            <span className="text-gray-600 text-sm hidden sm:inline">/</span>
+            <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-rose-500/10 text-rose-400 border border-rose-500/20 hidden sm:inline">
+              Docs &amp; Architecture
             </span>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
             <Link
               href="/"
               className="text-xs text-gray-400 hover:text-white transition-colors hidden sm:block"
@@ -73,9 +214,54 @@ export default function DocsPage() {
         </div>
       </nav>
 
+      {/* Mobile Drawer Slide-out */}
+      {mobileDrawerOpen && (
+        <div className="fixed inset-0 z-50 lg:hidden flex">
+          <div
+            onClick={() => setMobileDrawerOpen(false)}
+            className="fixed inset-0 bg-black/80 backdrop-blur-sm"
+          />
+          <div className="relative w-4/5 max-w-xs bg-[#0b0f19] border-r border-white/10 p-5 space-y-4 flex flex-col z-10">
+            <div className="flex items-center justify-between pb-3 border-b border-white/10">
+              <span className="text-xs font-bold uppercase tracking-wider text-rose-400">Chapters Index</span>
+              <button
+                onClick={() => setMobileDrawerOpen(false)}
+                className="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 text-gray-300 flex items-center justify-center text-sm font-bold"
+              >
+                ✕
+              </button>
+            </div>
+
+            <nav className="space-y-1 flex-1 overflow-y-auto">
+              {navItems.map((item) => (
+                <a
+                  key={item.id}
+                  href={`#${item.id}`}
+                  onClick={() => {
+                    setActiveSection(item.id);
+                    setMobileDrawerOpen(false);
+                  }}
+                  className={`block px-3 py-2.5 rounded-lg text-xs font-medium transition-all ${
+                    activeSection === item.id
+                      ? "bg-rose-500/15 text-rose-400 border border-rose-500/30 font-semibold"
+                      : "text-gray-400 hover:text-gray-200 hover:bg-white/5"
+                  }`}
+                >
+                  {item.label}
+                </a>
+              ))}
+            </nav>
+
+            <div className="pt-3 border-t border-white/5 text-[11px] text-gray-500">
+              CoverCraft v2.4 Architecture
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Main Container */}
-      <div className="max-w-7xl mx-auto px-6 py-8 grid lg:grid-cols-12 gap-8 items-start">
-        {/* Left Sticky Sidebar */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 grid lg:grid-cols-12 gap-8 items-start">
+        {/* Left Sticky Sidebar (Desktop & Tablet Landscape) */}
         <aside className="lg:col-span-3 sticky top-20 hidden lg:block space-y-2 p-4 rounded-2xl bg-white/[0.02] border border-white/5 backdrop-blur-md">
           <div className="text-[11px] uppercase tracking-wider font-bold text-gray-400 px-3 pb-2 border-b border-white/5">
             Architecture Index
@@ -111,10 +297,10 @@ export default function DocsPage() {
               <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
               <span>PRODUCTION TECHNICAL DOCUMENTATION</span>
             </div>
-            <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight">
+            <h1 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight">
               CoverCraft Architecture: From Naive GenAI to Evidence-Grounded Application Intelligence
             </h1>
-            <p className="text-base text-gray-400 leading-relaxed max-w-3xl">
+            <p className="text-sm sm:text-base text-gray-400 leading-relaxed max-w-3xl">
               An architectural deep dive into technical honesty, zero-hallucination trust boundaries,
               deterministic application-layer scoring, real-time web grounding, and Model Context Protocol (MCP) orchestration.
             </p>
@@ -124,7 +310,7 @@ export default function DocsPage() {
           <section id="overview" className="space-y-6 scroll-mt-24">
             <div className="flex items-center gap-3">
               <span className="text-rose-400 font-mono text-sm font-bold">01</span>
-              <h2 className="text-2xl font-bold text-white">The High-Level Architectural Vision</h2>
+              <h2 className="text-xl sm:text-2xl font-bold text-white">The High-Level Architectural Vision</h2>
             </div>
 
             <p className="text-sm text-gray-300 leading-relaxed">
@@ -135,93 +321,87 @@ export default function DocsPage() {
               In reality, hiring managers, senior engineering reviewers, and automated screening systems evaluate applications through the lens of <strong>verifiable evidence</strong>. CoverCraft was designed from the ground up to replace creative text generation with an <strong>Evidence-Backed Application Intelligence Topology</strong>.
             </p>
 
-            {/* DIAGRAM 1: High Level Context & Evidence Isolation Topology (Interactive SVG) */}
-            <div className="p-6 rounded-2xl bg-white/[0.02] border border-white/10 space-y-3">
-              <div className="flex items-center justify-between pb-3 border-b border-white/5">
-                <span className="text-xs font-bold uppercase tracking-wider text-rose-400 flex items-center gap-1.5">
-                  <span>🏛️</span> ARCHITECTURE DIAGRAM 1: Evidence Layer & Isolation Boundary Topology
-                </span>
-                <span className="text-[11px] font-mono text-gray-400">Strict Context Pipeline</span>
-              </div>
+            {/* DIAGRAM 1: Zoomable High Level Context & Evidence Isolation Topology */}
+            <ZoomableDiagram
+              title="Evidence Layer & Isolation Boundary Topology"
+              subtitle="Strict Context Pipeline with Quarantined Ingestion"
+              badge="DIAGRAM 1"
+            >
+              <svg viewBox="0 0 880 340" className="w-full max-w-3xl min-w-[650px] font-sans">
+                <defs>
+                  <linearGradient id="gradInput" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#1e293b" />
+                    <stop offset="100%" stopColor="#0f172a" />
+                  </linearGradient>
+                  <linearGradient id="gradPolicy" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#881337" stopColorOpacity="0.4" />
+                    <stop offset="100%" stopColor="#030712" />
+                  </linearGradient>
+                  <linearGradient id="gradEngine" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#064e3b" stopColorOpacity="0.5" />
+                    <stop offset="100%" stopColor="#030712" />
+                  </linearGradient>
+                  <linearGradient id="gradOutput" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#0c4a6e" stopColorOpacity="0.5" />
+                    <stop offset="100%" stopColor="#030712" />
+                  </linearGradient>
+                </defs>
 
-              {/* Rendered SVG Architecture Diagram */}
-              <div className="w-full overflow-x-auto py-4 flex justify-center">
-                <svg viewBox="0 0 880 340" className="w-full max-w-3xl min-w-[700px] font-sans">
-                  <defs>
-                    <linearGradient id="gradInput" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#1e293b" />
-                      <stop offset="100%" stopColor="#0f172a" />
-                    </linearGradient>
-                    <linearGradient id="gradPolicy" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#881337" stopColorOpacity="0.4" />
-                      <stop offset="100%" stopColor="#030712" />
-                    </linearGradient>
-                    <linearGradient id="gradEngine" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#064e3b" stopColorOpacity="0.5" />
-                      <stop offset="100%" stopColor="#030712" />
-                    </linearGradient>
-                    <linearGradient id="gradOutput" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#0c4a6e" stopColorOpacity="0.5" />
-                      <stop offset="100%" stopColor="#030712" />
-                    </linearGradient>
-                  </defs>
+                {/* Level 1: Untrusted Ingestion Layer */}
+                <rect x="20" y="20" width="250" height="50" rx="8" fill="url(#gradInput)" stroke="#38bdf8" strokeWidth="1" strokeDasharray="3 3" />
+                <text x="145" y="42" fill="#38bdf8" fontSize="12" fontWeight="bold" textAnchor="middle">Candidate Resume (Raw PDF/DOCX)</text>
+                <text x="145" y="58" fill="#94a3b8" fontSize="10" textAnchor="middle">Quarantined · 5MB Limit · Null-Byte Sanitized</text>
 
-                  {/* Level 1: Untrusted Ingestion Layer */}
-                  <rect x="20" y="20" width="250" height="50" rx="8" fill="url(#gradInput)" stroke="#38bdf8" strokeWidth="1" strokeDasharray="3 3" />
-                  <text x="145" y="42" fill="#38bdf8" fontSize="12" fontWeight="bold" textAnchor="middle">Candidate Resume (Raw PDF/DOCX)</text>
-                  <text x="145" y="58" fill="#94a3b8" fontSize="10" textAnchor="middle">Quarantined · 5MB Limit · Null-Byte Sanitized</text>
+                <rect x="315" y="20" width="250" height="50" rx="8" fill="url(#gradInput)" stroke="#f43f5e" strokeWidth="1" strokeDasharray="3 3" />
+                <text x="440" y="42" fill="#f43f5e" fontSize="12" fontWeight="bold" textAnchor="middle">Job Description (Raw Text)</text>
+                <text x="440" y="58" fill="#94a3b8" fontSize="10" textAnchor="middle">Competency Vector Extractor · 10K Char Cap</text>
 
-                  <rect x="315" y="20" width="250" height="50" rx="8" fill="url(#gradInput)" stroke="#f43f5e" strokeWidth="1" strokeDasharray="3 3" />
-                  <text x="440" y="42" fill="#f43f5e" fontSize="12" fontWeight="bold" textAnchor="middle">Job Description (Raw Text)</text>
-                  <text x="440" y="58" fill="#94a3b8" fontSize="10" textAnchor="middle">Competency Vector Extractor · 10K Char Cap</text>
+                <rect x="610" y="20" width="250" height="50" rx="8" fill="url(#gradInput)" stroke="#a855f7" strokeWidth="1" strokeDasharray="3 3" />
+                <text x="735" y="42" fill="#c084fc" fontSize="12" fontWeight="bold" textAnchor="middle">Live Web Search (Tavily Search API)</text>
+                <text x="735" y="58" fill="#94a3b8" fontSize="10" textAnchor="middle">Grounding · Official Domains · Recent News</text>
 
-                  <rect x="610" y="20" width="250" height="50" rx="8" fill="url(#gradInput)" stroke="#a855f7" strokeWidth="1" strokeDasharray="3 3" />
-                  <text x="735" y="42" fill="#c084fc" fontSize="12" fontWeight="bold" textAnchor="middle">Live Web Search (Tavily Search API)</text>
-                  <text x="735" y="58" fill="#94a3b8" fontSize="10" textAnchor="middle">Grounding · Official Domains · Recent News</text>
+                {/* Connecting Arrows */}
+                <path d="M 145 70 L 145 105 L 440 105 L 440 125" fill="none" stroke="#64748b" strokeWidth="1.5" />
+                <path d="M 440 70 L 440 125" fill="none" stroke="#64748b" strokeWidth="1.5" />
+                <path d="M 735 70 L 735 105 L 440 105 L 440 125" fill="none" stroke="#64748b" strokeWidth="1.5" />
 
-                  {/* Connecting Arrows */}
-                  <path d="M 145 70 L 145 105 L 440 105 L 440 125" fill="none" stroke="#64748b" strokeWidth="1.5" markerEnd="url(#arrow)" />
-                  <path d="M 440 70 L 440 125" fill="none" stroke="#64748b" strokeWidth="1.5" />
-                  <path d="M 735 70 L 735 105 L 440 105 L 440 125" fill="none" stroke="#64748b" strokeWidth="1.5" />
+                {/* Level 2: Strict XML Boundary Layer */}
+                <rect x="60" y="125" width="760" height="55" rx="10" fill="url(#gradPolicy)" stroke="#f43f5e" strokeWidth="1.5" />
+                <text x="440" y="148" fill="#fda4af" fontSize="12" fontWeight="bold" textAnchor="middle">TIER 1: IMMUTABLE SYSTEM INSTRUCTION &amp; STRICT TRUST BOUNDARIES</text>
+                <text x="440" y="166" fill="#cbd5e1" fontSize="11" textAnchor="middle">&lt;user_resume&gt; [Zero Hallucination Quarantine] &middot; &lt;job_description&gt; &middot; &lt;verified_web_sources&gt; [Citations Bound]</text>
 
-                  {/* Level 2: Strict XML Boundary Layer */}
-                  <rect x="60" y="125" width="760" height="55" rx="10" fill="url(#gradPolicy)" stroke="#f43f5e" strokeWidth="1.5" />
-                  <text x="440" y="148" fill="#fda4af" fontSize="12" fontWeight="bold" textAnchor="middle">TIER 1: IMMUTABLE SYSTEM INSTRUCTION &amp; STRICT TRUST BOUNDARIES</text>
-                  <text x="440" y="166" fill="#cbd5e1" fontSize="11" textAnchor="middle">&lt;user_resume&gt; [Zero Hallucination Quarantine] &middot; &lt;job_description&gt; &middot; &lt;verified_web_sources&gt; [Citations Bound]</text>
+                {/* Connecting Arrow */}
+                <path d="M 440 180 L 440 210" fill="none" stroke="#64748b" strokeWidth="1.5" />
 
-                  {/* Connecting Arrow */}
-                  <path d="M 440 180 L 440 210" fill="none" stroke="#64748b" strokeWidth="1.5" />
+                {/* Level 3: Deterministic Application Scoring Engine */}
+                <rect x="60" y="210" width="760" height="50" rx="10" fill="url(#gradEngine)" stroke="#10b981" strokeWidth="1.5" />
+                <text x="440" y="232" fill="#6ee7b7" fontSize="12" fontWeight="bold" textAnchor="middle">TIER 2: DETERMINISTIC APPLICATION-LAYER ENGINE (Next.js Edge / Node)</text>
+                <text x="440" y="248" fill="#a7f3d0" fontSize="10" textAnchor="middle">Mathematical Weighted Summation: (Strong&times;1.0 + Partial&times;0.6 + Transferable&times;0.4) / Total &middot; Verbatim Quote Verification</text>
 
-                  {/* Level 3: Deterministic Application Scoring Engine */}
-                  <rect x="60" y="210" width="760" height="50" rx="10" fill="url(#gradEngine)" stroke="#10b981" strokeWidth="1.5" />
-                  <text x="440" y="232" fill="#6ee7b7" fontSize="12" fontWeight="bold" textAnchor="middle">TIER 2: DETERMINISTIC APPLICATION-LAYER ENGINE (Next.js Edge / Node)</text>
-                  <text x="440" y="248" fill="#a7f3d0" fontSize="10" textAnchor="middle">Mathematical Weighted Summation: (Strong&times;1.0 + Partial&times;0.6 + Transferable&times;0.4) / Total &middot; Verbatim Quote Verification</text>
+                {/* Connecting Arrow */}
+                <path d="M 440 260 L 440 285" fill="none" stroke="#64748b" strokeWidth="1.5" />
 
-                  {/* Connecting Arrow */}
-                  <path d="M 440 260 L 440 285" fill="none" stroke="#64748b" strokeWidth="1.5" />
+                {/* Level 4: Output Dossiers */}
+                <rect x="40" y="285" width="180" height="42" rx="8" fill="url(#gradOutput)" stroke="#38bdf8" strokeWidth="1" />
+                <text x="130" y="311" fill="#bae6fd" fontSize="11" fontWeight="bold" textAnchor="middle">Evidence Cover Letter</text>
 
-                  {/* Level 4: Output Dossiers */}
-                  <rect x="40" y="285" width="180" height="42" rx="8" fill="url(#gradOutput)" stroke="#38bdf8" strokeWidth="1" />
-                  <text x="130" y="311" fill="#bae6fd" fontSize="11" fontWeight="bold" textAnchor="middle">Evidence Cover Letter</text>
+                <rect x="250" y="285" width="180" height="42" rx="8" fill="url(#gradOutput)" stroke="#38bdf8" strokeWidth="1" />
+                <text x="340" y="311" fill="#bae6fd" fontSize="11" fontWeight="bold" textAnchor="middle">Job Fit Radar &amp; Donut</text>
 
-                  <rect x="250" y="285" width="180" height="42" rx="8" fill="url(#gradOutput)" stroke="#38bdf8" strokeWidth="1" />
-                  <text x="340" y="311" fill="#bae6fd" fontSize="11" fontWeight="bold" textAnchor="middle">Job Fit Radar &amp; Donut</text>
+                <rect x="460" y="285" width="180" height="42" rx="8" fill="url(#gradOutput)" stroke="#38bdf8" strokeWidth="1" />
+                <text x="550" y="311" fill="#bae6fd" fontSize="11" fontWeight="bold" textAnchor="middle">4-Card Company Dossier</text>
 
-                  <rect x="460" y="285" width="180" height="42" rx="8" fill="url(#gradOutput)" stroke="#38bdf8" strokeWidth="1" />
-                  <text x="550" y="311" fill="#bae6fd" fontSize="11" fontWeight="bold" textAnchor="middle">4-Card Company Dossier</text>
-
-                  <rect x="670" y="285" width="180" height="42" rx="8" fill="url(#gradOutput)" stroke="#38bdf8" strokeWidth="1" />
-                  <text x="760" y="311" fill="#bae6fd" fontSize="11" fontWeight="bold" textAnchor="middle">Interview Defense Ledger</text>
-                </svg>
-              </div>
-            </div>
+                <rect x="670" y="285" width="180" height="42" rx="8" fill="url(#gradOutput)" stroke="#38bdf8" strokeWidth="1" />
+                <text x="760" y="311" fill="#bae6fd" fontSize="11" fontWeight="bold" textAnchor="middle">Interview Defense Ledger</text>
+              </svg>
+            </ZoomableDiagram>
           </section>
 
           {/* SECTION 2: The AI Wrapper Fallacy */}
           <section id="anti-patterns" className="space-y-6 scroll-mt-24">
             <div className="flex items-center gap-3">
               <span className="text-rose-400 font-mono text-sm font-bold">02</span>
-              <h2 className="text-2xl font-bold text-white">The Naive AI Wrapper Fallacy vs. Enterprise Evidence Architecture</h2>
+              <h2 className="text-xl sm:text-2xl font-bold text-white">The Naive AI Wrapper Fallacy vs. Enterprise Evidence Architecture</h2>
             </div>
 
             <p className="text-sm text-gray-300 leading-relaxed">
@@ -230,7 +410,7 @@ export default function DocsPage() {
 
             {/* Comparison Table */}
             <div className="overflow-x-auto rounded-xl border border-white/10 bg-white/[0.01]">
-              <table className="w-full text-xs text-left">
+              <table className="w-full text-xs text-left min-w-[600px]">
                 <thead className="bg-white/5 text-gray-300 uppercase tracking-wider font-semibold border-b border-white/10">
                   <tr>
                     <th className="p-3.5">Architecture Dimension</th>
@@ -273,14 +453,14 @@ export default function DocsPage() {
           <section id="trust-boundaries" className="space-y-6 scroll-mt-24">
             <div className="flex items-center gap-3">
               <span className="text-rose-400 font-mono text-sm font-bold">03</span>
-              <h2 className="text-2xl font-bold text-white">Context Isolation, Sanitization &amp; Prompt Security</h2>
+              <h2 className="text-xl sm:text-2xl font-bold text-white">Context Isolation, Sanitization &amp; Prompt Security</h2>
             </div>
 
             <p className="text-sm text-gray-300 leading-relaxed">
               CoverCraft decouples prompt logic into isolated policy files stored in <code className="text-rose-400 bg-white/5 px-1.5 py-0.5 rounded">src/prompts/</code>. The architecture enforces three distinct context layers:
             </p>
 
-            <div className="grid md:grid-cols-3 gap-4">
+            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
               <div className="p-4 rounded-xl bg-black/40 border border-white/5 space-y-2">
                 <span className="text-[10px] font-bold uppercase tracking-wider text-rose-400">Layer 1: Immutable Policy</span>
                 <h4 className="text-sm font-bold text-white">System Instructions</h4>
@@ -297,7 +477,7 @@ export default function DocsPage() {
                 </p>
               </div>
 
-              <div className="p-4 rounded-xl bg-black/40 border border-white/5 space-y-2">
+              <div className="p-4 rounded-xl bg-black/40 border border-white/5 space-y-2 sm:col-span-2 md:col-span-1">
                 <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-400">Layer 3: Schema Validation</span>
                 <h4 className="text-sm font-bold text-white">Structured Output Enforcement</h4>
                 <p className="text-xs text-gray-400 leading-relaxed">
@@ -328,68 +508,63 @@ export default function DocsPage() {
           <section id="deterministic-math" className="space-y-6 scroll-mt-24">
             <div className="flex items-center gap-3">
               <span className="text-rose-400 font-mono text-sm font-bold">04</span>
-              <h2 className="text-2xl font-bold text-white">Technical Honesty: Deterministic Application-Layer Scoring</h2>
+              <h2 className="text-xl sm:text-2xl font-bold text-white">Technical Honesty: Deterministic Application-Layer Scoring</h2>
             </div>
 
             <p className="text-sm text-gray-300 leading-relaxed">
               One of the most critical engineering decisions in CoverCraft is eliminating <strong>Black-Box LLM Score Hallucination</strong>. When an LLM is asked to output an overall fit percentage, it generates an impressionistic, non-reproducible number. CoverCraft removes scoring authority from the LLM entirely.
             </p>
 
-            {/* DIAGRAM 2: Deterministic Scoring Engine Flowchart (SVG) */}
-            <div className="p-6 rounded-2xl bg-white/[0.02] border border-white/10 space-y-3">
-              <div className="flex items-center justify-between pb-3 border-b border-white/5">
-                <span className="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
-                  <span>📐</span> ARCHITECTURE DIAGRAM 2: Deterministic Scoring Flowchart
-                </span>
-                <span className="text-[11px] font-mono text-gray-400">Zero Black-Box Math</span>
-              </div>
+            {/* DIAGRAM 2: Zoomable Deterministic Scoring Engine Flowchart */}
+            <ZoomableDiagram
+              title="Deterministic Scoring Flowchart"
+              subtitle="Categorical Classification to Mathematical Summation"
+              badge="DIAGRAM 2"
+            >
+              <svg viewBox="0 0 880 260" className="w-full max-w-3xl min-w-[650px] font-sans">
+                {/* Step 1 */}
+                <rect x="20" y="20" width="840" height="40" rx="8" fill="#111827" stroke="#374151" strokeWidth="1" />
+                <text x="440" y="44" fill="#f3f4f6" fontSize="12" fontWeight="bold" textAnchor="middle">
+                  STEP 1: Target JD Requirements Parsed into Discrete Competencies (N Total)
+                </text>
 
-              <div className="w-full overflow-x-auto py-4 flex justify-center">
-                <svg viewBox="0 0 880 260" className="w-full max-w-3xl min-w-[700px] font-sans">
-                  {/* Step 1 */}
-                  <rect x="20" y="20" width="840" height="40" rx="8" fill="#111827" stroke="#374151" strokeWidth="1" />
-                  <text x="440" y="44" fill="#f3f4f6" fontSize="12" fontWeight="bold" textAnchor="middle">
-                    STEP 1: Target JD Requirements Parsed into Discrete Competencies (N Total)
-                  </text>
+                {/* 4 Classification Boxes */}
+                <rect x="20" y="90" width="195" height="70" rx="8" fill="#064e3b" fillOpacity="0.3" stroke="#10b981" strokeWidth="1.5" />
+                <text x="117" y="115" fill="#34d399" fontSize="12" fontWeight="bold" textAnchor="middle">STRONG_MATCH</text>
+                <text x="117" y="133" fill="#a7f3d0" fontSize="11" textAnchor="middle">Weight: 1.0x</text>
+                <text x="117" y="148" fill="#6ee7b7" fontSize="10" textAnchor="middle">Verbatim Resume Quote Required</text>
 
-                  {/* 4 Classification Boxes */}
-                  <rect x="20" y="90" width="195" height="70" rx="8" fill="#064e3b" fillOpacity="0.3" stroke="#10b981" strokeWidth="1.5" />
-                  <text x="117" y="115" fill="#34d399" fontSize="12" fontWeight="bold" textAnchor="middle">STRONG_MATCH</text>
-                  <text x="117" y="133" fill="#a7f3d0" fontSize="11" textAnchor="middle">Weight: 1.0x</text>
-                  <text x="117" y="148" fill="#6ee7b7" fontSize="10" textAnchor="middle">Verbatim Resume Quote Required</text>
+                <rect x="235" y="90" width="195" height="70" rx="8" fill="#78350f" fillOpacity="0.3" stroke="#f59e0b" strokeWidth="1.5" />
+                <text x="332" y="115" fill="#fbbf24" fontSize="12" fontWeight="bold" textAnchor="middle">PARTIAL_MATCH</text>
+                <text x="332" y="133" fill="#fde68a" fontSize="11" textAnchor="middle">Weight: 0.6x</text>
+                <text x="332" y="148" fill="#fcd34d" fontSize="10" textAnchor="middle">Related Tooling / Tech Stack</text>
 
-                  <rect x="235" y="90" width="195" height="70" rx="8" fill="#78350f" fillOpacity="0.3" stroke="#f59e0b" strokeWidth="1.5" />
-                  <text x="332" y="115" fill="#fbbf24" fontSize="12" fontWeight="bold" textAnchor="middle">PARTIAL_MATCH</text>
-                  <text x="332" y="133" fill="#fde68a" fontSize="11" textAnchor="middle">Weight: 0.6x</text>
-                  <text x="332" y="148" fill="#fcd34d" fontSize="10" textAnchor="middle">Related Tooling / Tech Stack</text>
+                <rect x="450" y="90" width="195" height="70" rx="8" fill="#1e3a8a" fillOpacity="0.3" stroke="#3b82f6" strokeWidth="1.5" />
+                <text x="547" y="115" fill="#60a5fa" fontSize="12" fontWeight="bold" textAnchor="middle">TRANSFERABLE</text>
+                <text x="547" y="133" fill="#bfdbfe" fontSize="11" textAnchor="middle">Weight: 0.4x</text>
+                <text x="547" y="148" fill="#93c5fd" fontSize="10" textAnchor="middle">Foundational Adjacent Competency</text>
 
-                  <rect x="450" y="90" width="195" height="70" rx="8" fill="#1e3a8a" fillOpacity="0.3" stroke="#3b82f6" strokeWidth="1.5" />
-                  <text x="547" y="115" fill="#60a5fa" fontSize="12" fontWeight="bold" textAnchor="middle">TRANSFERABLE</text>
-                  <text x="547" y="133" fill="#bfdbfe" fontSize="11" textAnchor="middle">Weight: 0.4x</text>
-                  <text x="547" y="148" fill="#93c5fd" fontSize="10" textAnchor="middle">Foundational Adjacent Competency</text>
+                <rect x="665" y="90" width="195" height="70" rx="8" fill="#7f1d1d" fillOpacity="0.3" stroke="#ef4444" strokeWidth="1.5" />
+                <text x="762" y="115" fill="#f87171" fontSize="12" fontWeight="bold" textAnchor="middle">MISSING</text>
+                <text x="762" y="133" fill="#fecaca" fontSize="11" textAnchor="middle">Weight: 0.0x</text>
+                <text x="762" y="148" fill="#fca5a5" fontSize="10" textAnchor="middle">Requirement Honestly Framed as Gap</text>
 
-                  <rect x="665" y="90" width="195" height="70" rx="8" fill="#7f1d1d" fillOpacity="0.3" stroke="#ef4444" strokeWidth="1.5" />
-                  <text x="762" y="115" fill="#f87171" fontSize="12" fontWeight="bold" textAnchor="middle">MISSING</text>
-                  <text x="762" y="133" fill="#fecaca" fontSize="11" textAnchor="middle">Weight: 0.0x</text>
-                  <text x="762" y="148" fill="#fca5a5" fontSize="10" textAnchor="middle">Requirement Honestly Framed as Gap</text>
+                {/* Connectors */}
+                <path d="M 440 60 L 440 85" fill="none" stroke="#6b7280" strokeWidth="1.5" />
 
-                  {/* Connectors */}
-                  <path d="M 440 60 L 440 85" fill="none" stroke="#6b7280" strokeWidth="1.5" />
-
-                  {/* Step 3: Application Code Math */}
-                  <rect x="20" y="190" width="840" height="55" rx="8" fill="#0f172a" stroke="#38bdf8" strokeWidth="1.5" />
-                  <text x="440" y="213" fill="#38bdf8" fontSize="12" fontWeight="bold" textAnchor="middle">
-                    STEP 2: Deterministic Calculation in Application Code (src/app/api/analyze/route.js)
-                  </text>
-                  <text x="440" y="232" fill="#bae6fd" fontSize="11" textAnchor="middle">
-                    Score = Math.round( ((Strong &times; 1.0) + (Partial &times; 0.6) + (Transferable &times; 0.4) + (Missing &times; 0.0)) / Total &times; 100 )
-                  </text>
-                </svg>
-              </div>
-            </div>
+                {/* Step 3: Application Code Math */}
+                <rect x="20" y="190" width="840" height="55" rx="8" fill="#0f172a" stroke="#38bdf8" strokeWidth="1.5" />
+                <text x="440" y="213" fill="#38bdf8" fontSize="12" fontWeight="bold" textAnchor="middle">
+                  STEP 2: Deterministic Calculation in Application Code (src/app/api/analyze/route.js)
+                </text>
+                <text x="440" y="232" fill="#bae6fd" fontSize="11" textAnchor="middle">
+                  Score = Math.round( ((Strong &times; 1.0) + (Partial &times; 0.6) + (Transferable &times; 0.4) + (Missing &times; 0.0)) / Total &times; 100 )
+                </text>
+              </svg>
+            </ZoomableDiagram>
 
             {/* Interactive Live Formula Calculator Widget */}
-            <div className="p-6 rounded-2xl bg-gradient-to-r from-cyan-950/30 via-black/40 to-black/60 border border-cyan-500/30 space-y-4">
+            <div className="p-4 sm:p-6 rounded-2xl bg-gradient-to-r from-cyan-950/30 via-black/40 to-black/60 border border-cyan-500/30 space-y-4">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-white/10">
                 <div className="flex items-center gap-2">
                   <span className="text-cyan-400">⚡</span>
@@ -449,7 +624,7 @@ export default function DocsPage() {
                 </div>
               </div>
 
-              <div className="p-3 rounded-lg bg-black/60 border border-white/5 font-mono text-[11px] text-gray-300">
+              <div className="p-3 rounded-lg bg-black/60 border border-white/5 font-mono text-[11px] text-gray-300 overflow-x-auto">
                 Formula: (({calcStrong} &times; 1.0) + ({calcPartial} &times; 0.6) + ({calcTransferable} &times; 0.4) + ({calcMissing} &times; 0.0)) / {calcTotal} &times; 100 = <strong className="text-emerald-400">{calcScore}%</strong>
               </div>
             </div>
@@ -459,71 +634,66 @@ export default function DocsPage() {
           <section id="company-intelligence" className="space-y-6 scroll-mt-24">
             <div className="flex items-center gap-3">
               <span className="text-rose-400 font-mono text-sm font-bold">05</span>
-              <h2 className="text-2xl font-bold text-white">Real-Time Web Grounding &amp; The 4-Card Company Intel Dossier</h2>
+              <h2 className="text-xl sm:text-2xl font-bold text-white">Real-Time Web Grounding &amp; The 4-Card Company Intel Dossier</h2>
             </div>
 
             <p className="text-sm text-gray-300 leading-relaxed">
               Static LLMs suffer from knowledge cutoffs and cannot know a company's announcements, publications, or engineering priorities in 2026. CoverCraft integrates a real-time web retrieval and synthesis pipeline in <code className="text-cyan-400 bg-white/5 px-1.5 py-0.5 rounded">src/app/api/research/route.js</code>.
             </p>
 
-            {/* DIAGRAM 3: Real-Time Web Grounding Flowchart (SVG) */}
-            <div className="p-6 rounded-2xl bg-white/[0.02] border border-white/10 space-y-3">
-              <div className="flex items-center justify-between pb-3 border-b border-white/5">
-                <span className="text-xs font-bold uppercase tracking-wider text-cyan-400 flex items-center gap-1.5">
-                  <span>🌐</span> ARCHITECTURE DIAGRAM 3: Tavily Search &amp; 4-Card Synthesis Flowchart
-                </span>
-                <span className="text-[11px] font-mono text-gray-400">Live Web Grounding</span>
-              </div>
+            {/* DIAGRAM 3: Zoomable Real-Time Web Grounding Flowchart */}
+            <ZoomableDiagram
+              title="Tavily Search & 4-Card Synthesis Flowchart"
+              subtitle="Live Grounding to In-Text Interactive Citations"
+              badge="DIAGRAM 3"
+            >
+              <svg viewBox="0 0 880 230" className="w-full max-w-3xl min-w-[650px] font-sans">
+                {/* Query */}
+                <rect x="20" y="20" width="260" height="50" rx="8" fill="#0f172a" stroke="#38bdf8" strokeWidth="1" />
+                <text x="150" y="42" fill="#38bdf8" fontSize="11" fontWeight="bold" textAnchor="middle">Target Company + Role</text>
+                <text x="150" y="58" fill="#94a3b8" fontSize="10" textAnchor="middle">"Google DeepMind AI research 2026"</text>
 
-              <div className="w-full overflow-x-auto py-4 flex justify-center">
-                <svg viewBox="0 0 880 230" className="w-full max-w-3xl min-w-[700px] font-sans">
-                  {/* Query */}
-                  <rect x="20" y="20" width="260" height="50" rx="8" fill="#0f172a" stroke="#38bdf8" strokeWidth="1" />
-                  <text x="150" y="42" fill="#38bdf8" fontSize="11" fontWeight="bold" textAnchor="middle">Target Company + Role</text>
-                  <text x="150" y="58" fill="#94a3b8" fontSize="10" textAnchor="middle">"Google DeepMind AI research 2026"</text>
+                {/* Search Engine */}
+                <rect x="320" y="20" width="240" height="50" rx="8" fill="#082f49" stroke="#0284c7" strokeWidth="1.5" />
+                <text x="440" y="42" fill="#7dd3fc" fontSize="11" fontWeight="bold" textAnchor="middle">Tavily Advanced Search Engine</text>
+                <text x="440" y="58" fill="#bae6fd" fontSize="10" textAnchor="middle">Fallback: Gemini Google Grounding</text>
 
-                  {/* Search Engine */}
-                  <rect x="320" y="20" width="240" height="50" rx="8" fill="#082f49" stroke="#0284c7" strokeWidth="1.5" />
-                  <text x="440" y="42" fill="#7dd3fc" fontSize="11" fontWeight="bold" textAnchor="middle">Tavily Advanced Search Engine</text>
-                  <text x="440" y="58" fill="#bae6fd" fontSize="10" textAnchor="middle">Fallback: Gemini Google Grounding</text>
+                {/* Filter */}
+                <rect x="600" y="20" width="260" height="50" rx="8" fill="#1e1b4b" stroke="#818cf8" strokeWidth="1" />
+                <text x="730" y="42" fill="#c7d2fe" fontSize="11" fontWeight="bold" textAnchor="middle">Deduplication &amp; Categorizer</text>
+                <text x="730" y="58" fill="#a5b4fc" fontSize="10" textAnchor="middle">Official &middot; Research &middot; News Domains</text>
 
-                  {/* Filter */}
-                  <rect x="600" y="20" width="260" height="50" rx="8" fill="#1e1b4b" stroke="#818cf8" strokeWidth="1" />
-                  <text x="730" y="42" fill="#c7d2fe" fontSize="11" fontWeight="bold" textAnchor="middle">Deduplication &amp; Categorizer</text>
-                  <text x="730" y="58" fill="#a5b4fc" fontSize="10" textAnchor="middle">Official &middot; Research &middot; News Domains</text>
+                {/* Connector */}
+                <path d="M 280 45 L 320 45" fill="none" stroke="#64748b" strokeWidth="1.5" />
+                <path d="M 560 45 L 600 45" fill="none" stroke="#64748b" strokeWidth="1.5" />
+                <path d="M 730 70 L 730 100 L 440 100 L 440 120" fill="none" stroke="#64748b" strokeWidth="1.5" />
 
-                  {/* Connector */}
-                  <path d="M 280 45 L 320 45" fill="none" stroke="#64748b" strokeWidth="1.5" />
-                  <path d="M 560 45 L 600 45" fill="none" stroke="#64748b" strokeWidth="1.5" />
-                  <path d="M 730 70 L 730 100 L 440 100 L 440 120" fill="none" stroke="#64748b" strokeWidth="1.5" />
+                {/* 4 Cards Output */}
+                <rect x="20" y="120" width="195" height="85" rx="8" fill="#111827" stroke="#f43f5e" strokeWidth="1" />
+                <text x="117" y="142" fill="#fda4af" fontSize="11" fontWeight="bold" textAnchor="middle">CARD 1: SNAPSHOT</text>
+                <text x="117" y="160" fill="#94a3b8" fontSize="9" textAnchor="middle">2-3 Sentence Mission Scale</text>
+                <text x="117" y="176" fill="#94a3b8" fontSize="9" textAnchor="middle">Tagged Sources Count</text>
+                <text x="117" y="192" fill="#f43f5e" fontSize="9" textAnchor="middle">In-Text Citation Markers [1]</text>
 
-                  {/* 4 Cards Output */}
-                  <rect x="20" y="120" width="195" height="85" rx="8" fill="#111827" stroke="#f43f5e" strokeWidth="1" />
-                  <text x="117" y="142" fill="#fda4af" fontSize="11" fontWeight="bold" textAnchor="middle">CARD 1: SNAPSHOT</text>
-                  <text x="117" y="160" fill="#94a3b8" fontSize="9" textAnchor="middle">2-3 Sentence Mission Scale</text>
-                  <text x="117" y="176" fill="#94a3b8" fontSize="9" textAnchor="middle">Tagged Sources Count</text>
-                  <text x="117" y="192" fill="#f43f5e" fontSize="9" textAnchor="middle">In-Text Citation Markers [1]</text>
+                <rect x="235" y="120" width="195" height="85" rx="8" fill="#111827" stroke="#38bdf8" strokeWidth="1" />
+                <text x="332" y="142" fill="#7dd3fc" fontSize="11" fontWeight="bold" textAnchor="middle">CARD 2: ROLE SIGNALS</text>
+                <text x="332" y="160" fill="#94a3b8" fontSize="9" textAnchor="middle">Technical Capability Areas</text>
+                <text x="332" y="176" fill="#94a3b8" fontSize="9" textAnchor="middle">Aligned to Target Role</text>
+                <text x="332" y="192" fill="#38bdf8" fontSize="9" textAnchor="middle">"Why this matters" Callout</text>
 
-                  <rect x="235" y="120" width="195" height="85" rx="8" fill="#111827" stroke="#38bdf8" strokeWidth="1" />
-                  <text x="332" y="142" fill="#7dd3fc" fontSize="11" fontWeight="bold" textAnchor="middle">CARD 2: ROLE SIGNALS</text>
-                  <text x="332" y="160" fill="#94a3b8" fontSize="9" textAnchor="middle">Technical Capability Areas</text>
-                  <text x="332" y="176" fill="#94a3b8" fontSize="9" textAnchor="middle">Aligned to Target Role</text>
-                  <text x="332" y="192" fill="#38bdf8" fontSize="9" textAnchor="middle">"Why this matters" Callout</text>
+                <rect x="450" y="120" width="195" height="85" rx="8" fill="#111827" stroke="#f59e0b" strokeWidth="1" />
+                <text x="547" y="142" fill="#fde68a" fontSize="11" fontWeight="bold" textAnchor="middle">CARD 3: RECENT SIGNALS</text>
+                <text x="547" y="160" fill="#94a3b8" fontSize="9" textAnchor="middle">Latest 2026 Announcements</text>
+                <text x="547" y="176" fill="#94a3b8" fontSize="9" textAnchor="middle">arXiv Papers &amp; Launches</text>
+                <text x="547" y="192" fill="#f59e0b" fontSize="9" textAnchor="middle">Direct [Open &nearr;] External Links</text>
 
-                  <rect x="450" y="120" width="195" height="85" rx="8" fill="#111827" stroke="#f59e0b" strokeWidth="1" />
-                  <text x="547" y="142" fill="#fde68a" fontSize="11" fontWeight="bold" textAnchor="middle">CARD 3: RECENT SIGNALS</text>
-                  <text x="547" y="160" fill="#94a3b8" fontSize="9" textAnchor="middle">Latest 2026 Announcements</text>
-                  <text x="547" y="176" fill="#94a3b8" fontSize="9" textAnchor="middle">arXiv Papers &amp; Launches</text>
-                  <text x="547" y="192" fill="#f59e0b" fontSize="9" textAnchor="middle">Direct [Open &nearr;] External Links</text>
-
-                  <rect x="665" y="120" width="195" height="85" rx="8" fill="#111827" stroke="#10b981" strokeWidth="1" />
-                  <text x="762" y="142" fill="#6ee7b7" fontSize="11" fontWeight="bold" textAnchor="middle">CARD 4: CITED SOURCES</text>
-                  <text x="762" y="160" fill="#94a3b8" fontSize="9" textAnchor="middle">Domain Attribution</text>
-                  <text x="762" y="176" fill="#94a3b8" fontSize="9" textAnchor="middle">Snippet Verbatim Quotations</text>
-                  <text x="762" y="192" fill="#10b981" fontSize="9" textAnchor="middle">Interactive Modal Drawer</text>
-                </svg>
-              </div>
-            </div>
+                <rect x="665" y="120" width="195" height="85" rx="8" fill="#111827" stroke="#10b981" strokeWidth="1" />
+                <text x="762" y="142" fill="#6ee7b7" fontSize="11" fontWeight="bold" textAnchor="middle">CARD 4: CITED SOURCES</text>
+                <text x="762" y="160" fill="#94a3b8" fontSize="9" textAnchor="middle">Domain Attribution</text>
+                <text x="762" y="176" fill="#94a3b8" fontSize="9" textAnchor="middle">Snippet Verbatim Quotations</text>
+                <text x="762" y="192" fill="#10b981" fontSize="9" textAnchor="middle">Interactive Modal Drawer</text>
+              </svg>
+            </ZoomableDiagram>
 
             {/* In-Text Interactive Citation Pills */}
             <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5 space-y-2 text-xs">
@@ -540,7 +710,7 @@ export default function DocsPage() {
           <section id="mcp-protocol" className="space-y-6 scroll-mt-24">
             <div className="flex items-center gap-3">
               <span className="text-rose-400 font-mono text-sm font-bold">06</span>
-              <h2 className="text-2xl font-bold text-white">Model Context Protocol (MCP) &amp; Execution Transparency</h2>
+              <h2 className="text-xl sm:text-2xl font-bold text-white">Model Context Protocol (MCP) &amp; Execution Transparency</h2>
             </div>
 
             <p className="text-sm text-gray-300 leading-relaxed">
@@ -548,7 +718,7 @@ export default function DocsPage() {
             </p>
 
             {/* The 6 Registered Tools */}
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
               {[
                 { tool: "jd_analyzer", desc: "Extracts required competency vectors and separates hard technical prerequisites from nice-to-haves." },
                 { tool: "web_search", desc: "Executes real-time Tavily search queries for company developments and engineering initiatives." },
@@ -571,7 +741,7 @@ export default function DocsPage() {
           <section id="interview-defense" className="space-y-6 scroll-mt-24">
             <div className="flex items-center gap-3">
               <span className="text-rose-400 font-mono text-sm font-bold">07</span>
-              <h2 className="text-2xl font-bold text-white">Adversarial Interview Defense Harness</h2>
+              <h2 className="text-xl sm:text-2xl font-bold text-white">Adversarial Interview Defense Harness</h2>
             </div>
 
             <p className="text-sm text-gray-300 leading-relaxed">
@@ -606,45 +776,45 @@ export default function DocsPage() {
           <section id="code-audit" className="space-y-6 scroll-mt-24 border-t border-white/10 pt-8">
             <div className="flex items-center gap-3">
               <span className="text-rose-400 font-mono text-sm font-bold">08</span>
-              <h2 className="text-2xl font-bold text-white">Codebase Audit &amp; Technical Verification Directory</h2>
+              <h2 className="text-xl sm:text-2xl font-bold text-white">Codebase Audit &amp; Technical Verification Directory</h2>
             </div>
 
             <p className="text-sm text-gray-300 leading-relaxed">
               Every system, formula, boundary, and protocol described in this documentation maps directly to production code files in the repository:
             </p>
 
-            <div className="grid md:grid-cols-2 gap-3 font-mono text-xs">
+            <div className="grid sm:grid-cols-2 gap-3 font-mono text-xs">
               <div className="p-3 rounded-lg bg-white/[0.02] border border-white/5 space-y-1">
                 <div className="text-rose-400 font-bold">System Prompts:</div>
-                <div className="text-gray-300">src/prompts/cover-letter.system.js</div>
-                <div className="text-gray-300">src/prompts/job-analysis.system.js</div>
-                <div className="text-gray-300">src/prompts/interview-defense.system.js</div>
+                <div className="text-gray-300 truncate">src/prompts/cover-letter.system.js</div>
+                <div className="text-gray-300 truncate">src/prompts/job-analysis.system.js</div>
+                <div className="text-gray-300 truncate">src/prompts/interview-defense.system.js</div>
               </div>
 
               <div className="p-3 rounded-lg bg-white/[0.02] border border-white/5 space-y-1">
                 <div className="text-cyan-400 font-bold">API Routes &amp; Engine:</div>
-                <div className="text-gray-300">src/app/api/analyze/route.js (Deterministic Math)</div>
-                <div className="text-gray-300">src/app/api/research/route.js (Tavily Pipeline)</div>
-                <div className="text-gray-300">src/app/api/parse-resume/route.js (Sanitization)</div>
+                <div className="text-gray-300 truncate">src/app/api/analyze/route.js</div>
+                <div className="text-gray-300 truncate">src/app/api/research/route.js</div>
+                <div className="text-gray-300 truncate">src/app/api/parse-resume/route.js</div>
               </div>
 
               <div className="p-3 rounded-lg bg-white/[0.02] border border-white/5 space-y-1">
                 <div className="text-purple-400 font-bold">MCP Protocol Server:</div>
-                <div className="text-gray-300">mcp-server/server.py (6 Tools Registered)</div>
-                <div className="text-gray-300">mcp-server/requirements.txt</div>
+                <div className="text-gray-300 truncate">mcp-server/server.py</div>
+                <div className="text-gray-300 truncate">mcp-server/requirements.txt</div>
               </div>
 
               <div className="p-3 rounded-lg bg-white/[0.02] border border-white/5 space-y-1">
                 <div className="text-emerald-400 font-bold">UI &amp; Visualization Suite:</div>
-                <div className="text-gray-300">src/components/generator/ResultsPanel.jsx</div>
-                <div className="text-gray-300">src/components/generator/InputForm.jsx</div>
+                <div className="text-gray-300 truncate">src/components/generator/ResultsPanel.jsx</div>
+                <div className="text-gray-300 truncate">src/components/generator/InputForm.jsx</div>
               </div>
             </div>
 
             {/* Launch CTA */}
-            <div className="p-8 rounded-2xl bg-gradient-to-r from-rose-500/20 via-orange-500/10 to-transparent border border-rose-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="p-6 sm:p-8 rounded-2xl bg-gradient-to-r from-rose-500/20 via-orange-500/10 to-transparent border border-rose-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div>
-                <h3 className="text-lg font-bold text-white">Experience CoverCraft in Action</h3>
+                <h3 className="text-base sm:text-lg font-bold text-white">Experience CoverCraft in Action</h3>
                 <p className="text-xs text-gray-400 mt-1">
                   Upload your resume, analyze real job requirements, and inspect the live MCP trace.
                 </p>
