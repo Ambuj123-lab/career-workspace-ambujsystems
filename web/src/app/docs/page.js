@@ -653,9 +653,39 @@ export default function DocsPage() {
               <h2 className="text-xl sm:text-2xl font-bold text-white">Real-Time Web Grounding &amp; The 4-Card Company Intel Dossier</h2>
             </div>
 
-            <p className="text-sm text-gray-300 leading-relaxed">
-              Static LLMs suffer from knowledge cutoffs and cannot know a company's announcements, publications, or engineering priorities in 2026. CoverCraft integrates a real-time web retrieval and synthesis pipeline in <code className="text-cyan-400 bg-white/5 px-1.5 py-0.5 rounded">src/app/api/research/route.js</code>.
-            </p>
+            <div className="space-y-4 text-sm text-gray-300 leading-relaxed">
+              <p>
+                Static LLMs suffer from knowledge cutoffs and cannot know a company&apos;s live hiring status, engineering priorities, or workplace reputation in 2026. CoverCraft integrates a deep real-time web retrieval and intelligence pipeline in <code className="text-cyan-400 bg-white/5 px-1.5 py-0.5 rounded">src/app/api/research/route.js</code>.
+              </p>
+
+              {/* 3 Highlights Grid */}
+              <div className="grid sm:grid-cols-3 gap-3 pt-1">
+                <div className="p-3.5 rounded-xl bg-white/[0.02] border border-cyan-500/20 space-y-1">
+                  <div className="text-xs font-bold text-cyan-400 flex items-center gap-1.5">
+                    <span>🌐</span> Tavily 8-Page Live Crawl
+                  </div>
+                  <p className="text-xs text-gray-400">
+                    Deep multi-page crawl targeting company engineering, tech stack, and portal postings.
+                  </p>
+                </div>
+                <div className="p-3.5 rounded-xl bg-white/[0.02] border border-emerald-500/20 space-y-1">
+                  <div className="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
+                    <span>⚡</span> Jina AI Deep Reader
+                  </div>
+                  <p className="text-xs text-gray-400">
+                    High-fidelity markdown scraping via <code className="text-[10px] text-emerald-300">r.jina.ai</code> with zero JavaScript, cookie, or ad bloat.
+                  </p>
+                </div>
+                <div className="p-3.5 rounded-xl bg-white/[0.02] border border-amber-500/20 space-y-1">
+                  <div className="text-xs font-bold text-amber-400 flex items-center gap-1.5">
+                    <span>🛡️</span> Vendor &amp; Staffing Shield
+                  </div>
+                  <p className="text-xs text-gray-400">
+                    Detects third-party staffing payrolls (C2H/agencies) with strict verbatim JD quotation proof.
+                  </p>
+                </div>
+              </div>
+            </div>
 
             {/* DIAGRAM 3: Zoomable Real-Time Web Grounding Flowchart */}
             <ZoomableDiagram

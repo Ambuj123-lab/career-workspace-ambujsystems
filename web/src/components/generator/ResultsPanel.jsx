@@ -896,7 +896,7 @@ export default function ResultsPanel({
                 <span className="text-xs font-bold text-white tracking-wider uppercase flex items-center gap-1.5">
                   <span>LIVE RECON &amp; EVIDENCE ENGINE</span>
                   <span className="text-[10px] font-mono text-cyan-300 px-2 py-0.5 rounded bg-cyan-500/20 border border-cyan-500/30">
-                    {companyData?.search_provider || "Tavily Search API"}
+                    {companyData?.search_provider || "Tavily Advanced (8 Pages)"} &middot; {companyData?.reader_provider || "Jina AI Deep Reader"}
                   </span>
                 </span>
               </div>

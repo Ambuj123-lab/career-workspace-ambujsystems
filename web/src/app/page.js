@@ -274,57 +274,62 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Feature 2: Company Intelligence */}
+            {/* Feature 2: Multi-Source Recon & Deep Reader */}
             <div className="faang-card glow-card-cyan hover-jiggle p-8 group cursor-default">
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-500/20 to-blue-500/20 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
                 <svg className="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
               </div>
-              <h3 className="text-xl font-bold mb-3">Company Intelligence</h3>
+              <h3 className="text-xl font-bold mb-3">Deep Web Recon &amp; Portal Intel</h3>
               <p className="text-gray-400 text-sm leading-relaxed mb-4">
-                Real-time web research via Tavily. Every company claim is{" "}
-                <span className="text-cyan-400 font-semibold">linked to its supporting source</span>.
-                You approve what enters your application.
+                Deep 8-page crawl via <span className="text-cyan-400 font-semibold">Tavily Advanced</span> + <span className="text-emerald-400 font-semibold">Jina AI Reader</span>. Live workplace signals across{" "}
+                <span className="text-cyan-300 font-semibold">Naukri, AmbitionBox, Indeed &amp; LinkedIn</span> with 3-way categorized evidence.
               </p>
               <div className="mt-4 p-3 rounded-lg bg-white/[0.03] border border-white/5 text-xs">
-                <div className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-3">Source-Backed Research</div>
+                <div className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-3">3-Way Evidence Distribution</div>
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="flex items-center gap-2 text-emerald-400"><span>✓</span> Company overview</span>
-                    <span className="text-gray-600 text-[10px]">Official</span>
+                    <span className="flex items-center gap-2 text-cyan-400"><span>🏢</span> Company official sources</span>
+                    <span className="text-cyan-300 font-mono text-[10px]">Domain &middot; Careers</span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="flex items-center gap-2 text-emerald-400"><span>✓</span> Recent development</span>
-                    <span className="text-gray-600 text-[10px]">News</span>
+                    <span className="flex items-center gap-2 text-emerald-400"><span>💼</span> Job portals &amp; reviews</span>
+                    <span className="text-emerald-300 font-mono text-[10px]">Naukri &middot; AmbitionBox</span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="flex items-center gap-2 text-emerald-400"><span>✓</span> Technology signal</span>
-                    <span className="text-gray-600 text-[10px]">Engineering</span>
+                    <span className="flex items-center gap-2 text-purple-400"><span>🌐</span> External industry news</span>
+                    <span className="text-purple-300 font-mono text-[10px]">TechCrunch &middot; Research</span>
                   </div>
                   <div className="flex items-center justify-between mt-2 pt-2 border-t border-white/5">
-                    <span className="flex items-center gap-2 text-amber-400"><span>⚠</span> Unsupported claim</span>
-                    <span className="text-gray-600 text-[10px]">No source</span>
+                    <span className="flex items-center gap-2 text-cyan-300"><span>⚡</span> Jina AI Deep Page Reader</span>
+                    <span className="text-emerald-400 font-mono text-[10px]">Markdown (No Ads)</span>
                   </div>
                 </div>
                 <div className="mt-3 pt-2 border-t border-white/5 text-[10px] text-gray-500">
-                  4 sources found &middot; 3 claims verified
+                  8 pages crawled &middot; Top 5 cited in synthesis
                 </div>
               </div>
             </div>
 
-            {/* Feature 3: Interview Defense */}
+            {/* Feature 3: Interview Defense & Vendor Shield */}
             <div className="faang-card glow-card-violet hover-jiggle p-8 group cursor-default">
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-500/20 to-purple-500/20 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
                 <svg className="w-6 h-6 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
               </div>
-              <h3 className="text-xl font-bold mb-3">Interview Defense</h3>
+              <h3 className="text-xl font-bold mb-3">Interview Defense &amp; Vendor Shield</h3>
               <p className="text-gray-400 text-sm leading-relaxed mb-4">
-                Every claim in your letter &rarr; predicted interview question &rarr;{" "}
-                <span className="text-violet-400 font-semibold">evidence + suggested answer</span>.
-                Don&apos;t just write it. Be ready to defend it.
+                Audits your vacancy with the <span className="text-violet-400 font-semibold">Job Seeker Reality Check</span>. Flags{" "}
+                <span className="text-amber-400 font-semibold">third-party staffing payrolls</span> with verbatim quotes, detects hidden salaries, and generates adversarial interview defenses.
               </p>
               <div className="mt-4 p-3 rounded-lg bg-white/[0.03] border border-white/5 text-xs space-y-2">
-                <div className="text-gray-500 italic">&ldquo;Walk me through the 75% vector reduction.&rdquo;</div>
-                <div className="text-gray-300"><span className="text-violet-400 font-semibold">Evidence:</span> Jina v3 MRL, 1024&rarr;256 dims, Cohere reranker</div>
+                <div className="flex items-center justify-between text-[11px] pb-1 border-b border-white/5">
+                  <span className="text-amber-400 font-semibold">⚠️ Staffing Route Detected</span>
+                  <span className="text-gray-400 font-mono">Quoted from JD</span>
+                </div>
+                <div className="text-gray-400 text-[11px] italic truncate">&ldquo;Selected candidate on payroll of XYZ Staffing for client...&rdquo;</div>
+                <div className="flex items-center justify-between pt-1 text-[11px]">
+                  <span className="text-emerald-400 font-semibold">✓ Interview Defense Ready</span>
+                  <span className="text-gray-400 font-mono">Verbatim Evidence</span>
+                </div>
               </div>
             </div>
           </div>
