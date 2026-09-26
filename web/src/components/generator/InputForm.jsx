@@ -107,8 +107,16 @@ export default function InputForm({ onGenerate }) {
         body: data,
       });
 
-      const result = await res.json();
-      if (result.error) throw new Error(result.error);
+      let result;
+      try {
+        result = await res.json();
+      } catch (jsonErr) {
+        throw new Error(`Failed to parse server response (${res.status}). Please try pasting text directly or re-uploading.`);
+      }
+
+      if (!res.ok || result?.error) {
+        throw new Error(result?.error || `Failed to process document (${res.status})`);
+      }
 
       update("resume", result.text);
       setFileMeta(result);

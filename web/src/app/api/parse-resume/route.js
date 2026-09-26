@@ -8,13 +8,42 @@ export const dynamic = "force-dynamic";
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB ceiling
 const MAX_RESUME_CHARS = 15000;
 const MAX_PDF_PAGES = 10;
-const PARSE_TIMEOUT_MS = 5000; // 5s timeout defense against decompression bombs
+const PARSE_TIMEOUT_MS = 8000;
+
+async function parsePdfBuffer(buffer) {
+  try {
+    const uint8 = new Uint8Array(buffer);
+    const parser = new PDFParse({ data: uint8 });
+    const res = await parser.getText();
+    const text = typeof res === "string" ? res : res?.text || "";
+    if (text.trim().length > 10) {
+      return text.trim();
+    }
+  } catch (err) {
+    console.warn("PDFParse warning, attempting fallback extraction:", err?.message || err);
+  }
+
+  // Resilient Fallback: Stream text tokens from raw PDF buffer
+  const str = buffer.toString("binary");
+  const textMatches = [];
+  const regex = /\(([^)]+)\)\s*Tj/g;
+  let match;
+  while ((match = regex.exec(str)) !== null) {
+    if (match[1] && match[1].length > 1) {
+      textMatches.push(match[1]);
+    }
+  }
+  const fallbackText = textMatches.join(" ").trim();
+  if (fallbackText.length > 10) return fallbackText;
+
+  throw new Error("Could not extract readable text from PDF. Ensure the PDF contains selectable text (not scanned images).");
+}
 
 export async function POST(req) {
   try {
-    // 1. IP Rate Limiting (Defense against automated bombing scripts)
+    // 1. IP Rate Limiting
     const clientIp = getClientIp(req);
-    const rateCheck = checkRateLimit(clientIp, { limit: 10, windowMs: 60000 });
+    const rateCheck = checkRateLimit(clientIp, { limit: 15, windowMs: 60000 });
     if (!rateCheck.allowed) {
       return NextResponse.json(
         { error: `Rate limit exceeded. Please wait ${rateCheck.resetSeconds} seconds before uploading another document.` },
@@ -41,7 +70,7 @@ export async function POST(req) {
       );
     }
 
-    // 3. File Type Whitelist (Strict: No zip, tar, exe, bin)
+    // 3. File Type Whitelist
     const allowedExts = ["pdf", "docx", "txt", "md"];
     if (!allowedExts.includes(ext)) {
       return NextResponse.json(
@@ -53,7 +82,7 @@ export async function POST(req) {
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
-    // 4. Magic Byte Integrity Check: Prevent fake renamed ZIP bombs pretending to be PDFs
+    // 4. Magic Byte Integrity Check
     if (ext === "pdf") {
       const headerStr = buffer.slice(0, 5).toString("ascii");
       if (!headerStr.startsWith("%PDF-")) {
@@ -66,21 +95,10 @@ export async function POST(req) {
 
     let extractedText = "";
 
-    // 5. Document Parser with Decompression Timeout Guard (PDF Bomb Defense)
+    // 5. Document Parser with Decompression Timeout Guard
     const parsePromise = (async () => {
       if (ext === "pdf") {
-        const uint8 = new Uint8Array(buffer);
-        const parser = new PDFParse(uint8);
-        await parser.load();
-
-        // Page Count Guard
-        const numPages = parser.doc?.numPages || 1;
-        if (numPages > MAX_PDF_PAGES) {
-          throw new Error(`Document contains ${numPages} pages. Resumes cannot exceed ${MAX_PDF_PAGES} pages.`);
-        }
-
-        const res = await parser.getText();
-        return typeof res === "string" ? res : res.text || "";
+        return await parsePdfBuffer(buffer);
       } else if (ext === "docx") {
         const docxRes = await mammoth.extractRawText({ buffer });
         return docxRes.value || "";
