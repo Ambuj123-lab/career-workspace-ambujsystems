@@ -71,16 +71,17 @@ export default function Home() {
             {status === "authenticated" && session?.user ? (
               <Link
                 href="/generate"
-                className="px-4 py-2 rounded-lg bg-gradient-to-r from-rose-600 to-orange-500 text-sm font-semibold text-white hover:opacity-90 transition-opacity shadow-md shadow-rose-500/20"
+                className="px-4 py-2 rounded-xl bg-[#070b14] hover:bg-[#0d1322] border border-white/20 hover:border-cyan-500/40 text-xs font-semibold text-white transition-all shadow-md shadow-black/80 flex items-center gap-1.5"
               >
-                Open Generator →
+                <span>⚡</span>
+                <span>Open Generator &rarr;</span>
               </Link>
             ) : (
               <button
                 onClick={() => signIn("google", { callbackUrl: "/generate" })}
-                className="px-4 py-2 rounded-lg bg-gradient-to-r from-rose-600 to-orange-500 text-sm font-semibold text-white hover:opacity-90 transition-opacity shadow-md shadow-rose-500/20 cursor-pointer"
+                className="px-4 py-2 rounded-xl bg-[#070b14] hover:bg-[#0d1322] border border-white/20 hover:border-white/40 text-xs font-semibold text-white transition-all shadow-md shadow-black/80 cursor-pointer"
               >
-                Get Started
+                Get Started &rarr;
               </button>
             )}
           </div>
@@ -194,9 +195,10 @@ export default function Home() {
               {status === "authenticated" && session?.user ? (
                 <Link
                   href="/generate"
-                  className="inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-2xl bg-gradient-to-r from-rose-600 via-orange-500 to-rose-600 text-white font-bold text-base sm:text-lg hover:scale-[1.02] transition-transform shadow-2xl shadow-rose-500/20 text-center"
+                  className="inline-flex items-center justify-center gap-3 px-8 py-4 rounded-2xl bg-[#070b14] hover:bg-[#0d1322] border border-white/20 hover:border-cyan-500/40 text-white font-bold text-base sm:text-lg transition-all shadow-2xl shadow-black/90 hover:shadow-cyan-500/20 text-center card-lift hover-jiggle"
                 >
-                  Launch Generator &rarr;
+                  <span className="text-cyan-400">⚡</span>
+                  <span>Launch Generator &rarr;</span>
                 </Link>
               ) : (
                 <button
@@ -573,8 +575,12 @@ export default function Home() {
               </p>
               <p className="text-sm text-gray-500 mb-8">Sign in with Google to get started &mdash; keeps your data secure and rate-limited.</p>
               {status === "authenticated" && session?.user ? (
-                <Link href="/generate" className="inline-block px-10 py-4 rounded-xl bg-gradient-to-r from-rose-600 via-orange-500 to-rose-600 text-white font-bold text-lg hover:scale-[1.02] transition-transform shadow-2xl shadow-rose-500/20 pulse-glow text-center">
-                  Go to Generator &rarr;
+                <Link
+                  href="/generate"
+                  className="inline-flex items-center justify-center gap-3 px-10 py-4.5 rounded-2xl bg-[#070b14] hover:bg-[#0d1322] border border-white/20 hover:border-cyan-500/40 text-white font-bold text-lg hover:scale-[1.02] transition-all shadow-2xl shadow-black/90 hover:shadow-cyan-500/20 text-center"
+                >
+                  <span className="text-cyan-400">⚡</span>
+                  <span>Launch Generator &rarr;</span>
                 </Link>
               ) : (
                 <button
