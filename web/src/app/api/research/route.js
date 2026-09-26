@@ -7,6 +7,39 @@ export const dynamic = "force-dynamic";
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
 const TAVILY_API_KEY = process.env.TAVILY_API_KEY || "";
 
+// Jina AI Reader: High-Fidelity Markdown Web Extractor (Free, zero-bloat)
+async function extractWithJinaReader(url) {
+  if (!url || !url.startsWith("http")) return null;
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 3500); // 3.5s strict timeout
+    const reqHeaders = {
+      "Accept": "application/json",
+      "X-No-Cache": "true",
+    };
+    if (process.env.JINA_API_KEY) {
+      reqHeaders["Authorization"] = `Bearer ${process.env.JINA_API_KEY}`;
+    }
+    const res = await fetch(`https://r.jina.ai/${url}`, {
+      headers: reqHeaders,
+      signal: controller.signal,
+    });
+    clearTimeout(timeout);
+    if (res.ok) {
+      const data = await res.json();
+      const markdown = data.data?.content || data.content || "";
+      if (markdown && markdown.length > 100) {
+        // Return first 1,500 clean characters
+        return markdown.slice(0, 1500).replace(/\n{3,}/g, "\n\n").trim();
+      }
+    }
+  } catch (err) {
+    // Non-blocking fallback to standard snippet
+  }
+  return null;
+}
+
+
 export async function POST(req) {
   try {
     const clientIp = getClientIp(req);
@@ -77,6 +110,23 @@ export async function POST(req) {
       } catch (gErr) {
         console.warn("Gemini grounding fallback error:", gErr.message);
       }
+    }
+
+    // 1.5. Deep Page Scraping via Jina AI Reader for Top Authoritative URLs
+    let jinaEnrichedCount = 0;
+    if (rawResults.length > 0) {
+      const topUrls = rawResults.slice(0, 2);
+      await Promise.allSettled(
+        topUrls.map(async (r) => {
+          if (r.url && (!r.content || r.content.length < 250)) {
+            const deepContent = await extractWithJinaReader(r.url);
+            if (deepContent) {
+              r.content = deepContent;
+              jinaEnrichedCount++;
+            }
+          }
+        })
+      );
     }
 
     // 2. Classify & Deduplicate Sources
@@ -214,6 +264,8 @@ ${sourcesText || "No external web sources retrieved."}
       company_name,
       query_used: query,
       search_provider: searchProvider,
+      reader_provider: jinaEnrichedCount > 0 ? "Jina AI Deep Reader (r.jina.ai)" : "Tavily Extractor",
+      jina_deep_scraped_count: jinaEnrichedCount,
       sources_analyzed_count: rawResults.length,
       sources_cited_count: Math.min(processedSources.length, synthData.company_snapshot?.sources_count || processedSources.length),
       official_sources_count: companySourcesList.length,
