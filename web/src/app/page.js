@@ -2,6 +2,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import AuthButton from "@/components/AuthButton";
+import LandingHeroPreview from "@/components/LandingHeroPreview";
 import { useSession, signIn } from "next-auth/react";
 
 export default function Home() {
@@ -223,6 +224,9 @@ export default function Home() {
               </Link>
             </div>
           </div>
+
+          {/* Interactive Evidence Engine Showcase */}
+          <LandingHeroPreview />
         </section>
 
         {/* ===== TRUST BAR ===== */}
