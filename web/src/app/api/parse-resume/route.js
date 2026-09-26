@@ -6,44 +6,56 @@ export const dynamic = "force-dynamic";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB ceiling
 const MAX_RESUME_CHARS = 15000;
-const PARSE_TIMEOUT_MS = 8000;
+const PARSE_TIMEOUT_MS = 20000;
 
 /**
- * Extract text from PDF buffer using pdfjs-dist legacy build (no worker required).
- * Falls back to raw binary stream regex extraction for malformed PDFs.
+ * Extract text from PDF buffer using:
+ * 1. Primary: unpdf (Serverless-optimized, worker-free, pure JS)
+ * 2. Secondary: Gemini Multimodal Vision / Document OCR (Handles scanned PDFs, image-only resumes, custom font encodings)
+ * 3. Fallback: Stream text tokens from raw binary buffer
  */
 async function parsePdfBuffer(buffer) {
-  // Primary: pdfjs-dist legacy build (worker-free, Vercel-compatible)
+  // 1. Primary: unpdf (Instant, serverless-safe, zero external binaries)
   try {
-    const pdfjsLib = await import("pdfjs-dist/legacy/build/pdf.mjs");
+    const { getDocumentProxy, extractText } = await import("unpdf");
     const uint8 = new Uint8Array(buffer);
-    const loadingTask = pdfjsLib.getDocument({
-      data: uint8,
-      useWorkerFetch: false,
-      isEvalSupported: false,
-      useSystemFonts: false,
-    });
-    const doc = await loadingTask.promise;
-    const textParts = [];
-
-    for (let i = 1; i <= doc.numPages; i++) {
-      const page = await doc.getPage(i);
-      const content = await page.getTextContent();
-      const pageText = content.items.map((item) => item.str).join(" ");
-      if (pageText.trim()) {
-        textParts.push(pageText.trim());
-      }
+    const pdf = await getDocumentProxy(uint8);
+    const { text } = await extractText(pdf, { mergePages: true });
+    if (text && text.trim().length > 20) {
+      return text.trim();
     }
-
-    const fullText = textParts.join("\n\n");
-    if (fullText.trim().length > 10) {
-      return fullText.trim();
-    }
+    console.warn("[parsePdfBuffer] unpdf returned short/empty text, attempting Gemini OCR...");
   } catch (err) {
-    console.warn("pdfjs-dist extraction warning, attempting fallback:", err?.message || err);
+    console.warn("[parsePdfBuffer] unpdf extraction warning:", err?.message || err);
   }
 
-  // Resilient Fallback: Stream text tokens from raw PDF buffer
+  // 2. Secondary: Gemini Multimodal Vision OCR Fallback
+  // Perfect for scanned resumes or PDFs with non-standard font maps
+  try {
+    if (process.env.GEMINI_API_KEY) {
+      const { GoogleGenerativeAI } = await import("@google/generative-ai");
+      const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+      const model = genAI.getGenerativeModel({ model: "gemini-3.5-flash-lite" });
+      const base64Data = buffer.toString("base64");
+      const result = await model.generateContent([
+        {
+          inlineData: {
+            data: base64Data,
+            mimeType: "application/pdf",
+          },
+        },
+        "Extract all readable text, experience, skills, education, and contact details from this resume document. Output ONLY the extracted text in plain text, preserving headings and line breaks. Do not summarize or add commentary.",
+      ]);
+      const geminiText = result?.response?.text();
+      if (geminiText && geminiText.trim().length > 20) {
+        return geminiText.trim();
+      }
+    }
+  } catch (geminiErr) {
+    console.warn("[parsePdfBuffer] Gemini OCR fallback warning:", geminiErr?.message || geminiErr);
+  }
+
+  // 3. Fallback: Stream text tokens from raw PDF buffer
   const str = buffer.toString("binary");
   const textMatches = [];
   const regex = /\(([^)]+)\)\s*Tj/g;
@@ -54,9 +66,9 @@ async function parsePdfBuffer(buffer) {
     }
   }
   const fallbackText = textMatches.join(" ").trim();
-  if (fallbackText.length > 10) return fallbackText;
+  if (fallbackText.length > 20) return fallbackText;
 
-  throw new Error("Could not extract readable text from PDF. Ensure the PDF contains selectable text (not scanned images).");
+  throw new Error("Could not extract readable text from PDF. Ensure the PDF contains readable text or upload DOCX/TXT.");
 }
 
 export async function POST(req) {

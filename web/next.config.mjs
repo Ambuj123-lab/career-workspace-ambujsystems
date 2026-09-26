@@ -1,7 +1,8 @@
-﻿/** @type {import('next').NextConfig} */
+/** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'standalone',
-  serverExternalPackages: ['pdfjs-dist'],
+  serverExternalPackages: ['unpdf'],
 };
 
 export default nextConfig;
+
