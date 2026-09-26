@@ -167,7 +167,7 @@ export default function Home() {
 
       {/* ===== HERO ===== */}
       <main className="flex-1">
-        <section className="max-w-7xl mx-auto px-6 pt-24 pb-20 md:pt-32 md:pb-28">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-20 pb-16 md:pt-32 md:pb-28">
           <div className="max-w-4xl mx-auto text-center">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/10 bg-white/5 mb-8">
               <span className="status-dot" />
@@ -242,7 +242,7 @@ export default function Home() {
         </section>
 
         {/* ===== 3 KILLER FEATURES ===== */}
-        <section id="how-it-works" className="max-w-7xl mx-auto px-6 py-24">
+        <section id="how-it-works" className="max-w-7xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">
               Three Features. <span className="gradient-text-warm">Zero Fluff.</span>
@@ -254,7 +254,7 @@ export default function Home() {
 
           <div className="grid md:grid-cols-3 gap-6">
             {/* Feature 1: Evidence Job Fit */}
-            <div className="faang-card glow-card-rose hover-jiggle p-8 group cursor-default">
+            <div className="faang-card glow-card-rose hover-jiggle p-5 sm:p-8 group cursor-default">
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-rose-500/20 to-orange-500/20 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
                 <svg className="w-6 h-6 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
               </div>
@@ -281,7 +281,7 @@ export default function Home() {
             </div>
 
             {/* Feature 2: Multi-Source Recon & Deep Reader */}
-            <div className="faang-card glow-card-cyan hover-jiggle p-8 group cursor-default">
+            <div className="faang-card glow-card-cyan hover-jiggle p-5 sm:p-8 group cursor-default">
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-500/20 to-blue-500/20 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
                 <svg className="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
               </div>
@@ -317,7 +317,7 @@ export default function Home() {
             </div>
 
             {/* Feature 3: Interview Defense & Vendor Shield */}
-            <div className="faang-card glow-card-violet hover-jiggle p-8 group cursor-default">
+            <div className="faang-card glow-card-violet hover-jiggle p-5 sm:p-8 group cursor-default">
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-500/20 to-purple-500/20 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
                 <svg className="w-6 h-6 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
               </div>
@@ -342,7 +342,7 @@ export default function Home() {
         </section>
 
         {/* ===== ARCHITECTURE PIPELINE ===== */}
-        <section className="border-y border-white/5 bg-white/[0.01] py-24">
+        <section className="border-y border-white/5 bg-white/[0.01] py-16 sm:py-24">
           <div className="max-w-7xl mx-auto px-6">
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">
@@ -380,7 +380,7 @@ export default function Home() {
         </section>
 
         {/* ===== GUARDRAILS ===== */}
-        <section className="max-w-7xl mx-auto px-6 py-24">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">
               Security & <span className="gradient-text-warm">Trust Guardrails</span>
@@ -409,8 +409,8 @@ export default function Home() {
         </section>
 
         {/* ===== CREATOR & ENGINEERING SPOTLIGHT ===== */}
-        <section className="max-w-7xl mx-auto px-6 pb-20">
-          <div className="p-6 sm:p-12 rounded-3xl bg-[#080d1a] border border-white/10 backdrop-blur-xl relative overflow-hidden shadow-xl">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 pb-16 sm:pb-20">
+          <div className="p-5 sm:p-12 rounded-3xl bg-[#080d1a] border border-white/10 backdrop-blur-xl relative overflow-hidden shadow-xl">
             <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/10 rounded-full blur-[100px] pointer-events-none" />
 
             <div className="relative z-10 grid lg:grid-cols-12 gap-8 items-center">
@@ -516,7 +516,7 @@ export default function Home() {
 
         {/* ===== INTEGRITY & NO-HYPE DISCLAIMER ===== */}
         <section className="max-w-7xl mx-auto px-6 pb-20">
-          <div className="p-8 sm:p-10 rounded-3xl faang-card glow-card-amber backdrop-blur-xl relative overflow-hidden shadow-2xl">
+          <div className="p-5 sm:p-10 rounded-3xl faang-card glow-card-amber backdrop-blur-xl relative overflow-hidden shadow-2xl">
             <div className="absolute top-0 right-0 w-80 h-80 bg-amber-500/5 rounded-full blur-[90px] pointer-events-none" />
 
             <div className="relative z-10 space-y-6">
@@ -530,7 +530,7 @@ export default function Home() {
 
               <div className="grid md:grid-cols-3 gap-6">
                 {/* Column 1: Zero Service Charge */}
-                <div className="space-y-2 p-5 rounded-2xl faang-card glow-card-emerald hover-jiggle cursor-default">
+                <div className="space-y-2 p-4 sm:p-5 rounded-2xl faang-card glow-card-emerald hover-jiggle cursor-default">
                   <div className="flex items-center gap-2 text-white font-bold text-sm">
                     <span className="text-emerald-400 font-mono">01.</span>
                     <span>100% Free &middot; Zero Service Fees</span>
@@ -541,7 +541,7 @@ export default function Home() {
                 </div>
 
                 {/* Column 2: Anti-Hype on ATS Ranking */}
-                <div className="space-y-2 p-5 rounded-2xl faang-card glow-card-amber hover-jiggle cursor-default">
+                <div className="space-y-2 p-4 sm:p-5 rounded-2xl faang-card glow-card-amber hover-jiggle cursor-default">
                   <div className="flex items-center gap-2 text-white font-bold text-sm">
                     <span className="text-amber-400 font-mono">02.</span>
                     <span>No "ATS Ranking" Snake-Oil</span>
@@ -552,7 +552,7 @@ export default function Home() {
                 </div>
 
                 {/* Column 3: What It Actually Does */}
-                <div className="space-y-2 p-5 rounded-2xl faang-card glow-card-cyan hover-jiggle cursor-default">
+                <div className="space-y-2 p-4 sm:p-5 rounded-2xl faang-card glow-card-cyan hover-jiggle cursor-default">
                   <div className="flex items-center gap-2 text-white font-bold text-sm">
                     <span className="text-cyan-400 font-mono">03.</span>
                     <span>What We Actually Deliver</span>
@@ -567,7 +567,7 @@ export default function Home() {
         </section>
 
         {/* ===== CTA ===== */}
-        <section className="max-w-7xl mx-auto px-6 pb-24">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 pb-20 sm:pb-24">
           <div className="p-12 md:p-16 rounded-3xl bg-[#050814]/90 border border-white/10 backdrop-blur-2xl text-center relative overflow-hidden shadow-2xl">
             <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 via-transparent to-cyan-500/10 pointer-events-none" />
             <div className="relative z-10">

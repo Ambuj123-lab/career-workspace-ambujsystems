@@ -29,7 +29,7 @@ export default function AuthButton({ className = "", hideUnauthenticated = false
       <div className={`relative ${className}`} ref={dropdownRef}>
         <button
           onClick={() => setDropdownOpen(!dropdownOpen)}
-          className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 transition-all text-xs font-medium text-gray-200"
+          className="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 transition-all text-xs font-medium text-gray-200"
           id="user-menu-button"
         >
           {session.user.image ? (
@@ -43,7 +43,7 @@ export default function AuthButton({ className = "", hideUnauthenticated = false
               {(session.user.name || session.user.email || "U")[0].toUpperCase()}
             </div>
           )}
-          <span className="max-w-[100px] truncate">{session.user.name?.split(" ")[0] || session.user.email}</span>
+          <span className="hidden sm:inline max-w-[100px] truncate">{session.user.name?.split(" ")[0] || session.user.email}</span>
           <svg className="w-3 h-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
           </svg>

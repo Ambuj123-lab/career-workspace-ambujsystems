@@ -96,13 +96,13 @@ export default function LandingHeroPreview() {
   const [selectedSkill, setSelectedSkill] = useState(SAMPLE_SKILLS[0]);
 
   return (
-    <div className="w-full max-w-6xl mx-auto mt-14 sm:mt-16 text-left">
+    <div className="w-full max-w-6xl mx-auto mt-10 sm:mt-16 text-left">
       {/* Outer Glow Container */}
       <div className="relative rounded-3xl p-1 bg-gradient-to-b from-white/15 via-white/5 to-transparent shadow-[0_0_50px_-12px_rgba(244,63,94,0.18)]">
         <div className="rounded-[22px] bg-[#070b14]/95 border border-white/10 backdrop-blur-2xl overflow-hidden shadow-2xl">
           
           {/* Top Window Bar with Interactive Tabs */}
-          <div className="flex flex-wrap items-center justify-between gap-4 px-5 py-4 border-b border-white/10 bg-white/[0.02]">
+          <div className="flex flex-wrap items-center justify-between gap-3 px-3.5 sm:px-5 py-3 sm:py-4 border-b border-white/10 bg-white/[0.02]">
             <div className="flex items-center gap-2.5">
               <span className="w-3 h-3 rounded-full bg-rose-500/80 inline-block" />
               <span className="w-3 h-3 rounded-full bg-amber-500/80 inline-block" />
@@ -182,15 +182,15 @@ export default function LandingHeroPreview() {
               {/* Grid: Radar Chart + Skill Inspector */}
               <div className="grid lg:grid-cols-12 gap-6 items-stretch">
                 {/* Left: Recharts Pentagon Radar */}
-                <div className="lg:col-span-6 p-4 rounded-2xl bg-white/[0.02] border border-white/5 flex flex-col justify-center min-h-[320px]">
+                <div className="lg:col-span-6 p-2.5 sm:p-4 rounded-2xl bg-white/[0.02] border border-white/5 flex flex-col justify-center min-h-[290px] sm:min-h-[320px]">
                   <div className="w-full h-72">
                     <ResponsiveContainer width="100%" height="100%">
-                      <RadarChart cx="50%" cy="50%" outerRadius="58%" data={SAMPLE_RADAR}>
+                      <RadarChart cx="50%" cy="50%" outerRadius="52%" data={SAMPLE_RADAR}>
                         <PolarGrid stroke="#374151" strokeDasharray="3 3" />
                         <PolarAngleAxis
                           dataKey="dimension"
                           stroke="#9ca3af"
-                          tick={{ fontSize: 10, fill: "#e5e7eb", fontWeight: 600 }}
+                          tick={{ fontSize: 9, fill: "#e5e7eb", fontWeight: 600 }}
                         />
                         <PolarRadiusAxis angle={30} domain={[0, 100]} stroke="#4b5563" />
                         <Radar
@@ -297,7 +297,7 @@ export default function LandingHeroPreview() {
 
               <div className="grid md:grid-cols-2 gap-4">
                 {SAMPLE_DEFENSE.map((d) => (
-                  <div key={d.id} className="p-5 rounded-2xl bg-white/[0.02] border border-white/10 space-y-3.5">
+                  <div key={d.id} className="p-3.5 sm:p-5 rounded-2xl bg-white/[0.02] border border-white/10 space-y-3">
                     <div className="flex items-center justify-between">
                       <span className="text-[10px] font-bold text-rose-400 tracking-wider">
                         {d.title}
@@ -366,12 +366,12 @@ export default function LandingHeroPreview() {
                   <span className="text-[11px] text-gray-500">Uncheck any source you want omitted</span>
                 </div>
 
-                <div className="p-3.5 rounded-xl bg-white/[0.02] border border-white/5 flex items-start gap-3">
+                <div className="p-3 sm:p-3.5 rounded-xl bg-white/[0.02] border border-white/5 flex items-start gap-2.5 sm:gap-3">
                   <input type="checkbox" defaultChecked className="mt-1 accent-rose-500 rounded" />
                   <div className="text-xs">
                     <div className="flex items-center gap-2">
                       <span className="font-bold text-cyan-400"><RedactedMarker chars="████████" className="mr-1" /> Jobs &mdash; 128,424 Vacancies in September 2026 &mdash; Naukri.com</span>
-                      <span className="text-[10px] text-gray-500 font-mono">Cited Source #1</span>
+                      <span className="text-[10px] text-gray-500 font-mono shrink-0">Cited Source #1</span>
                     </div>
                     <p className="text-gray-400 text-[11px] mt-0.5">
                       Title: <RedactedMarker chars="████████" className="mr-1" /> Jobs &mdash; Research company profiles, enterprise AI platform adoption, and technical vacancy requirements.
@@ -379,12 +379,12 @@ export default function LandingHeroPreview() {
                   </div>
                 </div>
 
-                <div className="p-3.5 rounded-xl bg-white/[0.02] border border-white/5 flex items-start gap-3">
+                <div className="p-3 sm:p-3.5 rounded-xl bg-white/[0.02] border border-white/5 flex items-start gap-2.5 sm:gap-3">
                   <input type="checkbox" defaultChecked className="mt-1 accent-rose-500 rounded" />
                   <div className="text-xs">
                     <div className="flex items-center gap-2">
                       <span className="font-bold text-cyan-400"><RedactedMarker chars="████████" className="mr-1" /> Unified Delivery Platform Whitepaper</span>
-                      <span className="text-[10px] text-gray-500 font-mono">Cited Source #2</span>
+                      <span className="text-[10px] text-gray-500 font-mono shrink-0">Cited Source #2</span>
                     </div>
                     <p className="text-gray-400 text-[11px] mt-0.5">
                       Architecture breakdown of proprietary GenAI agent delivery workflows and enterprise governance.

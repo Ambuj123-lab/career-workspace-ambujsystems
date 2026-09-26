@@ -336,21 +336,21 @@ export default function GeneratePage() {
 
       {/* Nav */}
       <nav className="sticky top-0 z-50 border-b border-white/5 bg-[#030712]/80 backdrop-blur-xl">
-        <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
-          <a href="/" className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-rose-500 to-orange-400 flex items-center justify-center text-white font-black text-xs">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between gap-2">
+          <a href="/" className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-rose-500 to-orange-400 flex items-center justify-center text-white font-black text-xs shadow-sm">
               CL
             </div>
-            <span className="text-base font-bold">
+            <span className="text-sm sm:text-base font-bold">
               Cover<span className="gradient-text-warm">Craft</span>
             </span>
           </a>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
             <Link
               href="/docs"
-              className="text-xs font-semibold text-cyan-400 hover:text-cyan-300 transition-colors px-2.5 py-1 border border-cyan-500/20 rounded-lg bg-cyan-500/10 flex items-center gap-1.5"
+              className="text-xs font-semibold text-cyan-400 hover:text-cyan-300 transition-colors px-2 sm:px-2.5 py-1 border border-cyan-500/20 rounded-lg bg-cyan-500/10 flex items-center gap-1"
             >
-              <span>🏛️</span>
+              <span className="hidden xs:inline">🏛️</span>
               <span>Docs</span>
             </Link>
             <AuthButton hideUnauthenticated={true} />
@@ -363,9 +363,10 @@ export default function GeneratePage() {
                   setCompanyData(null);
                   setDefenseData(null);
                 }}
-                className="text-xs text-gray-400 hover:text-white transition-colors px-3 py-1.5 border border-white/10 rounded-lg hover:bg-white/5"
+                className="text-xs text-gray-300 hover:text-white transition-colors px-2.5 sm:px-3 py-1 sm:py-1.5 border border-white/10 rounded-lg hover:bg-white/5 flex items-center gap-1 whitespace-nowrap bg-white/[0.03] font-medium shrink-0"
               >
-                ↺ New Letter
+                <span>↺</span>
+                <span>New<span className="hidden xs:inline"> Letter</span></span>
               </button>
             )}
           </div>
