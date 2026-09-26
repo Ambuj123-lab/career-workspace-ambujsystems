@@ -112,7 +112,7 @@ When LLM JSON structures are delayed or partially populated, a deterministic reg
 | Layer | Technologies / Services | Purpose |
 |---|---|---|
 | **Frontend Framework** | **Next.js 16.1.6 (App Router)** + **React 19** | Server Components, Streaming SSR, High-Performance Hydration |
-| **Styling & Motion** | **Vanilla Tailwind CSS v4** + HSL Design Tokens | FAANG-grade frosted glass, dynamic card lifts, tactile springs |
+| **Styling & Motion** | **Vanilla Tailwind CSS v4** + HSL Design Tokens | Modern dark mode, frosted glass surfaces, tactile spring micro-interactions |
 | **Language Model** | **Google Gemini 2.5 Flash Lite** (Fallback: `2.0-flash`) | Structured JSON extraction, fast inference, 1M context window |
 | **Web Crawling** | **Tavily AI Search API** (8-Page Crawl) | Real-time portal & news search with domain filtering |
 | **Page Extractor** | **Jina AI Reader (`r.jina.ai`)** | Deep page markdown conversion with Bearer token authentication |
@@ -176,7 +176,7 @@ career-workspace-ambujsystems/
 │   │   │   │   └── research/        # Tavily 8-page crawl + Jina Reader pipeline
 │   │   │   ├── docs/                # Interactive Architectural Documentation
 │   │   │   ├── generate/            # Main interactive workspace interface
-│   │   │   ├── globals.css          # FAANG-grade tactile animations & glow tokens
+│   │   │   ├── globals.css          # Design system tokens, tactile spring curves & glow utilities
 │   │   │   ├── layout.js            # Root layout with NextAuth Provider
 │   │   │   └── page.js              # High-conversion Obsidian Black landing page
 │   │   ├── components/

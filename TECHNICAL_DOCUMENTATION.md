@@ -2,7 +2,7 @@
 ## Comprehensive Technical Architecture & Engineering Documentation
 
 > **Project:** CoverCraft (`ai-cover-letter`)  
-> **Repository:** `d:\Ambuj\Projects\ai-cover-letter`  
+> **Repository:** [https://github.com/Ambuj123-lab/career-workspace-ambujsystems](https://github.com/Ambuj123-lab/career-workspace-ambujsystems)  
 > **Frontend:** Next.js 16 (App Router, TailwindCSS, Recharts)  
 > **Backend:** Next.js Serverless Edge/Node APIs + Python Model Context Protocol (MCP) Server  
 > **AI Foundation:** Google Gemini (`gemini-3.5-flash-lite` primary, `gemini-3.8-flash` fallback) + Tavily Advanced Search API  
@@ -71,13 +71,13 @@ Unlike standard applications where the LLM invents a match score, CoverCraft enf
 - The **score is computed mathematically in application code** (`src/app/api/analyze/route.js`).
 
 ### Mathematical Formulation
-$$\text{Evidence Coverage Score} = \left( \frac{\sum_{i=1}^{N} W(c_i)}{N} \right) \times 100$$
+$\text{Evidence Coverage Score} = \left( \frac{\sum_{i=1}^{N} W(c_i)}{N} \right) \times 100$
 
-Where $N$ is total JD requirements, and the status weights are:
-- $\mathbf{W(\text{STRONG\_MATCH})} = 1.0$ (Supported by direct verbatim resume quote)
-- $\mathbf{W(\text{PARTIAL\_MATCH})} = 0.6$ (Related technology or foundational knowledge)
-- $\mathbf{W(\text{TRANSFERABLE})} = 0.4$ (Adjacent skill from another domain)
-- $\mathbf{W(\text{MISSING})} = 0.0$ (Not found in resume; gap honestly framed)
+Where $N$ is total JD requirements, and the status weights $W(c_i)$ are:
+- `W(STRONG_MATCH) = 1.0` (Supported by direct verbatim resume quote)
+- `W(PARTIAL_MATCH) = 0.6` (Related technology or foundational knowledge)
+- `W(TRANSFERABLE) = 0.4` (Adjacent skill from another domain)
+- `W(MISSING) = 0.0` (Not found in resume; gap honestly framed)
 
 ### UI Transparency Box
 In the **Generative Job Fit** tab, this formula is displayed openly with four live metric counters, ensuring zero black-box fabrication.
@@ -145,33 +145,29 @@ The project includes an MCP Server (`/mcp-server/server.py`) and a real-time exe
 
 ---
 
-## 7. Google OAuth Authentication Setup Guide
+## 7. Authentication Architecture & Local OAuth Configuration
 
-### Why is Google Sign-In currently showing `redirect_uri_mismatch`?
-When you click **"Sign in with Google"**, Google's OAuth server inspects where the user is being redirected to.
-CoverCraft's NextAuth.js expects the callback at:
-`http://localhost:3000/api/auth/callback/google`
+### OAuth 2.0 Authorization Flow & Callback Resolution
+When an applicant initiates authentication via **"Sign in with Google"**, Google's OAuth 2.0 authorization server verifies the calling origin and callback URI against registered credentials.
 
-Because the Google OAuth Client ID was originally created for another port (or project), Google rejects the request with:
-> **Error 400: redirect_uri_mismatch**
+In production and local environments, NextAuth.js expects the callback endpoint at:
+- **Local Development:** `http://localhost:3000/api/auth/callback/google`
+- **Production Edge:** `https://career-workspace-ambujsystems.vercel.app/api/auth/callback/google`
 
-### Exact Step-by-Step Fix in Google Cloud Console:
+If a request arrives from an unregistered origin or redirects to an unlisted callback, Google rejects the authorization flow with `Error 400: redirect_uri_mismatch`.
+
+### Verification & Configuration Steps:
 1. Open the **[Google Cloud Console](https://console.cloud.google.com/)**.
-2. Make sure your active project is selected in the top project dropdown.
-3. In the left navigation menu, go to **APIs & Services** ➔ **Credentials** (or search "Credentials" in the search bar).
-4. Under **OAuth 2.0 Client IDs**, find your client ID:
-   `94468882796-m4104s54sor9a703b5jq6iivb41stlsm.apps.googleusercontent.com`
-   Click on its name (or the pencil icon) to edit it.
-5. In the **Authorized JavaScript origins** section:
-   - Click **+ ADD URI**.
-   - Enter: `http://localhost:3000`
-6. In the **Authorized redirect URIs** section:
-   - Click **+ ADD URI**.
-   - Enter: `http://localhost:3000/api/auth/callback/google`
-   *(Important: Do NOT omit `/api/auth/callback/google`; NextAuth strictly requires this path!)*
-7. Click **SAVE** at the bottom of the page.
-8. Wait ~60 seconds for Google's OAuth servers to propagate the change.
-9. Return to `http://localhost:3000/generate` and click **"Sign in with Google"** — it will now log in smoothly!
+2. Ensure your active project is selected in the top project dropdown.
+3. Navigate to **APIs & Services** ➔ **Credentials**.
+4. Under **OAuth 2.0 Client IDs**, locate your Web Client ID (`<YOUR_GOOGLE_CLIENT_ID>.apps.googleusercontent.com`) and click edit.
+5. In **Authorized JavaScript origins**, register all authorized hosting origins:
+   - `http://localhost:3000` (Local Development)
+   - `https://career-workspace-ambujsystems.vercel.app` (Vercel Production)
+6. In **Authorized redirect URIs**, configure the strict callback routes:
+   - `http://localhost:3000/api/auth/callback/google`
+   - `https://career-workspace-ambujsystems.vercel.app/api/auth/callback/google`
+7. Click **SAVE** to persist changes across Google's edge cache.
 
 ---
 
