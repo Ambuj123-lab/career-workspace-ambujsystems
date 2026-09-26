@@ -23,7 +23,7 @@ export async function POST(req) {
       return NextResponse.json({ error: "Company name required" }, { status: 400 });
     }
 
-    const query = `${company_name} AI research engineering developments tech stack recent news 2026`;
+    const query = `${company_name} company overview tech stack engineering hiring jobs careers naukri ambitionbox indeed`;
     let rawResults = [];
     let searchProvider = "Tavily Advanced Search";
 
@@ -38,7 +38,7 @@ export async function POST(req) {
             query,
             search_depth: "advanced",
             include_answer: true,
-            max_results: 6,
+            max_results: 8,
           }),
         });
 
@@ -60,7 +60,7 @@ export async function POST(req) {
           tools: [{ googleSearch: {} }],
           generationConfig: { temperature: 0.2 },
         });
-        const gRes = await model.generateContent(`Find current facts and engineering developments about ${company_name}.`);
+        const gRes = await model.generateContent(`Find current facts, engineering tech stack, and hiring signals on Naukri, AmbitionBox, or official careers for ${company_name}.`);
         const candidate = gRes.response.candidates?.[0];
         const grounding = candidate?.groundingMetadata;
         if (grounding?.groundingChunks) {
@@ -102,10 +102,11 @@ export async function POST(req) {
           category = "Company";
         } else if (
           hostname.includes("naukri") ||
-          hostname.includes("linkedin") ||
+          hostname.includes("ambitionbox") ||
           hostname.includes("indeed") ||
-          hostname.includes("foundit") ||
           hostname.includes("glassdoor") ||
+          hostname.includes("linkedin") ||
+          hostname.includes("foundit") ||
           hostname.includes("greenhouse") ||
           hostname.includes("lever.co") ||
           hostname.includes("workday")
