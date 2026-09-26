@@ -101,7 +101,7 @@ export default function LandingHeroPreview() {
             </div>
 
             {/* Tab Controls */}
-            <div className="flex items-center gap-1.5 p-1 rounded-xl bg-black/40 border border-white/10 text-xs">
+            <div className="flex items-center gap-1.5 p-1 rounded-xl bg-black/40 border border-white/10 text-xs overflow-x-auto max-w-full">
               <button
                 onClick={() => setActiveTab("radar")}
                 className={`px-3 py-1.5 rounded-lg font-semibold transition-all flex items-center gap-1.5 cursor-pointer ${
@@ -173,12 +173,12 @@ export default function LandingHeroPreview() {
                 <div className="lg:col-span-6 p-4 rounded-2xl bg-white/[0.02] border border-white/5 flex flex-col justify-center min-h-[320px]">
                   <div className="w-full h-72">
                     <ResponsiveContainer width="100%" height="100%">
-                      <RadarChart cx="50%" cy="50%" outerRadius="70%" data={SAMPLE_RADAR}>
+                      <RadarChart cx="50%" cy="50%" outerRadius="58%" data={SAMPLE_RADAR}>
                         <PolarGrid stroke="#374151" strokeDasharray="3 3" />
                         <PolarAngleAxis
                           dataKey="dimension"
                           stroke="#9ca3af"
-                          tick={{ fontSize: 11, fill: "#e5e7eb", fontWeight: 600 }}
+                          tick={{ fontSize: 10, fill: "#e5e7eb", fontWeight: 600 }}
                         />
                         <PolarRadiusAxis angle={30} domain={[0, 100]} stroke="#4b5563" />
                         <Radar
