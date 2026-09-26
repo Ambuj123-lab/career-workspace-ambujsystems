@@ -1,4 +1,4 @@
-import { Inter } from "next/font/google";
+﻿import { Inter } from "next/font/google";
 import Providers from "@/components/Providers";
 import "./globals.css";
 
@@ -9,22 +9,47 @@ const inter = Inter({
 });
 
 export const metadata = {
-  title: "AI Cover Letter Generator | Evidence-Grounded, JD-Aware",
+  metadataBase: new URL("https://career-workspace-ambujsystems.vercel.app"),
+  title: "CoverCraft AI | Evidence-Grounded AI Career Workspace",
   description:
-    "Generate professional, ATS-ready cover letters powered by Gemini AI with evidence-backed job matching, company research grounding, and interview defense preparation.",
+    "Every claim backed by resume evidence. 5-axis competency radar fit, grounded company research via MCP, and built-in adversarial interview defense.",
   keywords: [
+    "CoverCraft AI",
     "AI cover letter",
-    "cover letter generator",
-    "JD matching",
-    "ATS optimization",
-    "Gemini AI",
+    "evidence-based resume matching",
+    "Model Context Protocol",
     "MCP server",
+    "interview defense",
+    "Gemini AI",
+    "ATS optimization",
   ],
-  authors: [{ name: "Ambuj Kumar Tripathi" }],
+  authors: [{ name: "Ambuj Kumar Tripathi", url: "https://ambuj-ai-portfolio.vercel.app" }],
+  creator: "Ambuj Kumar Tripathi",
+  publisher: "CoverCraft AI",
   openGraph: {
-    title: "AI Cover Letter Generator",
-    description: "Evidence-grounded cover letters with AI analysis",
+    title: "CoverCraft AI — Evidence-Grounded AI Career Workspace",
+    description:
+      "Every claim backed by resume evidence. 5-axis competency radar fit, grounded company research via MCP, and built-in adversarial interview defense.",
+    url: "https://career-workspace-ambujsystems.vercel.app",
+    siteName: "CoverCraft AI",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "CoverCraft AI — Evidence-Grounded AI Career Workspace",
+      },
+    ],
+    locale: "en_US",
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "CoverCraft AI — Evidence-Grounded AI Career Workspace",
+    description:
+      "Every claim backed by resume evidence. 5-axis competency radar fit, grounded company research via MCP, and built-in adversarial interview defense.",
+    images: ["/og-image.png"],
+    creator: "@Ambuj_Tripathi",
   },
 };
 
