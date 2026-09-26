@@ -198,6 +198,20 @@ export default function DocsPage() {
           </div>
 
           <div className="flex items-center gap-3">
+            {/* Live UptimeRobot Status Badge at TOP */}
+            <a
+              href="https://stats.uptimerobot.com/4tYmSQnuBE?utm_source=status_badge&utm_medium=referral"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center hover:opacity-90 transition-opacity"
+              title="Ambuj's Cloud Environment Live Uptime Status"
+            >
+              <img
+                src="https://badge.uptimerobot.com/psp/6d03dcfe5d5c495465fe9a459d7f778b.svg?style=logo&theme=dark"
+                alt="Ambuj's Cloud Environment: Up"
+                className="h-5 sm:h-6 w-auto"
+              />
+            </a>
             <Link
               href="/"
               className="text-xs text-gray-400 hover:text-white transition-colors hidden sm:block"

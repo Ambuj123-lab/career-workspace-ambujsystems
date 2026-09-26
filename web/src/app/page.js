@@ -30,7 +30,22 @@ export default function Home() {
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-6">
+          <div className="hidden md:flex items-center gap-5">
+            {/* Live UptimeRobot Status Badge at TOP */}
+            <a
+              href="https://stats.uptimerobot.com/4tYmSQnuBE?utm_source=status_badge&utm_medium=referral"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center hover:opacity-90 transition-opacity"
+              title="Ambuj's Cloud Environment Live Uptime Status"
+            >
+              <img
+                src="https://badge.uptimerobot.com/psp/6d03dcfe5d5c495465fe9a459d7f778b.svg?style=logo&theme=dark"
+                alt="Ambuj's Cloud Environment: Up"
+                className="h-6 w-auto"
+              />
+            </a>
+
             <Link
               href="/docs"
               className="text-sm font-semibold text-cyan-400 hover:text-cyan-300 transition-colors flex items-center gap-1.5"
@@ -71,7 +86,20 @@ export default function Home() {
           </div>
 
           {/* Mobile Right Controls & Hamburger */}
-          <div className="flex md:hidden items-center gap-2.5">
+          <div className="flex md:hidden items-center gap-2">
+            <a
+              href="https://stats.uptimerobot.com/4tYmSQnuBE?utm_source=status_badge&utm_medium=referral"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center"
+              title="Ambuj's Cloud Environment Live Uptime Status"
+            >
+              <img
+                src="https://badge.uptimerobot.com/psp/6d03dcfe5d5c495465fe9a459d7f778b.svg?style=logo&theme=dark"
+                alt="UptimeRobot Status"
+                className="h-5 w-auto"
+              />
+            </a>
             <AuthButton />
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -469,24 +497,59 @@ export default function Home() {
                   </div>
                 </div>
 
-                {/* Official Live UptimeRobot Status Badge */}
-                <a
-                  href="https://stats.uptimerobot.com/4tYmSQnuBE?utm_source=status_badge&utm_medium=referral"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-3.5 rounded-2xl bg-black/70 border border-white/10 hover:border-emerald-500/40 text-xs text-gray-300 flex items-center justify-between transition-all group shadow-xl hover:bg-black/90"
-                  title="Ambuj's Cloud Environment Live Uptime Status"
-                >
-                  <div className="flex items-center gap-2.5">
-                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                    <span className="font-semibold text-gray-300 group-hover:text-white transition-colors">Infrastructure Live Status</span>
+
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ===== INTEGRITY & NO-HYPE DISCLAIMER ===== */}
+        <section className="max-w-7xl mx-auto px-6 pb-20">
+          <div className="p-8 sm:p-10 rounded-3xl bg-[#080d18] border border-amber-500/20 backdrop-blur-xl relative overflow-hidden shadow-2xl">
+            <div className="absolute top-0 right-0 w-80 h-80 bg-amber-500/5 rounded-full blur-[90px] pointer-events-none" />
+
+            <div className="relative z-10 space-y-6">
+              <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-white/5">
+                <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full border border-amber-500/30 bg-amber-500/10 text-amber-400 text-xs font-semibold uppercase tracking-wider">
+                  <span>⚖️</span>
+                  <span>Engineering Integrity &amp; Transparency Disclaimer</span>
+                </div>
+                <span className="text-xs font-mono text-gray-400">Zero Commercial Charges &middot; No Snake-Oil Claims</span>
+              </div>
+
+              <div className="grid md:grid-cols-3 gap-6">
+                {/* Column 1: Zero Service Charge */}
+                <div className="space-y-2 p-5 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-amber-500/20 transition-colors">
+                  <div className="flex items-center gap-2 text-white font-bold text-sm">
+                    <span className="text-amber-400 font-mono">01.</span>
+                    <span>100% Free &middot; Zero Service Fees</span>
                   </div>
-                  <img
-                    src="https://badge.uptimerobot.com/psp/6d03dcfe5d5c495465fe9a459d7f778b.svg?style=logo&theme=dark"
-                    alt="Ambuj's Cloud Environment: Up"
-                    className="h-6 w-auto"
-                  />
-                </a>
+                  <p className="text-xs text-gray-400 leading-relaxed">
+                    This platform charges <span className="text-gray-200 font-semibold">$0.00</span>. There are no paid tier upsells, no monthly subscription traps, and no credit card required. Developed strictly as public AI infrastructure by Ambuj Kumar Tripathi.
+                  </p>
+                </div>
+
+                {/* Column 2: Anti-Hype on ATS Ranking */}
+                <div className="space-y-2 p-5 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-amber-500/20 transition-colors">
+                  <div className="flex items-center gap-2 text-white font-bold text-sm">
+                    <span className="text-amber-400 font-mono">02.</span>
+                    <span>No "ATS Ranking" Snake-Oil</span>
+                  </div>
+                  <p className="text-xs text-gray-400 leading-relaxed">
+                    We make <span className="text-gray-200 font-semibold">zero false claims</span> about &ldquo;ranking your CV #1 on ATS&rdquo; or &ldquo;gaming recruitment algorithms.&rdquo; Anyone selling &ldquo;guaranteed interviews&rdquo; is peddling snake-oil. Hiring decisions are made by humans based on real engineering merit.
+                  </p>
+                </div>
+
+                {/* Column 3: What It Actually Does */}
+                <div className="space-y-2 p-5 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-amber-500/20 transition-colors">
+                  <div className="flex items-center gap-2 text-white font-bold text-sm">
+                    <span className="text-amber-400 font-mono">03.</span>
+                    <span>What We Actually Deliver</span>
+                  </div>
+                  <p className="text-xs text-gray-400 leading-relaxed">
+                    Pure, honest, evidence-grounded writing assistance. We analyze the job description, cross-reference your actual resume, research real company developments with Tavily, and prepare you for adversarial interview questions.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
