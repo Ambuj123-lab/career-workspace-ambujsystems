@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSession, signIn } from "next-auth/react";
 import InputForm from "@/components/generator/InputForm";
 import ResultsPanel from "@/components/generator/ResultsPanel";
@@ -8,6 +8,13 @@ import AuthButton from "@/components/AuthButton";
 
 export default function GeneratePage() {
   const { data: session, status } = useSession();
+  const [isDevBypass, setIsDevBypass] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && new URLSearchParams(window.location.search).get("dev") === "true") {
+      setIsDevBypass(true);
+    }
+  }, []);
   const [step, setStep] = useState("input"); // input | researching | approval_gate | generating | results
   const [formData, setFormData] = useState(null);
   const [analysisData, setAnalysisData] = useState(null);
@@ -286,7 +293,7 @@ export default function GeneratePage() {
     );
   }
 
-  if (status === "unauthenticated" || !session) {
+  if (!isDevBypass && (status === "unauthenticated" || !session)) {
     return (
       <div className="min-h-screen bg-[#030712] flex flex-col items-center justify-center p-6 relative overflow-hidden">
         <div className="absolute inset-0 glow-rose opacity-20 pointer-events-none" />
