@@ -491,7 +491,7 @@ export default function ResultsPanel({
 
           <div className="space-y-4">
             {(defenseData?.questions || []).map((q, idx) => (
-              <div key={idx} className="p-4 rounded-xl bg-white/[0.02] border border-white/5 space-y-3">
+              <div key={idx} className="p-5 rounded-2xl faang-card glow-card-violet hover-jiggle space-y-3 cursor-default">
                 <div className="flex items-start justify-between gap-3">
                   <div className="space-y-1 flex-1">
                     <span className="text-[10px] font-bold uppercase tracking-wider text-rose-400">
@@ -546,7 +546,7 @@ export default function ResultsPanel({
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {(atsData?.checks || []).map((check, idx) => (
-              <div key={idx} className="p-4 rounded-xl bg-white/[0.02] border border-white/5 space-y-2">
+              <div key={idx} className="p-4 rounded-xl faang-card glow-card-emerald hover-jiggle space-y-2 cursor-default">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold text-white">{check.label}</span>
                   <span
@@ -885,7 +885,7 @@ export default function ResultsPanel({
           {/* Top Compact Live Web Research Status Strip (Clickable) */}
           <div
             onClick={() => setActiveTab("sources")}
-            className="p-3.5 rounded-xl bg-gradient-to-r from-cyan-950/40 via-blue-950/30 to-black/60 border border-cyan-500/30 hover:border-cyan-400/50 cursor-pointer transition-all space-y-2 group shadow-lg shadow-cyan-950/20"
+            className="p-4 rounded-2xl faang-card glow-card-cyan hover-jiggle cursor-pointer transition-all space-y-2 group shadow-lg shadow-cyan-950/20"
           >
             <div className="flex flex-wrap items-center justify-between gap-2">
               <div className="flex items-center gap-2">

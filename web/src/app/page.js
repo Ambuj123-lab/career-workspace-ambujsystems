@@ -248,7 +248,7 @@ export default function Home() {
 
           <div className="grid md:grid-cols-3 gap-6">
             {/* Feature 1: Evidence Job Fit */}
-            <div className="glass-card p-8 group hover:border-rose-500/20 transition-colors">
+            <div className="faang-card glow-card-rose hover-jiggle p-8 group cursor-default">
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-rose-500/20 to-orange-500/20 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
                 <svg className="w-6 h-6 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
               </div>
@@ -275,7 +275,7 @@ export default function Home() {
             </div>
 
             {/* Feature 2: Company Intelligence */}
-            <div className="glass-card p-8 group hover:border-cyan-500/20 transition-colors">
+            <div className="faang-card glow-card-cyan hover-jiggle p-8 group cursor-default">
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-500/20 to-blue-500/20 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
                 <svg className="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
               </div>
@@ -312,7 +312,7 @@ export default function Home() {
             </div>
 
             {/* Feature 3: Interview Defense */}
-            <div className="glass-card p-8 group hover:border-violet-500/20 transition-colors">
+            <div className="faang-card glow-card-violet hover-jiggle p-8 group cursor-default">
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-500/20 to-purple-500/20 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
                 <svg className="w-6 h-6 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
               </div>
@@ -377,21 +377,21 @@ export default function Home() {
             <p className="text-gray-400 max-w-xl mx-auto">Built for professional integrity. Not a toy.</p>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-5xl mx-auto">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {[
-              { icon: "\ud83d\udee1\ufe0f", title: "PII Protection", desc: "Resume data stripped of PII via regex before any external API call. Never sent to web search." },
-              { icon: "\ud83d\udd12", title: "Server-Side Keys", desc: "All API keys stored server-side in environment variables. Browser never contacts external APIs directly." },
-              { icon: "\ud83e\uddea", title: "Claim Validation", desc: "Every company claim checked against web search sources via evidence validator. Unsupported claims flagged." },
-              { icon: "\ud83d\udeab", title: "Injection Defense", desc: "JD and resume treated as untrusted data. Prompt injection patterns detected and flagged." },
-              { icon: "\ud83d\udcca", title: "Output Validation", desc: "LLM JSON responses validated against schemas. Invalid ranges and malformed data rejected." },
-              { icon: "\u26a1", title: "Rate Limiting", desc: "IP-based rate limits, max input sizes, generation cooldown. Google OAuth required." },
-              { icon: "\ud83d\udc41\ufe0f", title: "Source Transparency", desc: "Every company research claim shows its source URL. User can verify independently." },
-              { icon: "\u270b", title: "Human Approval Gate", desc: "Company research requires approval before inclusion in your letter. AI never auto-injects." },
+              { icon: "🛡️", title: "PII Protection", desc: "Resume data stripped of PII via regex before any external API call. Never sent to web search.", glow: "glow-card-emerald" },
+              { icon: "🔒", title: "Server-Side Keys", desc: "All API keys stored server-side in environment variables. Browser never contacts external APIs directly.", glow: "glow-card-cyan" },
+              { icon: "🧪", title: "Claim Validation", desc: "Every company claim checked against web search sources via evidence validator. Unsupported claims flagged.", glow: "glow-card-violet" },
+              { icon: "🚫", title: "Injection Defense", desc: "JD and resume treated as untrusted data. Prompt injection patterns detected and flagged.", glow: "glow-card-rose" },
+              { icon: "📊", title: "Output Validation", desc: "LLM JSON responses validated against schemas. Invalid ranges and malformed data rejected.", glow: "glow-card-amber" },
+              { icon: "⚡", title: "Rate Limiting", desc: "IP-based rate limits, max input sizes, generation cooldown. Google OAuth required.", glow: "glow-card-emerald" },
+              { icon: "👁️", title: "Source Transparency", desc: "Every company research claim shows its source URL. User can verify independently.", glow: "glow-card-cyan" },
+              { icon: "✋", title: "Human Approval Gate", desc: "Company research requires approval before inclusion in your letter. AI never auto-injects.", glow: "glow-card-violet" },
             ].map((item) => (
-              <div key={item.title} className="p-5 rounded-xl border border-white/5 bg-white/[0.02] hover:border-white/10 transition-colors">
+              <div key={item.title} className={`faang-card ${item.glow} hover-jiggle p-5 cursor-default`}>
                 <div className="text-2xl mb-3">{item.icon}</div>
-                <div className="text-sm font-bold mb-1">{item.title}</div>
-                <div className="text-xs text-gray-500 leading-relaxed">{item.desc}</div>
+                <div className="text-sm font-bold mb-1 text-white">{item.title}</div>
+                <div className="text-xs text-gray-400 leading-relaxed">{item.desc}</div>
               </div>
             ))}
           </div>
@@ -399,7 +399,7 @@ export default function Home() {
 
         {/* ===== CREATOR & ENGINEERING SPOTLIGHT ===== */}
         <section className="max-w-7xl mx-auto px-6 pb-20">
-          <div className="p-8 sm:p-12 rounded-3xl bg-gradient-to-br from-emerald-500/[0.08] via-white/[0.02] to-transparent border border-emerald-500/25 backdrop-blur-xl relative overflow-hidden shadow-2xl">
+          <div className="p-8 sm:p-12 rounded-3xl faang-card glow-card-aurora backdrop-blur-xl relative overflow-hidden shadow-2xl">
             <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/10 rounded-full blur-[100px] pointer-events-none" />
 
             <div className="relative z-10 grid lg:grid-cols-12 gap-8 items-center">
@@ -469,7 +469,7 @@ export default function Home() {
                       href="https://github.com/Ambuj123-lab/agentic-rag-financial-parser"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="block p-3.5 rounded-xl bg-white/[0.02] hover:bg-white/5 border border-white/5 transition-colors group"
+                      className="block p-4 rounded-xl faang-card glow-card-emerald hover-jiggle group transition-all"
                     >
                       <div className="flex items-center justify-between text-xs font-bold text-white group-hover:text-emerald-400">
                         <span>Agentic Financial Parser</span>
@@ -484,7 +484,7 @@ export default function Home() {
                       href="https://ambuj-ai-portfolio.vercel.app"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="block p-3.5 rounded-xl bg-white/[0.02] hover:bg-white/5 border border-white/5 transition-colors group"
+                      className="block p-4 rounded-xl faang-card glow-card-cyan hover-jiggle group transition-all"
                     >
                       <div className="flex items-center justify-between text-xs font-bold text-white group-hover:text-cyan-400">
                         <span>Personal AI Portfolio</span>
@@ -505,7 +505,7 @@ export default function Home() {
 
         {/* ===== INTEGRITY & NO-HYPE DISCLAIMER ===== */}
         <section className="max-w-7xl mx-auto px-6 pb-20">
-          <div className="p-8 sm:p-10 rounded-3xl bg-[#080d18] border border-amber-500/20 backdrop-blur-xl relative overflow-hidden shadow-2xl">
+          <div className="p-8 sm:p-10 rounded-3xl faang-card glow-card-amber backdrop-blur-xl relative overflow-hidden shadow-2xl">
             <div className="absolute top-0 right-0 w-80 h-80 bg-amber-500/5 rounded-full blur-[90px] pointer-events-none" />
 
             <div className="relative z-10 space-y-6">
@@ -519,9 +519,9 @@ export default function Home() {
 
               <div className="grid md:grid-cols-3 gap-6">
                 {/* Column 1: Zero Service Charge */}
-                <div className="space-y-2 p-5 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-amber-500/20 transition-colors">
+                <div className="space-y-2 p-5 rounded-2xl faang-card glow-card-emerald hover-jiggle cursor-default">
                   <div className="flex items-center gap-2 text-white font-bold text-sm">
-                    <span className="text-amber-400 font-mono">01.</span>
+                    <span className="text-emerald-400 font-mono">01.</span>
                     <span>100% Free &middot; Zero Service Fees</span>
                   </div>
                   <p className="text-xs text-gray-400 leading-relaxed">
@@ -530,7 +530,7 @@ export default function Home() {
                 </div>
 
                 {/* Column 2: Anti-Hype on ATS Ranking */}
-                <div className="space-y-2 p-5 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-amber-500/20 transition-colors">
+                <div className="space-y-2 p-5 rounded-2xl faang-card glow-card-amber hover-jiggle cursor-default">
                   <div className="flex items-center gap-2 text-white font-bold text-sm">
                     <span className="text-amber-400 font-mono">02.</span>
                     <span>No "ATS Ranking" Snake-Oil</span>
@@ -541,9 +541,9 @@ export default function Home() {
                 </div>
 
                 {/* Column 3: What It Actually Does */}
-                <div className="space-y-2 p-5 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-amber-500/20 transition-colors">
+                <div className="space-y-2 p-5 rounded-2xl faang-card glow-card-cyan hover-jiggle cursor-default">
                   <div className="flex items-center gap-2 text-white font-bold text-sm">
-                    <span className="text-amber-400 font-mono">03.</span>
+                    <span className="text-cyan-400 font-mono">03.</span>
                     <span>What We Actually Deliver</span>
                   </div>
                   <p className="text-xs text-gray-400 leading-relaxed">
