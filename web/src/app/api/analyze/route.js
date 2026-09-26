@@ -70,6 +70,48 @@ export async function POST(req) {
       }
     });
 
+    // Deterministic Job Context & Hiring Route Fallbacks (Evidence-Grounded)
+    const lowerJd = (jd_text || "").toLowerCase();
+    
+    // Check for explicit third-party staffing indicators
+    const isVendorMentioned = 
+      lowerJd.includes("payroll of") || 
+      lowerJd.includes("on the payroll") ||
+      lowerJd.includes("contract to hire") ||
+      lowerJd.includes("c2h") ||
+      lowerJd.includes("deployed at client") ||
+      lowerJd.includes("third-party payroll") ||
+      lowerJd.includes("third party payroll") ||
+      lowerJd.includes("deputed at client");
+
+    // Extract verbatim quote if vendor mentioned
+    let vendorQuote = null;
+    if (isVendorMentioned) {
+      const match = jd_text.match(/(?:payroll of|on the payroll|contract to hire|c2h|deployed at client|third-party payroll|deputed at client)[^\.\n]*/i);
+      if (match) vendorQuote = match[0].trim();
+    }
+
+    if (!data.job_context) {
+      data.job_context = {};
+    }
+    data.job_context.role = data.job_context.role || data.role_title || "Target Engineering Role";
+    data.job_context.work_model = data.job_context.work_model || (lowerJd.includes("remote") ? "Remote" : lowerJd.includes("hybrid") ? "Hybrid" : lowerJd.includes("on-site") || lowerJd.includes("onsite") ? "On-site" : "Not stated in job posting");
+    data.job_context.experience_bracket = data.job_context.experience_bracket || (jd_text.match(/\b\d+\s*[-–to]+\s*\d+\s*(?:years?|yrs?)\b/i)?.[0] || "Not stated in job posting");
+    data.job_context.employment_type = data.job_context.employment_type || (lowerJd.includes("full-time") || lowerJd.includes("full time") ? "Full-time" : lowerJd.includes("contract") ? "Contract" : "Not stated in job posting");
+    data.job_context.salary_range = data.job_context.salary_range || (jd_text.match(/(?:₹|\$|inr|usd|lpa|ctc)[\s\d\.,\-–toLPAk]+/i)?.[0] || "Not disclosed in job posting");
+    data.job_context.source_platform = data.job_context.source_platform || (lowerJd.includes("naukri") ? "Naukri.com" : lowerJd.includes("linkedin") ? "LinkedIn" : lowerJd.includes("indeed") ? "Indeed" : "Job Description Text");
+
+    if (!data.hiring_context) {
+      data.hiring_context = {
+        is_third_party_vendor: isVendorMentioned,
+        application_route: isVendorMentioned ? "Third-Party Recruiter / Contract Staffing" : "Direct Employer Posting",
+        employer_of_record: isVendorMentioned ? (vendorQuote || "Third-party staffing agency stated in JD") : "Direct company payroll",
+        client_company: isVendorMentioned ? "Client deployment" : "Direct posting",
+        verbatim_evidence_quote: vendorQuote,
+        verification_warning: isVendorMentioned ? "Verify contract terms, client perks, and payroll entity before applying." : null
+      };
+    }
+
     data._model_used = model;
     data._scoring_method = "deterministic_application_layer";
 

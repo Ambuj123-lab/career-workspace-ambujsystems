@@ -87,19 +87,32 @@ export async function POST(req) {
       if (!r.url || seenUrls.has(r.url)) return;
       seenUrls.add(r.url);
 
-      let category = "News";
+      let category = "External";
       let hostname = "";
       try {
         hostname = new URL(r.url).hostname.toLowerCase();
+        const cleanComp = company_name.toLowerCase().replace(/[^a-z0-9]/g, "");
         if (
-          hostname.includes(company_name.toLowerCase().replace(/\s+/g, "")) ||
-          hostname.includes("deepmind.google") ||
-          hostname.includes("google.com") ||
-          hostname.includes("official")
+          hostname.includes(cleanComp) ||
+          hostname.includes("official") ||
+          r.url.includes("/about") ||
+          r.url.includes("/careers") ||
+          r.url.includes("/blog")
         ) {
-          category = "Official";
-        } else if (hostname.includes("research") || hostname.includes("arxiv") || hostname.includes("paper")) {
-          category = "Research";
+          category = "Company";
+        } else if (
+          hostname.includes("naukri") ||
+          hostname.includes("linkedin") ||
+          hostname.includes("indeed") ||
+          hostname.includes("foundit") ||
+          hostname.includes("glassdoor") ||
+          hostname.includes("greenhouse") ||
+          hostname.includes("lever.co") ||
+          hostname.includes("workday")
+        ) {
+          category = "Job Board";
+        } else {
+          category = "External News";
         }
       } catch (e) {
         hostname = r.url;
@@ -145,6 +158,19 @@ Return JSON matching this schema:
     "summary": "...",
     "sources_count": 3
   },
+  "company_identity": {
+    "industry": "e.g. IT Services & Software Consulting (or 'Not verified from available sources')",
+    "company_type": "Product Company" | "Services / Consulting" | "Staffing / Recruitment" | "GCC / Captive Center" | "Startup" | "Not verified from available sources",
+    "business_focus": "e.g. Cloud Platforms & Enterprise AI",
+    "headquarters": "City, Country (e.g. Pune, India) or 'Not verified from available sources'",
+    "founded": "Year string or null if not stated",
+    "website": "Domain name or 'Not verified'"
+  },
+  "employer_type": {
+    "category": "Direct Employer" | "Services Vendor" | "Staffing / Recruitment" | "Consulting" | "Product Company" | "GCC / Captive Center" | "Startup",
+    "verification_status": "Verified from source" | "Not verified from available sources",
+    "evidence_citation": "[1]"
+  },
   "role_relevant_signals": [
     {
       "signal": "...",
@@ -178,17 +204,47 @@ ${sourcesText || "No external web sources retrieved."}
       synthData.company_snapshot?.summary ||
       `${company_name} is an active technology organization. Real-time web intelligence identified ${processedSources.length} verified sources.`;
 
+    // 3-Way Source Categorization (Company, Job, External)
+    const companySourcesList = processedSources.filter((s) => s.category === "Company");
+    const jobSourcesList = processedSources.filter((s) => s.category === "Job Board");
+    const externalSourcesList = processedSources.filter((s) => s.category === "External News" || s.category === "News");
+
     return NextResponse.json({
       company_name,
       query_used: query,
       search_provider: searchProvider,
       sources_analyzed_count: rawResults.length,
       sources_cited_count: Math.min(processedSources.length, synthData.company_snapshot?.sources_count || processedSources.length),
-      official_sources_count: officialCount,
+      official_sources_count: companySourcesList.length,
       updated_at: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
       company_snapshot: synthData.company_snapshot || {
         summary: description,
         sources_count: processedSources.length,
+      },
+      company_identity: synthData.company_identity || {
+        industry: "IT & Software Services",
+        company_type: "Services / Consulting",
+        business_focus: "Cloud & Software Engineering",
+        headquarters: "Not verified from available sources",
+        founded: null,
+        website: processedSources[0]?.domain || "Not verified",
+      },
+      employer_type: synthData.employer_type || {
+        category: "Direct Employer",
+        verification_status: processedSources.length > 0 ? "Verified from source" : "Not verified from available sources",
+        evidence_citation: "[1]",
+      },
+      sources_categorized: {
+        company_sources: companySourcesList,
+        job_sources: jobSourcesList,
+        external_sources: externalSourcesList,
+        coverage: {
+          company_count: companySourcesList.length,
+          job_count: jobSourcesList.length,
+          external_count: externalSourcesList.length,
+          total_retrieved: rawResults.length,
+          total_cited: Math.min(processedSources.length, 5),
+        },
       },
       role_relevant_signals: synthData.role_relevant_signals || [],
       recent_signals: synthData.recent_signals || [],

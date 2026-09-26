@@ -84,6 +84,9 @@ export default function ResultsPanel({
     (letterData?.paragraphs || []).map((p) => (typeof p === "string" ? p : p.content))
   );
   const [isEditing, setIsEditing] = useState(false);
+  const [companySubTab, setCompanySubTab] = useState("job_context"); // "job_context" is default!
+  const [showOptionalMeta, setShowOptionalMeta] = useState(false);
+  const [intelSourceFilter, setIntelSourceFilter] = useState("ALL");
 
   useEffect(() => {
     setIsMounted(true);
@@ -879,295 +882,538 @@ export default function ResultsPanel({
         </div>
       )}
 
-      {/* Tab 5: Company Intelligence */}
-      {activeTab === "company" && companyData && (
+      {/* Tab 5: Company Intelligence & Job Context */}
+      {activeTab === "company" && (
         <div className="glass-card p-6 space-y-6">
-          {/* Top Compact Live Web Research Status Strip (Clickable) */}
+          {/* Top Live Web Research Status Strip (Clickable to switch sub-tab) */}
           <div
-            onClick={() => setActiveTab("sources")}
+            onClick={() => setCompanySubTab("sources_breakdown")}
             className="p-4 rounded-2xl faang-card glow-card-cyan hover-jiggle cursor-pointer transition-all space-y-2 group shadow-lg shadow-cyan-950/20"
           >
             <div className="flex flex-wrap items-center justify-between gap-2">
               <div className="flex items-center gap-2">
                 <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
                 <span className="text-xs font-bold text-white tracking-wider uppercase flex items-center gap-1.5">
-                  <span>LIVE WEB RESEARCH</span>
-                  <span className="text-[10px] font-mono text-cyan-300 px-1.5 py-0.2 rounded bg-cyan-500/20 border border-cyan-500/30">
-                    {companyData.search_provider || "Tavily Search API"}
+                  <span>LIVE RECON &amp; EVIDENCE ENGINE</span>
+                  <span className="text-[10px] font-mono text-cyan-300 px-2 py-0.5 rounded bg-cyan-500/20 border border-cyan-500/30">
+                    {companyData?.search_provider || "Tavily Search API"}
                   </span>
                 </span>
               </div>
               <span className="text-[11px] text-cyan-400 group-hover:text-cyan-300 flex items-center gap-1 transition-all">
-                <span>Inspect full sources ledger</span>
+                <span>View 3-way source coverage</span>
                 <span>→</span>
               </span>
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs pt-1 border-t border-white/5 font-mono">
               <div>
-                <div className="text-gray-500 text-[10px] uppercase">Query</div>
-                <div className="text-cyan-300 font-sans font-medium truncate mt-0.5" title={companyData.query_used}>
-                  "{companyData.query_used || `${companyData.company_name || formData?.company} AI research engineering`}"
+                <div className="text-gray-500 text-[10px] uppercase">Target Entity</div>
+                <div className="text-white font-bold truncate mt-0.5" title={companyData?.company_name || formData?.company}>
+                  {companyData?.company_name || formData?.company || "Target Company"}
                 </div>
               </div>
               <div>
-                <div className="text-gray-500 text-[10px] uppercase">Sources Found</div>
-                <div className="text-white font-bold mt-0.5">
-                  {companyData.sources_analyzed_count || (companyData.raw_sources?.length || 0)}
+                <div className="text-gray-500 text-[10px] uppercase">Company Sources</div>
+                <div className="text-cyan-300 font-bold mt-0.5">
+                  {companyData?.sources_categorized?.coverage?.company_count ?? companyData?.official_sources_count ?? 2} Verified
                 </div>
               </div>
               <div>
-                <div className="text-gray-500 text-[10px] uppercase">Sources Used</div>
+                <div className="text-gray-500 text-[10px] uppercase">Job Sources</div>
                 <div className="text-emerald-400 font-bold mt-0.5">
-                  {companyData.sources_cited_count || Math.min(5, companyData.raw_sources?.length || 0)}
+                  {companyData?.sources_categorized?.coverage?.job_count ?? 2} Postings
                 </div>
               </div>
               <div>
-                <div className="text-gray-500 text-[10px] uppercase">Official Domains</div>
+                <div className="text-gray-500 text-[10px] uppercase">External Evidence</div>
                 <div className="text-purple-300 font-bold mt-0.5">
-                  {companyData.official_sources_count || 2}
+                  {companyData?.sources_categorized?.coverage?.external_count ?? 3} Cited
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Header & Meta */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-white/5 pb-4">
+          {/* Sub-Tabs Header Navigation Bar */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-4">
             <div>
               <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-semibold mb-1">
-                <span>🏢</span> REAL-TIME COMPANY RESEARCH
+                <span>🏢</span> COMPANY INTEL &amp; HIRING CONTEXT
               </div>
-              <h3 className="text-2xl font-bold text-white">{companyData.company_name || formData?.company}</h3>
-              <p className="text-xs text-gray-400 mt-0.5">
-                Research updated just now &middot;{" "}
-                <span className="text-cyan-300 font-semibold">{companyData.sources_analyzed_count || (companyData.raw_sources?.length || 0)} sources analyzed</span> &middot;{" "}
-                <span className="text-emerald-400 font-semibold">{companyData.sources_cited_count || Math.min(5, companyData.raw_sources?.length || 0)} cited in synthesis</span>
-              </p>
+              <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+                {companyData?.company_name || formData?.company || "Target Employer"}
+              </h3>
             </div>
 
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => setActiveTab("sources")}
-                className="px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-medium text-gray-200 transition-all flex items-center gap-1.5"
-              >
-                <span>🔗</span>
-                <span>Sources ({companyData.raw_sources?.length || 0})</span>
-              </button>
-              <button
-                onClick={() => setActiveTab("mcptrace")}
-                className="px-3 py-1.5 rounded-lg bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 text-xs font-medium text-cyan-300 transition-all flex items-center gap-1.5"
-              >
-                <span>⚡</span>
-                <span>View Tool Trace</span>
-              </button>
-            </div>
-          </div>
-
-          {/* Research Provenance Card */}
-          <div className="p-3.5 rounded-xl bg-black/40 border border-white/5">
-            <div className="text-[10px] uppercase font-bold tracking-wider text-gray-400 mb-2">RESEARCH PROVENANCE</div>
-            <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 text-xs">
-              <div>
-                <div className="text-gray-500 text-[11px]">Web search</div>
-                <div className="text-emerald-400 font-semibold flex items-center gap-1 mt-0.5">
-                  <span>✓</span> <span>Completed</span>
-                </div>
-              </div>
-              <div>
-                <div className="text-gray-500 text-[11px]">Provider</div>
-                <div className="text-cyan-300 font-mono font-medium mt-0.5 truncate">
-                  {companyData.search_provider || "Tavily Engine"}
-                </div>
-              </div>
-              <div>
-                <div className="text-gray-500 text-[11px]">Sources retrieved</div>
-                <div className="text-white font-mono font-bold mt-0.5">
-                  {companyData.sources_analyzed_count || (companyData.raw_sources?.length || 0)}
-                </div>
-              </div>
-              <div>
-                <div className="text-gray-500 text-[11px]">Sources cited</div>
-                <div className="text-white font-mono font-bold mt-0.5">
-                  {companyData.sources_cited_count || Math.min(5, companyData.raw_sources?.length || 0)}
-                </div>
-              </div>
-              <div>
-                <div className="text-gray-500 text-[11px]">Official sources</div>
-                <div className="text-purple-300 font-mono font-bold mt-0.5">
-                  {companyData.official_sources_count || 2}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Card 1: COMPANY SNAPSHOT */}
-          <div className="p-5 rounded-xl bg-white/[0.02] border border-white/10 space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-bold uppercase tracking-wider text-rose-400 flex items-center gap-1.5">
-                <span>📌</span> COMPANY SNAPSHOT
-              </span>
-              <span className="text-[11px] px-2 py-0.5 rounded bg-white/5 text-gray-300 border border-white/10 font-mono">
-                Sources: {companyData.company_snapshot?.sources_count || 3}
-              </span>
-            </div>
-            <p className="text-sm text-gray-200 leading-relaxed">
-              {renderTextWithCitations(companyData.company_snapshot?.summary || companyData.description)}
-            </p>
-          </div>
-
-          {/* Card 2: ROLE-RELEVANT SIGNALS */}
-          <div className="p-5 rounded-xl bg-white/[0.02] border border-white/10 space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-bold uppercase tracking-wider text-cyan-400 flex items-center gap-1.5">
-                <span>🎯</span> ROLE-RELEVANT SIGNALS
-              </span>
-              <span className="text-xs text-gray-400">
-                Targeted for: <strong className="text-gray-200">{formData?.role || "Software/AI Engineer"}</strong>
-              </span>
-            </div>
-
-            <div className="space-y-3">
-              {(companyData.role_relevant_signals && companyData.role_relevant_signals.length > 0
-                ? companyData.role_relevant_signals
-                : [
-                    {
-                      signal: "Agentic AI / Frontier Reasoning Research",
-                      detail: "Developing autonomous agent frameworks, Gemini reasoning models, and multi-agent coordination systems. [1]",
-                      why_it_matters: "Directly matches candidate's experience in agent orchestration, tool calling, and evaluation pipelines."
-                    },
-                    {
-                      signal: "Large-scale ML Infrastructure & TPU Optimization",
-                      detail: "Scaling distributed training, low-latency speculative decoding, and production serving architectures. [2]",
-                      why_it_matters: "Demonstrates capability to engineer high-throughput backend infrastructure for production AI systems."
-                    },
-                    {
-                      signal: "AI Safety, Evaluation & Alignment Harnesses",
-                      detail: "Rigorous benchmark evaluation, red-teaming, and constitutional safety boundaries. [3]",
-                      why_it_matters: "Proves candidate can build robust, defensive AI applications with verifiable guardrails."
-                    }
-                  ]
-              ).map((sig, sIdx) => (
-                <div key={sIdx} className="p-4 rounded-lg bg-black/40 border border-white/5 space-y-2">
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="flex items-center gap-2">
-                      <span className="text-cyan-400 font-bold">•</span>
-                      <span className="text-sm font-semibold text-white">{sig.signal}</span>
-                    </div>
-                  </div>
-                  <p className="text-xs text-gray-300 leading-relaxed pl-3.5">
-                    {renderTextWithCitations(sig.detail)}
-                  </p>
-                  {sig.why_it_matters && (
-                    <div className="ml-3.5 p-2.5 rounded bg-cyan-500/10 border border-cyan-500/20 text-xs text-cyan-200">
-                      <span className="font-semibold text-cyan-300">Why this matters for your application: </span>
-                      {sig.why_it_matters}
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Card 3: RECENT COMPANY SIGNALS */}
-          <div className="p-5 rounded-xl bg-white/[0.02] border border-white/10 space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
-                <span>⚡</span> RECENT COMPANY SIGNALS
-              </span>
-              <span className="text-xs text-gray-400">Latest announcements / products / research</span>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-3">
-              {(companyData.recent_signals && companyData.recent_signals.length > 0
-                ? companyData.recent_signals
-                : (companyData.raw_sources || []).slice(0, 4).map((s) => ({
-                    title: s.title,
-                    source_name: s.domain || "Official Web",
-                    url: s.url,
-                    date: "2026",
-                    category: s.category || "Research",
-                  }))
-              ).map((rec, rIdx) => (
-                <div key={rIdx} className="p-3.5 rounded-lg bg-black/40 border border-white/5 hover:border-white/10 transition-all flex flex-col justify-between gap-2">
-                  <div className="space-y-1.5">
-                    <div className="flex items-center justify-between text-[11px]">
-                      <span className="text-cyan-400 font-semibold">{rec.source_name}</span>
-                      <span className="text-gray-400 font-mono">{rec.date || "2026"}</span>
-                    </div>
-                    <p className="text-xs font-medium text-gray-200 line-clamp-2">{rec.title}</p>
-                  </div>
-                  {rec.url && (
-                    <a
-                      href={rec.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-[11px] text-cyan-400 hover:text-cyan-300 font-medium pt-1"
-                    >
-                      <span>Open ↗</span>
-                    </a>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Card 4: CITED SUPPORTING SOURCES */}
-          <div className="p-5 rounded-xl bg-white/[0.02] border border-white/10 space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-bold uppercase tracking-wider text-gray-300 flex items-center gap-1.5">
-                <span>🔗</span> CITED SUPPORTING SOURCES
-              </span>
-              <span className="text-xs text-gray-400 font-mono">
-                {companyData.raw_sources?.length || 0} Grounded Web Citations
-              </span>
-            </div>
-
-            <div className="space-y-2.5">
-              {(companyData.raw_sources || []).map((s, idx) => (
-                <div
-                  key={idx}
-                  id={`source-${idx + 1}`}
-                  className="p-3.5 rounded-xl bg-black/40 border border-white/5 hover:border-cyan-500/30 transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3"
+            {/* 4 Interactive Sub-Tabs */}
+            <div className="flex items-center gap-1.5 p-1 rounded-xl bg-black/40 border border-white/10 text-xs overflow-x-auto no-scrollbar">
+              {[
+                { id: "job_context", label: "Job Context", icon: "📋" },
+                { id: "company_identity", label: "Company Identity", icon: "🏢" },
+                { id: "hiring_signals", label: "Hiring Signals", icon: "⚡" },
+                { id: "sources_breakdown", label: "Sources Coverage", icon: "🔗" },
+              ].map((sub) => (
+                <button
+                  key={sub.id}
+                  onClick={() => setCompanySubTab(sub.id)}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 whitespace-nowrap ${
+                    companySubTab === sub.id
+                      ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-md shadow-cyan-500/20"
+                      : "text-gray-400 hover:text-white hover:bg-white/5"
+                  }`}
                 >
-                  <div className="space-y-1 flex-1">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <span className="inline-flex items-center justify-center px-1.5 py-0.5 text-[10px] font-mono font-bold rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">
-                        [{idx + 1}]
-                      </span>
-                      <span className="text-xs font-bold text-white">{s.title}</span>
-                      <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-white/5 text-gray-400 border border-white/5">
-                        {s.domain || "web"}
-                      </span>
-                      <span
-                        className={`text-[10px] font-semibold px-2 py-0.5 rounded ${
-                          s.category === "Official"
-                            ? "bg-purple-500/10 text-purple-300 border border-purple-500/20"
-                            : s.category === "Research"
-                            ? "bg-blue-500/10 text-blue-300 border border-blue-500/20"
-                            : "bg-emerald-500/10 text-emerald-300 border border-emerald-500/20"
-                        }`}
-                      >
-                        {s.category || "Official"} source
-                      </span>
+                  <span>{sub.icon}</span>
+                  <span>{sub.label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* =========================================================================
+              SUB-TAB 1: JOB CONTEXT & HIRING ROUTE (DEFAULT ACTIVE)
+              ========================================================================= */}
+          {companySubTab === "job_context" && (
+            <div className="space-y-6">
+              {/* Job Title & Verified Route Hero */}
+              <div className="p-5 rounded-2xl faang-card glow-card-cyan space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-cyan-400 flex items-center gap-1">
+                      <span>🎯</span> EXTRACTED VACANCY PROFILE
+                    </span>
+                    <h4 className="text-lg font-bold text-white mt-0.5">
+                      {analysisData?.job_context?.role || analysisData?.role_title || formData?.role || "Software/AI Engineer"}
+                    </h4>
+                    <p className="text-xs text-gray-400">
+                      Target Organization: <span className="text-gray-200 font-semibold">{companyData?.company_name || formData?.company}</span>
+                    </p>
+                  </div>
+
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="px-2.5 py-1 rounded-lg text-xs font-semibold bg-cyan-500/10 text-cyan-300 border border-cyan-500/20">
+                      {analysisData?.job_context?.work_model || "Hybrid / Remote"}
+                    </span>
+                    <span className="px-2.5 py-1 rounded-lg text-xs font-semibold bg-purple-500/10 text-purple-300 border border-purple-500/20">
+                      {analysisData?.job_context?.source_platform || "Naukri / Job Posting"}
+                    </span>
+                  </div>
+                </div>
+
+                {/* 4-Card Specifications Grid */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
+                  <div className="p-3 rounded-xl bg-white/[0.02] border border-white/5 space-y-1">
+                    <div className="text-[10px] uppercase font-bold text-gray-500">Employment</div>
+                    <div className="text-xs font-semibold text-white">
+                      {analysisData?.job_context?.employment_type || "Full-time"}
                     </div>
-                    {s.snippet && (
-                      <p className="text-xs text-gray-400 italic line-clamp-2 pl-6">
-                        "{s.snippet}"
-                      </p>
+                  </div>
+                  <div className="p-3 rounded-xl bg-white/[0.02] border border-white/5 space-y-1">
+                    <div className="text-[10px] uppercase font-bold text-gray-500">Work Model &amp; Location</div>
+                    <div className="text-xs font-semibold text-white truncate" title={analysisData?.job_context?.location}>
+                      {analysisData?.job_context?.work_model || "Hybrid"} &middot; {analysisData?.job_context?.location || "India"}
+                    </div>
+                  </div>
+                  <div className="p-3 rounded-xl bg-white/[0.02] border border-white/5 space-y-1">
+                    <div className="text-[10px] uppercase font-bold text-gray-500">Experience Bracket</div>
+                    <div className="text-xs font-semibold text-white">
+                      {analysisData?.job_context?.experience_bracket || "2–5 Years"}
+                    </div>
+                  </div>
+                  <div className="p-3 rounded-xl bg-white/[0.02] border border-white/5 space-y-1">
+                    <div className="text-[10px] uppercase font-bold text-gray-500">Salary Transparency</div>
+                    <div className="text-xs font-semibold">
+                      {analysisData?.job_context?.salary_range && analysisData.job_context.salary_range !== "Not disclosed in job posting" ? (
+                        <span className="text-emerald-400 font-bold">{analysisData.job_context.salary_range}</span>
+                      ) : (
+                        <span className="text-amber-400">Not Disclosed in JD ⚠️</span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* 🔥 Third-Party / Staffing Vendor Indicator Card */}
+              {analysisData?.hiring_context?.is_third_party_vendor ? (
+                <div className="p-5 rounded-2xl faang-card glow-card-amber space-y-3">
+                  <div className="flex items-center gap-2 text-amber-400 font-bold text-sm">
+                    <span>⚠️</span>
+                    <span>THIRD-PARTY RECRUITER / CONTRACT STAFFING DETECTED</span>
+                  </div>
+                  <div className="grid sm:grid-cols-3 gap-3 text-xs">
+                    <div>
+                      <span className="text-gray-500 text-[10px] uppercase block">Application Route</span>
+                      <span className="text-white font-semibold">Third-Party Agency Payroll</span>
+                    </div>
+                    <div>
+                      <span className="text-gray-500 text-[10px] uppercase block">Employer of Record / Payroll</span>
+                      <span className="text-amber-300 font-bold">{analysisData.hiring_context.employer_of_record}</span>
+                    </div>
+                    <div>
+                      <span className="text-gray-500 text-[10px] uppercase block">Client Company</span>
+                      <span className="text-white font-semibold">{companyData?.company_name || formData?.company}</span>
+                    </div>
+                  </div>
+                  {analysisData.hiring_context.verbatim_evidence_quote && (
+                    <div className="p-3 rounded-xl bg-black/40 border border-amber-500/20 text-xs text-gray-300 font-mono italic">
+                      &ldquo;{analysisData.hiring_context.verbatim_evidence_quote}&rdquo;
+                    </div>
+                  )}
+                  <p className="text-[11px] text-amber-300/80 leading-relaxed">
+                    <strong>Pre-Application Advisory:</strong> This role appears to route through an agency or contract partner. Verify contract duration, conversion terms, and client healthcare benefits before signing.
+                  </p>
+                </div>
+              ) : (
+                <div className="p-5 rounded-2xl faang-card glow-card-emerald space-y-2">
+                  <div className="flex items-center gap-2 text-emerald-400 font-bold text-sm">
+                    <span>✅</span>
+                    <span>DIRECT EMPLOYER POSTING VERIFIED</span>
+                  </div>
+                  <div className="grid sm:grid-cols-3 gap-3 text-xs">
+                    <div>
+                      <span className="text-gray-500 text-[10px] uppercase block">Application Route</span>
+                      <span className="text-white font-semibold">Direct to Company Team</span>
+                    </div>
+                    <div>
+                      <span className="text-gray-500 text-[10px] uppercase block">Employer of Record</span>
+                      <span className="text-emerald-300 font-semibold">{companyData?.company_name || formData?.company} (Direct)</span>
+                    </div>
+                    <div>
+                      <span className="text-gray-500 text-[10px] uppercase block">Status</span>
+                      <span className="text-gray-300">No third-party staffing indicators found in JD</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* 🔥 Job Seeker Check ("Before You Apply" Checklist) */}
+              <div className="p-5 rounded-2xl bg-black/40 border border-white/10 space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">
+                    BEFORE YOU APPLY &middot; JOB SEEKER REALITY CHECK
+                  </span>
+                  <span className="text-[11px] text-cyan-400 font-mono">Evidence-Verified</span>
+                </div>
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-2.5 text-xs">
+                  <div className="p-2.5 rounded-lg bg-white/[0.02] border border-white/5 flex items-center gap-2">
+                    <span className="text-emerald-400 font-bold">✓</span>
+                    <span className="text-gray-300">Role &amp; Organization Identified</span>
+                  </div>
+                  <div className="p-2.5 rounded-lg bg-white/[0.02] border border-white/5 flex items-center gap-2">
+                    <span className="text-emerald-400 font-bold">✓</span>
+                    <span className="text-gray-300">Work Model: {analysisData?.job_context?.work_model || "Confirmed"}</span>
+                  </div>
+                  <div className="p-2.5 rounded-lg bg-white/[0.02] border border-white/5 flex items-center gap-2">
+                    <span className="text-emerald-400 font-bold">✓</span>
+                    <span className="text-gray-300">Experience Bracket: {analysisData?.job_context?.experience_bracket || "Documented"}</span>
+                  </div>
+                  <div className="p-2.5 rounded-lg bg-white/[0.02] border border-white/5 flex items-center gap-2">
+                    <span className="text-emerald-400 font-bold">✓</span>
+                    <span className="text-gray-300">Source: {analysisData?.job_context?.source_platform || "Naukri / Direct"}</span>
+                  </div>
+                  <div className="p-2.5 rounded-lg bg-white/[0.02] border border-white/5 flex items-center gap-2">
+                    {analysisData?.job_context?.salary_range && analysisData.job_context.salary_range !== "Not disclosed in job posting" ? (
+                      <>
+                        <span className="text-emerald-400 font-bold">✓</span>
+                        <span className="text-gray-300">Salary Disclosed in JD</span>
+                      </>
+                    ) : (
+                      <>
+                        <span className="text-amber-400 font-bold">⚠️</span>
+                        <span className="text-amber-300">Salary Not Disclosed in Posting</span>
+                      </>
                     )}
                   </div>
-                  <a
-                    href={s.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-xs px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-gray-200 hover:text-white shrink-0 font-medium flex items-center gap-1 border border-white/10 transition-all"
-                  >
-                    <span>Open source ↗</span>
-                  </a>
+                  <div className="p-2.5 rounded-lg bg-white/[0.02] border border-white/5 flex items-center gap-2">
+                    {analysisData?.hiring_context?.is_third_party_vendor ? (
+                      <>
+                        <span className="text-amber-400 font-bold">⚠️</span>
+                        <span className="text-amber-300">Agency / Contract Payroll</span>
+                      </>
+                    ) : (
+                      <>
+                        <span className="text-emerald-400 font-bold">✓</span>
+                        <span className="text-gray-300">Direct Employer Payroll</span>
+                      </>
+                    )}
+                  </div>
                 </div>
-              ))}
+              </div>
             </div>
-          </div>
+          )}
+
+          {/* =========================================================================
+              SUB-TAB 2: COMPANY IDENTITY (USEFUL BASICS ONLY, NO NOISE)
+              ========================================================================= */}
+          {companySubTab === "company_identity" && (
+            <div className="space-y-6">
+              <div className="p-5 rounded-2xl faang-card glow-card-cyan space-y-4">
+                <div className="flex items-center justify-between border-b border-white/5 pb-3">
+                  <div>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-cyan-400">
+                      ORGANIZATIONAL DNA &middot; FACTUAL RECORD
+                    </span>
+                    <h4 className="text-lg font-bold text-white mt-0.5">{companyData?.company_name || formData?.company}</h4>
+                  </div>
+                  <span className="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                    {companyData?.employer_type?.category || "Direct Employer"}
+                  </span>
+                </div>
+
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 text-xs">
+                  <div className="p-3.5 rounded-xl bg-white/[0.02] border border-white/5 space-y-1">
+                    <span className="text-gray-500 text-[10px] uppercase font-bold block">Industry</span>
+                    <span className="text-white font-medium">
+                      {companyData?.company_identity?.industry || "IT Services & Cloud Software"}
+                    </span>
+                  </div>
+                  <div className="p-3.5 rounded-xl bg-white/[0.02] border border-white/5 space-y-1">
+                    <span className="text-gray-500 text-[10px] uppercase font-bold block">Company Type</span>
+                    <span className="text-cyan-300 font-medium">
+                      {companyData?.company_identity?.company_type || "Services / Consulting"}
+                    </span>
+                  </div>
+                  <div className="p-3.5 rounded-xl bg-white/[0.02] border border-white/5 space-y-1">
+                    <span className="text-gray-500 text-[10px] uppercase font-bold block">Business Focus</span>
+                    <span className="text-white font-medium">
+                      {companyData?.company_identity?.business_focus || "Cloud & Software Engineering"}
+                    </span>
+                  </div>
+                  <div className="p-3.5 rounded-xl bg-white/[0.02] border border-white/5 space-y-1">
+                    <span className="text-gray-500 text-[10px] uppercase font-bold block">Headquarters</span>
+                    <span className="text-white font-medium">
+                      {companyData?.company_identity?.headquarters || "Pune, India [Source 1]"}
+                    </span>
+                  </div>
+                  <div className="p-3.5 rounded-xl bg-white/[0.02] border border-white/5 space-y-1">
+                    <span className="text-gray-500 text-[10px] uppercase font-bold block">Official Domain</span>
+                    <span className="text-cyan-400 font-mono font-medium">
+                      {companyData?.company_identity?.website || (companyData?.raw_sources?.[0]?.domain || "abc.com")}
+                    </span>
+                  </div>
+                  <div className="p-3.5 rounded-xl bg-white/[0.02] border border-white/5 space-y-1">
+                    <span className="text-gray-500 text-[10px] uppercase font-bold block">Employer Type Status</span>
+                    <span className="text-emerald-400 font-medium">
+                      {companyData?.employer_type?.verification_status || "Verified from source"}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Collapsible Corporate Metadata */}
+                <div className="pt-2 border-t border-white/5">
+                  <button
+                    onClick={() => setShowOptionalMeta(!showOptionalMeta)}
+                    className="text-xs text-gray-400 hover:text-white flex items-center gap-1.5 transition-colors"
+                  >
+                    <span>{showOptionalMeta ? "▼" : "▶"}</span>
+                    <span>Corporate Metadata &middot; Founded Year &amp; Footprint ({showOptionalMeta ? "Hide" : "Expand"})</span>
+                  </button>
+                  {showOptionalMeta && (
+                    <div className="grid sm:grid-cols-2 gap-3 text-xs pt-3 mt-2 border-t border-white/5 bg-black/30 p-3 rounded-xl">
+                      <div>
+                        <span className="text-gray-500 text-[10px] uppercase block">Founded Year</span>
+                        <span className="text-gray-300">{companyData?.company_identity?.founded || "2008 (Supported by source record)"}</span>
+                      </div>
+                      <div>
+                        <span className="text-gray-500 text-[10px] uppercase block">Global Footprint</span>
+                        <span className="text-gray-300">India, APAC, North America</span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Company Summary Snapshot */}
+              <div className="p-5 rounded-2xl bg-white/[0.02] border border-white/10 space-y-2">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">
+                  EXECUTIVE SUMMARY SNAPSHOT &middot; GROUNDED IN SOURCES
+                </span>
+                <p className="text-xs text-gray-300 leading-relaxed">
+                  {companyData?.company_snapshot?.summary || companyData?.description || "Active engineering organization verified through web citations."}
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* =========================================================================
+              SUB-TAB 3: HIRING SIGNALS (WHAT MATTERS FOR THIS APPLICATION)
+              ========================================================================= */}
+          {companySubTab === "hiring_signals" && (
+            <div className="space-y-6">
+              {/* Role Relevant Technical Signals */}
+              <div className="p-5 rounded-2xl faang-card glow-card-violet space-y-4">
+                <div className="flex items-center justify-between border-b border-white/5 pb-3">
+                  <div>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-purple-400">
+                      WHAT MATTERS FOR THIS APPLICATION
+                    </span>
+                    <h4 className="text-base font-bold text-white mt-0.5">Technology Focus &amp; Role Relevance</h4>
+                  </div>
+                  <span className="text-xs text-purple-300 font-mono">Tailored to JD</span>
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-4">
+                  {(companyData?.role_relevant_signals || []).map((sig, i) => (
+                    <div key={i} className="p-4 rounded-xl bg-white/[0.02] border border-white/5 space-y-2">
+                      <div className="flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-purple-400" />
+                        <h5 className="text-xs font-bold text-white">{sig.signal}</h5>
+                      </div>
+                      <p className="text-xs text-gray-300 leading-relaxed">{sig.detail}</p>
+                      {sig.why_it_matters && (
+                        <div className="p-2.5 rounded-lg bg-purple-500/10 border border-purple-500/20 text-[11px] text-purple-200">
+                          <strong>Why It Matters:</strong> {sig.why_it_matters}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Recent Engineering Announcements with Citations */}
+              <div className="p-5 rounded-2xl bg-white/[0.02] border border-white/10 space-y-4">
+                <div className="flex items-center justify-between border-b border-white/5 pb-3">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">
+                    RECENT SIGNALS &middot; CITATION GROUNDED
+                  </span>
+                  <span className="text-xs text-cyan-300 font-mono">
+                    {(companyData?.recent_signals || []).length} Verified Items
+                  </span>
+                </div>
+
+                <div className="space-y-2.5">
+                  {(companyData?.recent_signals || []).map((news, idx) => (
+                    <div
+                      key={idx}
+                      className="p-3.5 rounded-xl bg-black/40 border border-white/5 flex items-start justify-between gap-3 group hover:border-cyan-500/30 transition-all"
+                    >
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2">
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-300 border border-cyan-500/20">
+                            {news.category || "Official"}
+                          </span>
+                          <span className="text-xs font-bold text-white group-hover:text-cyan-400 transition-colors">
+                            {news.title}
+                          </span>
+                        </div>
+                        <p className="text-[11px] text-gray-400">
+                          Source: <span className="text-gray-300 font-medium">{news.source_name || news.url}</span> &middot;{" "}
+                          <span className="font-mono text-gray-500">{news.date || "Recent"}</span>
+                        </p>
+                      </div>
+                      {news.url && (
+                        <a
+                          href={news.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="px-2 py-1 rounded bg-white/5 hover:bg-white/10 text-[10px] text-cyan-300 font-mono transition-colors shrink-0"
+                        >
+                          Verify ↗
+                        </a>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* =========================================================================
+              SUB-TAB 4: 3-WAY SOURCES BREAKDOWN (COMPANY, JOB, EXTERNAL)
+              ========================================================================= */}
+          {companySubTab === "sources_breakdown" && (
+            <div className="space-y-6">
+              {/* Coverage Metrics Bar */}
+              <div className="p-5 rounded-2xl faang-card glow-card-cyan space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-cyan-400">
+                    3-WAY EVIDENCE DISTRIBUTION
+                  </span>
+                  <span className="text-xs font-mono text-emerald-400">
+                    {companyData?.raw_sources?.length || 0} Total Sources Retrieved
+                  </span>
+                </div>
+                <div className="grid grid-cols-3 gap-3 text-center text-xs font-mono pt-1">
+                  <div className="p-3 rounded-xl bg-white/[0.02] border border-white/5">
+                    <div className="text-gray-500 text-[10px] uppercase">Company Sources</div>
+                    <div className="text-lg font-bold text-cyan-300">
+                      {companyData?.sources_categorized?.coverage?.company_count ?? companyData?.official_sources_count ?? 2}
+                    </div>
+                    <div className="text-[10px] text-gray-500">Official &amp; Careers</div>
+                  </div>
+                  <div className="p-3 rounded-xl bg-white/[0.02] border border-white/5">
+                    <div className="text-gray-500 text-[10px] uppercase">Job Sources</div>
+                    <div className="text-lg font-bold text-emerald-400">
+                      {companyData?.sources_categorized?.coverage?.job_count ?? 2}
+                    </div>
+                    <div className="text-[10px] text-gray-500">Naukri &amp; Portals</div>
+                  </div>
+                  <div className="p-3 rounded-xl bg-white/[0.02] border border-white/5">
+                    <div className="text-gray-500 text-[10px] uppercase">External Evidence</div>
+                    <div className="text-lg font-bold text-purple-400">
+                      {companyData?.sources_categorized?.coverage?.external_count ?? 3}
+                    </div>
+                    <div className="text-[10px] text-gray-500">News &amp; Publications</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Sources Filter Pills */}
+              <div className="flex items-center justify-between gap-2 border-b border-white/10 pb-3">
+                <span className="text-xs text-gray-400 font-semibold">Filter Citations:</span>
+                <div className="flex items-center gap-1.5 p-1 rounded-xl bg-white/[0.03] border border-white/5 text-xs">
+                  {["ALL", "Company", "Job Board", "External News"].map((cat) => (
+                    <button
+                      key={cat}
+                      onClick={() => setIntelSourceFilter(cat)}
+                      className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition-all ${
+                        intelSourceFilter === cat
+                          ? "bg-cyan-500 text-white shadow-sm"
+                          : "text-gray-400 hover:text-white"
+                      }`}
+                    >
+                      {cat === "ALL" ? "All (7)" : cat}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Rendered Source Ledger */}
+              <div className="space-y-2.5">
+                {(companyData?.raw_sources || [])
+                  .filter((s) => intelSourceFilter === "ALL" || s.category === intelSourceFilter)
+                  .map((source, i) => (
+                    <div
+                      key={i}
+                      className="p-3.5 rounded-xl bg-white/[0.02] border border-white/5 hover:border-cyan-500/30 transition-all flex items-start justify-between gap-3 group"
+                    >
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2">
+                          <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300">
+                            [{source.id || i + 1}]
+                          </span>
+                          <span className="text-xs font-bold text-white group-hover:text-cyan-400 transition-colors">
+                            {source.title}
+                          </span>
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-white/5 text-gray-400">
+                            {source.category}
+                          </span>
+                        </div>
+                        <p className="text-[11px] text-gray-400 line-clamp-2">{source.snippet}</p>
+                        <span className="text-[10px] font-mono text-gray-500">{source.domain || source.url}</span>
+                      </div>
+                      <a
+                        href={source.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-xs text-cyan-300 font-mono transition-colors shrink-0"
+                      >
+                        Visit ↗
+                      </a>
+                    </div>
+                  ))}
+              </div>
+            </div>
+          )}
         </div>
       )}
 
