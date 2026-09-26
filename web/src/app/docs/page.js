@@ -59,11 +59,11 @@ function ZoomableDiagram({ title, subtitle, badge = "ARCHITECTURE DIAGRAM", chil
         </div>
       </div>
 
-      {/* Diagram Container */}
-      <div className="w-full overflow-x-auto py-4 flex justify-center bg-black/20 rounded-xl border border-white/5 cursor-grab active:cursor-grabbing">
+      {/* Diagram Container with strict mobile viewport isolation */}
+      <div className="w-full max-w-full overflow-x-auto py-3 bg-black/40 rounded-xl border border-white/5 cursor-grab active:cursor-grabbing scrollbar-thin">
         <div
-          style={{ transform: `scale(${scale})`, transformOrigin: "top center", transition: "transform 0.2s ease-out" }}
-          className="w-full flex justify-center py-2"
+          style={{ transform: `scale(${scale})`, transformOrigin: "top left sm:top center", transition: "transform 0.2s ease-out" }}
+          className="w-[740px] max-w-none py-2 px-1"
         >
           {children}
         </div>
@@ -197,7 +197,7 @@ export default function DocsPage() {
             </span>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             {/* Live UptimeRobot Status Badge at TOP */}
             <a
               href="https://stats.uptimerobot.com/4tYmSQnuBE?utm_source=status_badge&utm_medium=referral"
@@ -209,7 +209,7 @@ export default function DocsPage() {
               <img
                 src="https://badge.uptimerobot.com/psp/6d03dcfe5d5c495465fe9a459d7f778b.svg?style=logo&theme=dark"
                 alt="Ambuj's Cloud Environment: Up"
-                className="h-5 sm:h-6 w-auto"
+                className="h-4 sm:h-6 w-auto max-w-[90px] sm:max-w-none"
               />
             </a>
             <Link
@@ -220,9 +220,10 @@ export default function DocsPage() {
             </Link>
             <Link
               href="/generate"
-              className="px-3.5 py-1.5 rounded-lg bg-gradient-to-r from-rose-500 to-orange-500 hover:from-rose-600 hover:to-orange-600 text-white text-xs font-semibold shadow-md shadow-rose-500/20 transition-all flex items-center gap-1.5"
+              className="px-2.5 sm:px-3.5 py-1.5 rounded-lg bg-gradient-to-r from-rose-500 to-orange-500 hover:from-rose-600 hover:to-orange-600 text-white text-[11px] sm:text-xs font-semibold shadow-md shadow-rose-500/20 transition-all flex items-center gap-1 shrink-0"
             >
-              <span>Launch App</span>
+              <span className="hidden sm:inline">Launch App</span>
+              <span className="sm:hidden">App</span>
               <span>→</span>
             </Link>
           </div>
@@ -305,7 +306,7 @@ export default function DocsPage() {
         </aside>
 
         {/* Main Document Body */}
-        <main className="lg:col-span-9 space-y-16">
+        <main className="lg:col-span-9 space-y-12 sm:space-y-16 min-w-0 max-w-full overflow-hidden">
           {/* Header Banner */}
           <div className="space-y-4 border-b border-white/10 pb-8">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-semibold">
@@ -342,7 +343,7 @@ export default function DocsPage() {
               subtitle="Strict Context Pipeline with Quarantined Ingestion"
               badge="DIAGRAM 1"
             >
-              <svg viewBox="0 0 880 340" className="w-full max-w-3xl min-w-[650px] font-sans">
+              <svg viewBox="0 0 880 340" className="w-full font-sans select-none">
                 <defs>
                   <linearGradient id="gradInput" x1="0%" y1="0%" x2="100%" y2="100%">
                     <stop offset="0%" stopColor="#1e293b" />
@@ -523,7 +524,7 @@ export default function DocsPage() {
           <section id="deterministic-math" className="space-y-6 scroll-mt-24">
             <div className="flex items-center gap-3">
               <span className="text-rose-400 font-mono text-sm font-bold">04</span>
-              <h2 className="text-xl sm:text-2xl font-bold text-white">Technical Honesty: Deterministic Application-Layer Scoring</h2>
+              <h2 className="text-lg sm:text-2xl font-bold text-white break-words">Technical Honesty: Deterministic Application-Layer Scoring</h2>
             </div>
 
             <p className="text-sm text-gray-300 leading-relaxed">
@@ -536,7 +537,7 @@ export default function DocsPage() {
               subtitle="Categorical Classification to Mathematical Summation"
               badge="DIAGRAM 2"
             >
-              <svg viewBox="0 0 880 260" className="w-full max-w-3xl min-w-[650px] font-sans">
+              <svg viewBox="0 0 880 260" className="w-full font-sans select-none">
                 {/* Step 1 */}
                 <rect x="20" y="20" width="840" height="40" rx="8" fill="#111827" stroke="#374151" strokeWidth="1" />
                 <text x="440" y="44" fill="#f3f4f6" fontSize="12" fontWeight="bold" textAnchor="middle">
@@ -662,7 +663,7 @@ export default function DocsPage() {
               subtitle="Live Grounding to In-Text Interactive Citations"
               badge="DIAGRAM 3"
             >
-              <svg viewBox="0 0 880 230" className="w-full max-w-3xl min-w-[650px] font-sans">
+              <svg viewBox="0 0 880 230" className="w-full font-sans select-none">
                 {/* Query */}
                 <rect x="20" y="20" width="260" height="50" rx="8" fill="#0f172a" stroke="#38bdf8" strokeWidth="1" />
                 <text x="150" y="42" fill="#38bdf8" fontSize="11" fontWeight="bold" textAnchor="middle">Target Company + Role</text>

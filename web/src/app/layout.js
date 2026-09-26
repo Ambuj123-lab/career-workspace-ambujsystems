@@ -30,8 +30,8 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${inter.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col bg-[#030712] text-gray-50">
+    <html lang="en" className={`${inter.variable} h-full antialiased overflow-x-hidden`}>
+      <body className="min-h-full flex flex-col bg-[#030712] text-gray-50 overflow-x-hidden w-full max-w-full">
         <Providers>
           {children}
         </Providers>
