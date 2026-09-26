@@ -79,6 +79,18 @@ const SAMPLE_DEFENSE = [
   },
 ];
 
+
+function RedactedMarker({ chars = "████████", className = "" }) {
+  return (
+    <span
+      className={`inline-flex items-center px-1.5 py-0.5 rounded bg-zinc-950 text-zinc-600 border border-zinc-800/80 font-mono text-[10px] tracking-widest select-none shadow-[inset_0_1px_3px_rgba(0,0,0,0.8)] align-middle ${className}`}
+      title="[Entity Redacted]"
+    >
+      {chars}
+    </span>
+  );
+}
+
 export default function LandingHeroPreview() {
   const [activeTab, setActiveTab] = useState("radar"); // radar | defense | company
   const [selectedSkill, setSelectedSkill] = useState(SAMPLE_SKILLS[0]);
@@ -332,7 +344,7 @@ export default function LandingHeroPreview() {
                   Review Verified Company Sources
                 </h3>
                 <p className="text-xs text-gray-400 mt-1">
-                  To guarantee zero AI hallucinations, review the sources discovered for <span className="px-1.5 py-0.5 rounded bg-violet-500/20 text-violet-300 font-semibold border border-violet-500/30 text-[11px]">Coforge</span>. Only approved claims enter your cover letter.
+                  To guarantee zero AI hallucinations, review the sources discovered for target enterprise <RedactedMarker chars="████████" />. Only approved claims enter your cover letter.
                 </p>
               </div>
 
@@ -340,10 +352,10 @@ export default function LandingHeroPreview() {
               <div className="p-4 rounded-xl bg-black/40 border border-white/10 space-y-2">
                 <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-rose-400">
                   <span>SYNTHESIZED COMPANY SIGNAL</span>
-                  <span className="px-2 py-0.5 rounded-full bg-violet-500/20 text-violet-300 border border-violet-500/30 font-mono lowercase">entity: coforge</span>
+                  <span className="px-2 py-0.5 rounded-full bg-zinc-950 text-zinc-500 border border-zinc-800 font-mono lowercase text-[10px] tracking-wider">entity: <RedactedMarker chars="██████" /></span>
                 </div>
                 <p className="text-xs text-gray-300 leading-relaxed">
-                  <span className="px-1.5 py-0.5 rounded bg-violet-500/20 text-violet-300 font-semibold border border-violet-500/30">Coforge</span> is a global digital services and solutions provider that fuses deep domain expertise with emerging technology to deliver real-world business impact <span className="text-rose-400 font-mono font-bold">[7]</span>. The company offers proprietary artificial intelligence platforms such as <span className="text-white font-semibold underline decoration-rose-500/50">Quasar AI</span>, an intelligent document management system, and <span className="text-white font-semibold underline decoration-cyan-500/50">ForgeX</span>, a unified delivery platform <span className="text-rose-400 font-mono font-bold">[4]</span>. Their technological focus spans digital services, artificial intelligence, and product engineering-led solutions.
+                  <RedactedMarker chars="████████" /> is a global digital services and solutions provider that fuses deep domain expertise with emerging technology to deliver real-world business impact <span className="text-rose-400 font-mono font-bold">[7]</span>. The company offers proprietary enterprise platforms such as <RedactedMarker chars="████████" />, an intelligent document management system, and <RedactedMarker chars="██████" />, a unified delivery platform <span className="text-rose-400 font-mono font-bold">[4]</span>. Their technological focus spans digital services, artificial intelligence, and product engineering-led solutions.
                 </p>
               </div>
 
@@ -358,11 +370,11 @@ export default function LandingHeroPreview() {
                   <input type="checkbox" defaultChecked className="mt-1 accent-rose-500 rounded" />
                   <div className="text-xs">
                     <div className="flex items-center gap-2">
-                      <span className="font-bold text-cyan-400"><span className="px-1.5 py-0.5 rounded bg-violet-500/20 text-violet-300 border border-violet-500/30 text-[11px] font-semibold">Coforge</span> Jobs &mdash; 128,424 Vacancies in September 2026 &mdash; Naukri.com</span>
+                      <span className="font-bold text-cyan-400"><RedactedMarker chars="████████" className="mr-1" /> Jobs &mdash; 128,424 Vacancies in September 2026 &mdash; Naukri.com</span>
                       <span className="text-[10px] text-gray-500 font-mono">Cited Source #1</span>
                     </div>
                     <p className="text-gray-400 text-[11px] mt-0.5">
-                      Title: <span className="text-violet-300 font-medium">Coforge</span> Jobs &mdash; Research company profiles, Quasar AI platform adoption, and technical vacancy requirements.
+                      Title: <RedactedMarker chars="████████" className="mr-1" /> Jobs &mdash; Research company profiles, enterprise AI platform adoption, and technical vacancy requirements.
                     </p>
                   </div>
                 </div>
@@ -371,7 +383,7 @@ export default function LandingHeroPreview() {
                   <input type="checkbox" defaultChecked className="mt-1 accent-rose-500 rounded" />
                   <div className="text-xs">
                     <div className="flex items-center gap-2">
-                      <span className="font-bold text-cyan-400"><span className="px-1.5 py-0.5 rounded bg-violet-500/20 text-violet-300 border border-violet-500/30 text-[11px] font-semibold">Coforge</span> ForgeX Unified Delivery Platform Whitepaper</span>
+                      <span className="font-bold text-cyan-400"><RedactedMarker chars="████████" className="mr-1" /> Unified Delivery Platform Whitepaper</span>
                       <span className="text-[10px] text-gray-500 font-mono">Cited Source #2</span>
                     </div>
                     <p className="text-gray-400 text-[11px] mt-0.5">
