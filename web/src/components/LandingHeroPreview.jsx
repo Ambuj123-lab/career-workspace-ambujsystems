@@ -332,17 +332,18 @@ export default function LandingHeroPreview() {
                   Review Verified Company Sources
                 </h3>
                 <p className="text-xs text-gray-400 mt-1">
-                  To guarantee zero AI hallucinations, review the sources discovered for your target company. Only approved claims enter your cover letter.
+                  To guarantee zero AI hallucinations, review the sources discovered for <span className="px-1.5 py-0.5 rounded bg-violet-500/20 text-violet-300 font-semibold border border-violet-500/30 text-[11px]">Coforge</span>. Only approved claims enter your cover letter.
                 </p>
               </div>
 
               {/* Synthesized Signal Box */}
               <div className="p-4 rounded-xl bg-black/40 border border-white/10 space-y-2">
-                <div className="text-[10px] font-bold uppercase tracking-wider text-rose-400">
-                  SYNTHESIZED COMPANY SIGNAL (COFORGE EXAMPLE)
+                <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-rose-400">
+                  <span>SYNTHESIZED COMPANY SIGNAL</span>
+                  <span className="px-2 py-0.5 rounded-full bg-violet-500/20 text-violet-300 border border-violet-500/30 font-mono lowercase">entity: coforge</span>
                 </div>
                 <p className="text-xs text-gray-300 leading-relaxed">
-                  Coforge is a global digital services and solutions provider that fuses deep domain expertise with emerging technology to deliver real-world business impact <span className="text-rose-400 font-mono font-bold">[7]</span>. The company offers proprietary artificial intelligence platforms such as <span className="text-white font-semibold underline decoration-rose-500/50">Quasar AI</span>, an intelligent document management system, and <span className="text-white font-semibold underline decoration-cyan-500/50">ForgeX</span>, a unified delivery platform <span className="text-rose-400 font-mono font-bold">[4]</span>. Their technological focus spans digital services, artificial intelligence, and product engineering-led solutions.
+                  <span className="px-1.5 py-0.5 rounded bg-violet-500/20 text-violet-300 font-semibold border border-violet-500/30">Coforge</span> is a global digital services and solutions provider that fuses deep domain expertise with emerging technology to deliver real-world business impact <span className="text-rose-400 font-mono font-bold">[7]</span>. The company offers proprietary artificial intelligence platforms such as <span className="text-white font-semibold underline decoration-rose-500/50">Quasar AI</span>, an intelligent document management system, and <span className="text-white font-semibold underline decoration-cyan-500/50">ForgeX</span>, a unified delivery platform <span className="text-rose-400 font-mono font-bold">[4]</span>. Their technological focus spans digital services, artificial intelligence, and product engineering-led solutions.
                 </p>
               </div>
 
@@ -357,11 +358,11 @@ export default function LandingHeroPreview() {
                   <input type="checkbox" defaultChecked className="mt-1 accent-rose-500 rounded" />
                   <div className="text-xs">
                     <div className="flex items-center gap-2">
-                      <span className="font-bold text-cyan-400">Coforge Jobs &mdash; 128,424 Vacancies in September 2026 &mdash; Naukri.com</span>
+                      <span className="font-bold text-cyan-400"><span className="px-1.5 py-0.5 rounded bg-violet-500/20 text-violet-300 border border-violet-500/30 text-[11px] font-semibold">Coforge</span> Jobs &mdash; 128,424 Vacancies in September 2026 &mdash; Naukri.com</span>
                       <span className="text-[10px] text-gray-500 font-mono">Cited Source #1</span>
                     </div>
                     <p className="text-gray-400 text-[11px] mt-0.5">
-                      Title: Coforge Jobs &mdash; Research company profiles, Quasar AI platform adoption, and technical vacancy requirements.
+                      Title: <span className="text-violet-300 font-medium">Coforge</span> Jobs &mdash; Research company profiles, Quasar AI platform adoption, and technical vacancy requirements.
                     </p>
                   </div>
                 </div>
@@ -370,7 +371,7 @@ export default function LandingHeroPreview() {
                   <input type="checkbox" defaultChecked className="mt-1 accent-rose-500 rounded" />
                   <div className="text-xs">
                     <div className="flex items-center gap-2">
-                      <span className="font-bold text-cyan-400">Coforge ForgeX Unified Delivery Platform Whitepaper</span>
+                      <span className="font-bold text-cyan-400"><span className="px-1.5 py-0.5 rounded bg-violet-500/20 text-violet-300 border border-violet-500/30 text-[11px] font-semibold">Coforge</span> ForgeX Unified Delivery Platform Whitepaper</span>
                       <span className="text-[10px] text-gray-500 font-mono">Cited Source #2</span>
                     </div>
                     <p className="text-gray-400 text-[11px] mt-0.5">
