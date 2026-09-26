@@ -9,7 +9,7 @@ const MAX_RESUME = 15000;
 const SAMPLE_DATA = {
   name: "Ambuj Kumar Tripathi",
   email: "ambuj.tripathi@example.com",
-  phone: "+91 9431801363",
+  phone: "+91 98765 43210",
   linkedin: "linkedin.com/in/ambuj-tripathi",
   role: "Senior AI Engineer (Agentic Systems)",
   company: "Google DeepMind",
@@ -216,7 +216,7 @@ export default function InputForm({ onGenerate }) {
               type="text"
               value={form.phone}
               onChange={(e) => update("phone", e.target.value)}
-              placeholder="+91 9431801363"
+              placeholder="+91 98765 43210"
               className="w-full px-4 py-3 bg-white/[0.04] border border-white/10 rounded-xl text-sm text-white placeholder-gray-600 focus:border-rose-500/50 focus:ring-1 focus:ring-rose-500/20 outline-none transition-all"
             />
           </div>
