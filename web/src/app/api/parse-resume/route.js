@@ -1,5 +1,4 @@
-import { NextResponse } from "next/server";
-import { PDFParse } from "pdf-parse";
+﻿import { NextResponse } from "next/server";
 import mammoth from "mammoth";
 import { checkRateLimit, getClientIp } from "@/lib/rateLimit";
 
@@ -7,20 +6,41 @@ export const dynamic = "force-dynamic";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB ceiling
 const MAX_RESUME_CHARS = 15000;
-const MAX_PDF_PAGES = 10;
 const PARSE_TIMEOUT_MS = 8000;
 
+/**
+ * Extract text from PDF buffer using pdfjs-dist legacy build (no worker required).
+ * Falls back to raw binary stream regex extraction for malformed PDFs.
+ */
 async function parsePdfBuffer(buffer) {
+  // Primary: pdfjs-dist legacy build (worker-free, Vercel-compatible)
   try {
+    const pdfjsLib = await import("pdfjs-dist/legacy/build/pdf.mjs");
     const uint8 = new Uint8Array(buffer);
-    const parser = new PDFParse({ data: uint8 });
-    const res = await parser.getText();
-    const text = typeof res === "string" ? res : res?.text || "";
-    if (text.trim().length > 10) {
-      return text.trim();
+    const loadingTask = pdfjsLib.getDocument({
+      data: uint8,
+      useWorkerFetch: false,
+      isEvalSupported: false,
+      useSystemFonts: false,
+    });
+    const doc = await loadingTask.promise;
+    const textParts = [];
+
+    for (let i = 1; i <= doc.numPages; i++) {
+      const page = await doc.getPage(i);
+      const content = await page.getTextContent();
+      const pageText = content.items.map((item) => item.str).join(" ");
+      if (pageText.trim()) {
+        textParts.push(pageText.trim());
+      }
+    }
+
+    const fullText = textParts.join("\n\n");
+    if (fullText.trim().length > 10) {
+      return fullText.trim();
     }
   } catch (err) {
-    console.warn("PDFParse warning, attempting fallback extraction:", err?.message || err);
+    console.warn("pdfjs-dist extraction warning, attempting fallback:", err?.message || err);
   }
 
   // Resilient Fallback: Stream text tokens from raw PDF buffer
