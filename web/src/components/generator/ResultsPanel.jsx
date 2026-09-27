@@ -326,21 +326,21 @@ export default function ResultsPanel({
     if (hasExplicitBrackets) {
       const parts = text.split(/(\[(?:Resume:?[^\]]*|Source:?[^\]]*|\d+)\])/gi);
       return parts.map((part, index) => {
-        // Resume Quote Grounding
+        // Resume Quote Grounding (High-Contrast for White Letter Paper)
         if (/^\[Resume:?/i.test(part)) {
           const quote = part.replace(/^\[Resume:?\s*/i, "").replace(/\]$/, "");
           return (
             <span
               key={index}
-              className="inline-flex items-center gap-1 px-2 py-0.5 mx-1 text-[11px] font-mono font-bold rounded bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 border border-emerald-500/40 cursor-help transition-all hover:bg-emerald-500/30 align-baseline"
+              className="inline-flex items-center gap-1 px-2 py-0.5 mx-1 text-[11px] font-sans font-bold rounded-md bg-emerald-100 text-emerald-900 border border-emerald-300 shadow-sm cursor-help hover:bg-emerald-200 transition-all align-baseline"
               title={quote ? `Verified Resume Evidence: "${quote}"` : "Verified Candidate Resume Evidence"}
             >
-              ✓ Resume Anchor
+              <span className="text-[10px] text-emerald-700">✓</span> Resume Anchor
             </span>
           );
         }
 
-        // Company Research Citation [1], [2], etc.
+        // Company Research Citation [1], [2], etc. (High-Contrast for White Letter Paper)
         const numMatch = part.match(/\[(\d+)\]/);
         if (numMatch) {
           const sourceNum = parseInt(numMatch[1], 10);
@@ -359,7 +359,7 @@ export default function ResultsPanel({
                   if (el) el.scrollIntoView({ behavior: "smooth" });
                 }
               }}
-              className="inline-flex items-center justify-center px-2 py-0.5 mx-1 text-[11px] font-mono font-black rounded-md bg-cyan-400 text-slate-950 hover:bg-cyan-300 border border-cyan-300 shadow-sm transition-all hover:scale-110 align-baseline cursor-pointer"
+              className="inline-flex items-center justify-center px-2 py-0.5 mx-1 text-[11px] font-mono font-bold rounded-md bg-cyan-100 text-cyan-900 hover:bg-cyan-200 border border-cyan-300 shadow-sm transition-all hover:scale-105 align-baseline cursor-pointer"
               title={source ? `${source.title} (${source.domain}) - Click to inspect citation` : `Source #${sourceNum}`}
             >
               [{sourceNum}]
@@ -400,10 +400,10 @@ export default function ResultsPanel({
         {text}
         {matchedSkillInText && (
           <span
-            className="inline-flex items-center gap-1 px-2 py-0.5 mx-1 text-[11px] font-mono font-bold rounded bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 border border-emerald-500/40 cursor-help transition-all hover:bg-emerald-500/30 align-baseline"
+            className="inline-flex items-center gap-1 px-2 py-0.5 mx-1 text-[11px] font-sans font-bold rounded-md bg-emerald-100 text-emerald-900 border border-emerald-300 shadow-sm cursor-help hover:bg-emerald-200 transition-all align-baseline"
             title={`Verified Candidate Evidence: ${matchedSkillInText}`}
           >
-            ✓ Resume Anchor
+            <span className="text-[10px] text-emerald-700">✓</span> Resume Anchor
           </span>
         )}
         {isCompanySentence && hasSources && (
@@ -413,7 +413,7 @@ export default function ResultsPanel({
               const src = companyData?.raw_sources?.[0];
               if (src) setActiveCitationSource(src);
             }}
-            className="inline-flex items-center justify-center px-2 py-0.5 mx-1 text-[11px] font-mono font-black rounded-md bg-cyan-400 text-slate-950 hover:bg-cyan-300 border border-cyan-300 shadow-sm transition-all hover:scale-110 align-baseline cursor-pointer"
+            className="inline-flex items-center justify-center px-2 py-0.5 mx-1 text-[11px] font-mono font-bold rounded-md bg-cyan-100 text-cyan-900 hover:bg-cyan-200 border border-cyan-300 shadow-sm transition-all hover:scale-105 align-baseline cursor-pointer"
             title={`Source #1: ${companyData?.raw_sources?.[0]?.title || formData?.company}`}
           >
             [1]
@@ -472,25 +472,19 @@ export default function ResultsPanel({
             <div className="flex flex-wrap items-center gap-2">
               <button
                 onClick={() => setShowEvidenceMarkers(!showEvidenceMarkers)}
-                className={`relative group flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all shadow-md ${
+                className={`flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-medium transition-all border ${
                   showEvidenceMarkers
-                    ? "bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 text-slate-950 shadow-emerald-500/30 ring-2 ring-emerald-300/80 hover:scale-105 active:scale-95"
-                    : "bg-slate-800/80 text-gray-300 hover:text-white border border-white/15 hover:bg-slate-700/80"
+                    ? "bg-[#0b1220] text-gray-200 border-emerald-500/40 hover:border-emerald-400 shadow-sm shadow-emerald-500/10"
+                    : "bg-[#0b1220]/60 text-gray-500 border-white/10 hover:text-gray-300 hover:border-white/20"
                 }`}
-                title="Toggle verified in-line evidence markers [Resume] and [Source]"
+                title="Toggle verified in-line evidence markers"
               >
-                <span className="flex h-2 w-2 relative">
-                  {showEvidenceMarkers && (
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-slate-950 opacity-75" />
-                  )}
-                  <span className={`relative inline-flex rounded-full h-2 w-2 ${showEvidenceMarkers ? "bg-slate-950" : "bg-gray-500"}`} />
+                <span className={`w-2 h-2 rounded-full transition-all ${
+                  showEvidenceMarkers ? "bg-emerald-400 shadow-[0_0_8px_#34d399]" : "bg-gray-600"
+                }`} />
+                <span className="font-sans">
+                  Evidence Citations: <strong className={showEvidenceMarkers ? "text-emerald-400 font-semibold" : "text-gray-500 font-normal"}>{showEvidenceMarkers ? "ON" : "OFF"}</strong>
                 </span>
-                <span>Evidence Proofs: {showEvidenceMarkers ? "ON" : "OFF"}</span>
-                {showEvidenceMarkers && (
-                  <span className="text-[10px] uppercase tracking-wider px-1.5 py-0.5 rounded bg-black/20 font-black text-slate-950 border border-black/10">
-                    Perplexity
-                  </span>
-                )}
               </button>
 
               <button
