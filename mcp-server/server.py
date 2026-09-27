@@ -1,8 +1,8 @@
 """
 AI Cover Letter Generator - MCP Server
-4 Tools: company_research, evidence_validator, jd_analyzer, ats_readiness
+6 Tools: company_research, evidence_validator, jd_analyzer, ats_readiness, source_filter, cover_letter_generator
 
-Transport: Stdio transport (Standard I/O)
+Transport: Stdio transport (Standard I/O) / Streamable HTTP SSE capable
 Dependencies: pip install "mcp[cli]" google-generativeai tavily-python python-dotenv
 
 Run: python server.py
@@ -11,6 +11,7 @@ import asyncio
 import json
 import logging
 import sys
+import argparse
 from mcp.server import Server
 from mcp.server.stdio import stdio_server
 from mcp.types import Tool, TextContent
@@ -19,6 +20,8 @@ from tools.company_research import company_research
 from tools.evidence_validator import evidence_validator
 from tools.jd_analyzer import jd_analyzer
 from tools.ats_readiness import ats_readiness
+from tools.source_filter import source_filter
+from tools.cover_letter_generator import cover_letter_generator
 from config import MAX_JD_CHARS, MAX_RESUME_CHARS, MAX_COMPANY_NAME_CHARS
 
 # Configure server-side diagnostic logger (outputs to stderr to protect stdio JSON-RPC transport on stdout)
@@ -35,7 +38,7 @@ server = Server("ai-cover-letter-mcp")
 
 @server.list_tools()
 async def list_tools() -> list[Tool]:
-    """Register all 4 MCP tools."""
+    """Register all 6 MCP tools."""
     return [
         Tool(
             name="company_research",
@@ -135,6 +138,56 @@ async def list_tools() -> list[Tool]:
                 "required": ["letter_text", "jd_text"],
             },
         ),
+        Tool(
+            name="source_filter",
+            description=(
+                "Evaluate, rank, and filter web research sources based on domain credibility "
+                "and temporal freshness. Tier 1: Official company domains & verified newsrooms, "
+                "Tier 2: Job boards & tech media, Tier 3: Noise/scrapers."
+            ),
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "sources": {
+                        "type": "array",
+                        "items": {"type": "object"},
+                        "description": "List of source objects with url, title, and optional snippet",
+                    },
+                    "company_domain": {
+                        "type": "string",
+                        "description": "Optional primary domain of target company",
+                    },
+                },
+                "required": ["sources"],
+            },
+        ),
+        Tool(
+            name="cover_letter_generator",
+            description=(
+                "Generate an evidence-grounded cover letter strictly bounded by candidate's verified skills "
+                "and approved company research. Returns structured paragraphs with in-line citation markers."
+            ),
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "candidate_name": {"type": "string"},
+                    "role": {"type": "string"},
+                    "company": {"type": "string"},
+                    "matched_skills": {
+                        "type": "array",
+                        "items": {"type": "object"},
+                        "description": "List of matched skills with evidence quotes",
+                    },
+                    "approved_company_facts": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "description": "Optional list of verified company facts",
+                    },
+                    "tone": {"type": "string", "description": "Tone: professional, technical, or conversational"},
+                },
+                "required": ["candidate_name", "role", "company", "matched_skills"],
+            },
+        ),
     ]
 
 
@@ -162,13 +215,30 @@ async def call_tool(name: str, arguments: dict) -> list[TextContent]:
                 letter_text=arguments["letter_text"],
                 jd_text=arguments["jd_text"],
             )
+        elif name == "source_filter":
+            result = await source_filter(
+                sources=arguments["sources"],
+                company_domain=arguments.get("company_domain", ""),
+            )
+        elif name == "cover_letter_generator":
+            result = await cover_letter_generator(
+                candidate_name=arguments["candidate_name"],
+                role=arguments["role"],
+                company=arguments["company"],
+                matched_skills=arguments["matched_skills"],
+                approved_company_facts=arguments.get("approved_company_facts"),
+                tone=arguments.get("tone", "professional"),
+            )
         else:
             logger.warning(f"Rejected invocation for unregistered tool: {name}")
             result = {
                 "error": {
                     "code": "UNKNOWN_TOOL",
                     "message": f"Tool '{name}' is not registered on this MCP server.",
-                    "registered_tools": ["company_research", "evidence_validator", "jd_analyzer", "ats_readiness"],
+                    "registered_tools": [
+                        "company_research", "evidence_validator", "jd_analyzer",
+                        "ats_readiness", "source_filter", "cover_letter_generator"
+                    ],
                 }
             }
             return [TextContent(type="text", text=json.dumps(result, indent=2))]
@@ -179,30 +249,62 @@ async def call_tool(name: str, arguments: dict) -> list[TextContent]:
         logger.error(f"Missing required parameter for tool '{name}': {e}", exc_info=True)
         sanitized_error = {
             "error": {
-                "code": "INVALID_ARGUMENT",
+                "code": "INVALID_PARAMS",
                 "message": f"Missing required parameter: {str(e)}",
                 "tool": name,
             }
         }
         return [TextContent(type="text", text=json.dumps(sanitized_error, indent=2))]
     except Exception as e:
-        # Internal log captures full traceback on stderr for production diagnostics
         logger.error(f"Internal execution failure in tool '{name}': {e}", exc_info=True)
-        # Client receives structured, sanitized error payload without raw internal leaks
         sanitized_error = {
             "error": {
                 "code": "INTERNAL_TOOL_ERROR",
-                "message": "Tool execution encountered an unexpected internal error. Consult server diagnostic logs.",
+                "message": "Tool execution encountered an internal error. Please check server logs for details.",
                 "tool": name,
+                "error_type": type(e).__name__,
             }
         }
         return [TextContent(type="text", text=json.dumps(sanitized_error, indent=2))]
 
 
 async def main():
-    """Start MCP server with stdio transport."""
+    """Start MCP server with stdio transport (or parse CLI for transport)."""
+    parser = argparse.ArgumentParser(description="CoverCraft MCP Server")
+    parser.add_argument("--transport", choices=["stdio", "sse"], default="stdio", help="Transport mode")
+    parser.add_argument("--port", type=int, default=8000, help="Port for SSE transport")
+    args, _ = parser.parse_known_args()
+
+    if args.transport == "sse":
+        logger.info(f"Starting MCP server on SSE transport on port {args.port}...")
+        try:
+            from mcp.server.sse import SseServerTransport
+            from starlette.applications import Starlette
+            from starlette.routing import Route
+            import uvicorn
+
+            sse = SseServerTransport("/messages")
+
+            async def handle_sse(request):
+                async with sse.connect_sse(request.scope, request.receive, request._send) as streams:
+                    await server.run(streams[0], streams[1], server.create_initialization_options())
+
+            app = Starlette(routes=[
+                Route("/sse", endpoint=handle_sse),
+                Route("/messages", endpoint=sse.handle_post_message, methods=["POST"])
+            ])
+            uvicorn.run(app, host="0.0.0.0", port=args.port)
+            return
+        except ImportError:
+            logger.warning("Starlette/uvicorn not installed; falling back to standard stdio transport.")
+
+    logger.info("Starting CoverCraft MCP Server on stdio transport (6 Registered Tools)...")
     async with stdio_server() as (read_stream, write_stream):
-        await server.run(read_stream, write_stream, server.create_initialization_options())
+        await server.run(
+            read_stream,
+            write_stream,
+            server.create_initialization_options()
+        )
 
 
 if __name__ == "__main__":

@@ -129,56 +129,101 @@ export async function POST(req) {
       );
     }
 
-    // 2. Classify & Deduplicate Sources
-    const seenUrls = new Set();
-    const processedSources = [];
+    // 2. Deterministic Source Credibility & Temporal Freshness Filter (MCP: source_filter)
+    const TIER1_DOMAINS = [
+      "github.com", "sec.gov", "greenhouse.io", "lever.co", "workday.com",
+      "reuters.com", "techcrunch.com", "bloomberg.com", "forbes.com", "cnbc.com",
+      "theinformation.com", "wsj.com", "ft.com"
+    ];
+    const NOISE_DOMAINS = ["pinterest.com", "quora.com", "facebook.com", "instagram.com", "tiktok.com"];
 
-    rawResults.forEach((r, idx) => {
+    const seenUrls = new Set();
+    const scoredSources = [];
+    const cleanComp = company_name.toLowerCase().replace(/[^a-z0-9]/g, "");
+
+    rawResults.forEach((r) => {
       if (!r.url || seenUrls.has(r.url)) return;
       seenUrls.add(r.url);
 
-      let category = "External";
       let hostname = "";
       try {
         hostname = new URL(r.url).hostname.toLowerCase();
-        const cleanComp = company_name.toLowerCase().replace(/[^a-z0-9]/g, "");
-        if (
-          hostname.includes(cleanComp) ||
-          hostname.includes("official") ||
-          r.url.includes("/about") ||
-          r.url.includes("/careers") ||
-          r.url.includes("/blog")
-        ) {
-          category = "Company";
-        } else if (
-          hostname.includes("naukri") ||
-          hostname.includes("ambitionbox") ||
-          hostname.includes("indeed") ||
-          hostname.includes("glassdoor") ||
-          hostname.includes("linkedin") ||
-          hostname.includes("foundit") ||
-          hostname.includes("greenhouse") ||
-          hostname.includes("lever.co") ||
-          hostname.includes("workday")
-        ) {
-          category = "Job Board";
-        } else {
-          category = "External News";
-        }
-      } catch (e) {
-        hostname = r.url;
+      } catch {
+        return;
       }
 
-      processedSources.push({
-        id: processedSources.length + 1,
+      // Discard social noise & scrapers
+      if (NOISE_DOMAINS.some((nd) => hostname.includes(nd))) return;
+
+      let tier = 2;
+      let trustScore = 70;
+      let category = "External News";
+
+      if (
+        hostname.includes(cleanComp) ||
+        r.url.includes("/about") ||
+        r.url.includes("/careers") ||
+        r.url.includes("/press") ||
+        r.url.includes("/blog")
+      ) {
+        tier = 1;
+        trustScore = 95;
+        category = "Official Company";
+      } else if (TIER1_DOMAINS.some((td) => hostname.includes(td))) {
+        tier = 1;
+        trustScore = 90;
+        category = "Verified Newsroom / Primary";
+      } else if (
+        hostname.includes("naukri") ||
+        hostname.includes("ambitionbox") ||
+        hostname.includes("indeed") ||
+        hostname.includes("glassdoor") ||
+        hostname.includes("linkedin") ||
+        hostname.includes("greenhouse") ||
+        hostname.includes("lever.co") ||
+        hostname.includes("workday")
+      ) {
+        tier = 2;
+        trustScore = 75;
+        category = "Verified Job Board";
+      } else {
+        tier = 3;
+        trustScore = 55;
+        category = "Supporting Media";
+      }
+
+      // Temporal recency check
+      const textBlob = (r.title + " " + (r.content || "")).toLowerCase();
+      const oldYearMatch = textBlob.match(/\b(201[0-9]|202[0-3])\b/);
+      const recentYearMatch = textBlob.match(/\b(202[4-6])\b/);
+
+      let freshness = "CURRENT (2024-2026)";
+      if (oldYearMatch && !recentYearMatch) {
+        freshness = "HISTORICAL (>2y)";
+        trustScore -= 10;
+      } else if (recentYearMatch) {
+        trustScore += 5;
+      }
+
+      scoredSources.push({
         title: r.title || `${company_name} Intelligence`,
         url: r.url,
         domain: hostname,
-        snippet: r.content?.slice(0, 300) || "",
+        snippet: r.content?.slice(0, 350) || "",
         category,
-        relevance: processedSources.length < 2 ? "High relevance" : processedSources.length < 4 ? "Medium relevance" : "Supporting source",
+        tier,
+        trustScore,
+        freshness,
       });
     });
+
+    // Sort by Trust Score descending and assign IDs
+    scoredSources.sort((a, b) => b.trustScore - a.trustScore);
+    const processedSources = scoredSources.map((s, idx) => ({
+      ...s,
+      id: idx + 1,
+      relevance: s.tier === 1 ? "Tier-1 Authoritative" : s.tier === 2 ? "Tier-2 Verified" : "Supporting Context",
+    }));
 
     const officialCount = processedSources.filter((s) => s.category === "Official").length;
 

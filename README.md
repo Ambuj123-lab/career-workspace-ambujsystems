@@ -92,19 +92,23 @@ When LLM JSON structures are delayed or partially populated, a deterministic reg
 - **⚡ Hiring Signals Sub-Tab:** Isolates technology focuses, active initiatives, and recent hiring surges with cited references `[1]`, `[2]`.
 - **🔗 Sources Coverage Sub-Tab:** Displays full URL citations and scrape statuses.
 
-### 3. Evidence-Grounded Generation & Claim Validation Policy
+### 3. Evidence-Grounded Generation, UX & Claim Validation Policy
 - **Evidence-Grounded Synthesizer:** System instructions enforce that **every single achievement claim** in the cover letter must map directly to a verified bullet in the candidate's resume.
-- **No Fabricated Bridges:** If a candidate lacks a required skill (e.g., Kubernetes), the engine does not claim proficiency; it anchors to adjacent foundational experience (e.g., Docker containerization) or leaves it unstated.
-- **Human-in-the-Loop (HITL) Gate:** Users explicitly inspect and toggle on/off scraped web sources before any intelligence enters the LLM generation prompt.
+- **Interactive In-Line Evidence Markers with Clean Submission Export:** On-screen interactive badges (`[Resume Anchor]` & `[Source Citation]`) allow candidates to hover and verify exact source quotes with a live `[Evidence Markers: ON/OFF]` toggle. When candidates click **Copy to Clipboard** or **Download Markdown/PDF**, internal citation tags are **automatically stripped** to deliver 100% clean, submission-ready letters for recruiters.
+- **Adversarial Overclaim Red-Teamer (Veracity Audit Gate):** Scans generated text against candidate resume verbs to catch senior inflation (e.g., resume states "assisted team with Kubernetes rollout" vs draft stating "spearheaded enterprise migration"). The engine automatically softens unverified verbs to authentic baseline evidence and records an audit log.
+- **Live Step Progress Tracker & Dynamic Elapsed Timer:** An event-driven 4-phase execution tracker (`01. Competency Match` → `02. MCP Company Research` → `03. Human Approval` → `04. Evidence Synthesis`) with a live counting timer (`00:04s`) and active tool indicator so candidates clearly follow live execution without confusion or perceived stalls.
+- **Human-in-the-Loop (HITL) Gate:** Users explicitly inspect, evaluate credibility scores, and toggle on/off scraped web sources before any external intelligence enters the LLM generation prompt.
 
 ### 4. Native Model Context Protocol (MCP) Integration
 - Contains a standalone **Anthropic Model Context Protocol (MCP)** server written in Python 3.11 (`mcp-server/`).
-- Exposes **4 Registered Tools** via the standard Model Context Protocol **stdio transport**:
+- Exposes **6 Registered Tools** via standard Model Context Protocol **stdio transport** and **Streamable HTTP SSE transport**:
   1. `company_research`: Real-time web search via Tavily with traceable source citations.
   2. `evidence_validator`: Claim Ledger validation against source data returning `VERIFIED` / `PARTIAL` / `UNSUPPORTED`.
   3. `jd_analyzer`: Evidence-backed JD matching against resume with actual proof anchors.
   4. `ats_readiness`: Deterministic heuristic audit on keyword coverage, format integrity, and length.
-- Allows AI agents (Claude Desktop, Cursor, Windsurf, Custom Agents) to programmatically trigger evidence analysis, web grounding, and claim verification.
+  5. `source_filter`: Algorithmic domain authority tiering, noise suppression, and temporal freshness validation (>18m filter).
+  6. `cover_letter_generator`: Evidence-grounded synthesis with structured in-line citation markers and zero-overclaim enforcement.
+- Dual-transport support: run locally with Claude Desktop/Cursor via `stdio_server` or deploy as an independent streaming microservice using `--transport=sse`.
 
 ### 5. Production Observability & Multi-Stage Containerization
 - **MongoDB Atlas Telemetry:** Logs anonymized generation latency, token volume, tone selections, and error distributions.

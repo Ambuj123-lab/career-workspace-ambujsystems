@@ -461,7 +461,7 @@ export default function DocsPage() {
                   <tr>
                     <td className="p-3.5 font-bold text-white">Tool Transparency</td>
                     <td className="p-3.5 text-red-300/80">Black box opaque spinner. No visibility into system prompts, tool calls, or failure fallbacks.</td>
-                    <td className="p-3.5 text-emerald-300/90 font-medium">Model Context Protocol (MCP) stream terminal. 4 registered tools logging execution events with expandable JSON schema payloads.</td>
+                    <td className="p-3.5 text-emerald-300/90 font-medium">Model Context Protocol (MCP) stream terminal. 6 registered tools logging execution events with expandable JSON schema payloads.</td>
                   </tr>
                 </tbody>
               </table>
@@ -766,13 +766,15 @@ export default function DocsPage() {
               CoverCraft implements the open <strong>Model Context Protocol (MCP)</strong> standard, exposing an extensible tool server in <code className="text-purple-400 bg-white/5 px-1.5 py-0.5 rounded">mcp-server/server.py</code> and a streamable execution trace terminal in the frontend.
             </p>
 
-            {/* The 4 Registered Tools */}
-            <div className="grid sm:grid-cols-2 gap-3">
+            {/* The 6 Registered Tools */}
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
               {[
                 { tool: "company_research", desc: "Executes real-time Tavily search queries for company developments and engineering initiatives with verifiable source citations and domain filtering." },
                 { tool: "evidence_validator", desc: "Claim Ledger gatekeeper: Quarantines statements inside <user_resume> boundary and validates candidate claims against source data (VERIFIED / PARTIAL / UNSUPPORTED)." },
                 { tool: "jd_analyzer", desc: "Evidence-backed JD matching: Extracts required competency vectors from JD and matches each against resume with actual evidence." },
                 { tool: "ats_readiness", desc: "Deterministic heuristic audit: Evaluates keyword coverage, skills presence, and length without fake commercial ATS vendor scores." },
+                { tool: "source_filter", desc: "Domain credibility & temporal filter: Evaluates source tiers (Official company newsroom, SEC filings, tech media) and discards outdated articles (>18m)." },
+                { tool: "cover_letter_generator", desc: "Evidence-grounded synthesis engine: Generates structured letter paragraphs with verified in-line citation markers and zero-overclaim enforcement." },
               ].map((t, idx) => (
                 <div key={idx} className="p-3.5 rounded-xl bg-black/40 border border-white/5 space-y-1.5">
                   <div className="flex items-center gap-2">

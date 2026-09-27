@@ -196,20 +196,14 @@ export default function Home() {
               </span>
             </div>
 
-            <h1 className="text-5xl md:text-7xl font-black tracking-tight leading-[1.05] mb-6">
-              Cover Letters That{" "}
-              <span className="gradient-text">Prove</span>{" "}
-              <br className="hidden md:block" />
-              Your Fit
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight leading-[1.08] mb-6">
+              <span className="gradient-text">Evidence-Grounded AI</span>{" "}
+              <br className="hidden sm:block" />
+              for High-Stakes Career Applications
             </h1>
 
-            <p className="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed">
-              Not another template filler.{" "}
-              <span className="text-gray-300 font-medium">
-                Every claim backed by evidence.
-              </span>{" "}
-              Company research grounded in cited sources. ATS readiness analyzed.
-              Interview-defense ready.
+            <p className="text-base sm:text-lg md:text-xl text-gray-400 max-w-3xl mx-auto mb-10 leading-relaxed">
+              An <span className="text-gray-200 font-medium">engineering-first workspace</span> designed to eliminate generative hallucinations. Every qualification is audited against verified resume quotes, grounded with cited MCP company research, and prepared for adversarial interview defense.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3.5 sm:gap-4 justify-center items-center max-w-md sm:max-w-none mx-auto">

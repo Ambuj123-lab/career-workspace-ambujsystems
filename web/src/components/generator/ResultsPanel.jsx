@@ -84,6 +84,7 @@ export default function ResultsPanel({
     (letterData?.paragraphs || []).map((p) => (typeof p === "string" ? p : p.content))
   );
   const [isEditing, setIsEditing] = useState(false);
+  const [showEvidenceMarkers, setShowEvidenceMarkers] = useState(true);
   const [companySubTab, setCompanySubTab] = useState("job_context"); // "job_context" is default!
   const [showOptionalMeta, setShowOptionalMeta] = useState(false);
   const [intelSourceFilter, setIntelSourceFilter] = useState("ALL");
@@ -113,14 +114,33 @@ export default function ResultsPanel({
     formData?.name,
   ].join("\n");
 
+  // Clean letter text stripped of internal citation tags for HR submission
+  const cleanFullLetterText = [
+    formData?.name,
+    [formData?.email, formData?.phone, formData?.linkedin].filter(Boolean).join(" | "),
+    "",
+    new Date().toLocaleDateString("en-US", { day: "numeric", month: "long", year: "numeric" }),
+    "",
+    letterData?.subject_line || `Application for ${formData?.role} at ${formData?.company}`,
+    "",
+    letterData?.greeting || "Dear Hiring Manager,",
+    "",
+    ...paragraphs.map((p) => p.replace(/\[(?:Resume|Source|\d+)[^\]]*\]/gi, "").replace(/\s{2,}/g, " ").trim()),
+    "",
+    "Best regards,",
+    formData?.name,
+  ].join("\n");
+
   const handleCopy = () => {
-    navigator.clipboard.writeText(fullLetterText);
+    // Copies clean submission-ready text (no internal markers)
+    navigator.clipboard.writeText(cleanFullLetterText);
     setCopied(true);
     setTimeout(() => setCopied(false), 2500);
   };
 
   const handleDownloadMarkdown = () => {
-    const mdContent = `# Cover Letter: ${formData?.role} at ${formData?.company}\n\n**Candidate:** ${formData?.name}\n**Date:** ${new Date().toLocaleDateString()}\n\n---\n\n${fullLetterText}\n`;
+    // Downloads clean submission-ready Markdown (no internal markers)
+    const mdContent = `# Cover Letter: ${formData?.role} at ${formData?.company}\n\n**Candidate:** ${formData?.name}\n**Date:** ${new Date().toLocaleDateString()}\n\n---\n\n${cleanFullLetterText}\n`;
     const blob = new Blob([mdContent], { type: "text/markdown;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
@@ -293,20 +313,40 @@ export default function ResultsPanel({
     return list.filter((s) => (s.category || "Official") === sourceFilter);
   }, [companyData, sourceFilter]);
 
-  // Citation parser & clickable pill renderer
+  // Enhanced Evidence Citation Parser (Respects showEvidenceMarkers toggle)
   const renderTextWithCitations = (text) => {
     if (!text) return null;
-    const parts = text.split(/(\[\d+\])/g);
+    if (!showEvidenceMarkers) {
+      return text.replace(/\[(?:Resume|Source|\d+)[^\]]*\]/gi, "").replace(/\s{2,}/g, " ").trim();
+    }
+
+    const parts = text.split(/(\[(?:Resume:?[^\]]*|Source:?[^\]]*|\d+)\])/gi);
     return parts.map((part, index) => {
-      const match = part.match(/\[(\d+)\]/);
-      if (match) {
-        const sourceNum = parseInt(match[1], 10);
+      // 1. Resume Quote Grounding
+      if (/^\[Resume:?/i.test(part)) {
+        const quote = part.replace(/^\[Resume:?\s*/i, "").replace(/\]$/, "");
+        return (
+          <span
+            key={index}
+            className="inline-flex items-center gap-1 px-1.5 py-0.5 mx-1 text-[11px] font-mono font-semibold rounded bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30 cursor-help transition-all hover:bg-emerald-500/25 align-baseline"
+            title={quote ? `Verified Resume Evidence: "${quote}"` : "Verified Candidate Resume Evidence"}
+          >
+            ✓ Resume Anchor
+          </span>
+        );
+      }
+
+      // 2. Company Research Citation [1], [2], etc.
+      const numMatch = part.match(/\[(\d+)\]/);
+      if (numMatch) {
+        const sourceNum = parseInt(numMatch[1], 10);
         const source =
           (companyData?.raw_sources || []).find((s, idx) => (s.id || idx + 1) === sourceNum) ||
           (companyData?.raw_sources || [])[sourceNum - 1];
         return (
           <button
             key={index}
+            type="button"
             onClick={() => {
               if (source) {
                 setActiveCitationSource(source);
@@ -315,13 +355,14 @@ export default function ResultsPanel({
                 if (el) el.scrollIntoView({ behavior: "smooth" });
               }
             }}
-            className="inline-flex items-center justify-center px-1.5 py-0.2 mx-0.5 text-[10px] font-mono font-bold rounded bg-cyan-500/20 text-cyan-300 hover:bg-cyan-500/30 border border-cyan-500/40 transition-all hover:scale-105 align-baseline"
+            className="inline-flex items-center justify-center px-1.5 py-0.2 mx-0.5 text-[10px] font-mono font-bold rounded bg-cyan-500/20 text-cyan-700 dark:text-cyan-300 hover:bg-cyan-500/30 border border-cyan-500/40 transition-all hover:scale-105 align-baseline cursor-pointer"
             title={source ? `${source.title} (${source.domain}) - Click to inspect citation` : `Source #${sourceNum}`}
           >
             [{sourceNum}]
           </button>
         );
       }
+
       return part;
     });
   };
@@ -372,7 +413,20 @@ export default function ResultsPanel({
               </div>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
+              <button
+                onClick={() => setShowEvidenceMarkers(!showEvidenceMarkers)}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                  showEvidenceMarkers
+                    ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
+                    : "bg-white/5 text-gray-400 hover:text-white border border-white/10"
+                }`}
+                title="Toggle verified in-line evidence markers [Resume] and [Source]"
+              >
+                <span className={`w-2 h-2 rounded-full ${showEvidenceMarkers ? "bg-emerald-400 animate-pulse" : "bg-gray-500"}`} />
+                <span>Evidence Markers: {showEvidenceMarkers ? "ON" : "OFF"}</span>
+              </button>
+
               <button
                 onClick={() => setIsEditing(!isEditing)}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
@@ -450,7 +504,7 @@ export default function ResultsPanel({
                       className="w-full p-3 rounded-lg border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-rose-500 bg-white text-gray-900 font-sans"
                     />
                   ) : (
-                    <p>{p}</p>
+                    <p className="leading-relaxed">{renderTextWithCitations(p)}</p>
                   )}
                 </div>
               ))}

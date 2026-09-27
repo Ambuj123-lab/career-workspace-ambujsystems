@@ -59,6 +59,41 @@ export async function POST(req) {
 
     const data = JSON.parse(text);
 
+    // Adversarial Seniority Overclaim Red-Teamer (Veracity Audit Gate)
+    const fullDraft = (data.paragraphs || []).map((p) => (typeof p === "string" ? p : p.content)).join(" ");
+    const resumeLower = resume.toLowerCase();
+
+    const OVERCLAIM_PATTERNS = [
+      { trigger: /\bspearheaded\b/gi, safe: "led implementation of", word: "spearheaded" },
+      { trigger: /\bpioneered\b/gi, safe: "developed", word: "pioneered" },
+      { trigger: /\bsolely architected\b/gi, safe: "architected", word: "solely architected" },
+      { trigger: /\bheaded the entire\b/gi, safe: "contributed to the", word: "headed the entire" },
+      { trigger: /\bcommanded the\b/gi, safe: "coordinated the", word: "commanded the" },
+    ];
+
+    const overclaimAudit = [];
+    data.paragraphs = (data.paragraphs || []).map((p) => {
+      let textContent = typeof p === "string" ? p : p.content;
+      OVERCLAIM_PATTERNS.forEach(({ trigger, safe, word }) => {
+        if (trigger.test(textContent) && !resumeLower.includes(word)) {
+          overclaimAudit.push({
+            flagged_verb: word,
+            adjusted_to: safe,
+            reason: "Verb exceeds authentic resume evidence baseline",
+          });
+          textContent = textContent.replace(trigger, safe);
+        }
+      });
+      return typeof p === "string" ? textContent : { ...p, content: textContent };
+    });
+
+    data.overclaim_audit = {
+      audited: true,
+      flags_count: overclaimAudit.length,
+      flags: overclaimAudit,
+      verdict: overclaimAudit.length === 0 ? "AUTHENTIC_FIT" : "ADJUSTED_TO_EVIDENCE",
+    };
+
     // DETERMINISTIC APPLICATION-LAYER METRICS
     const strongSkillsCount = (analysis?.required_skills || []).filter(
       (s) => s.status === "STRONG_MATCH"

@@ -5,6 +5,7 @@ import { useSession, signIn } from "next-auth/react";
 import InputForm from "@/components/generator/InputForm";
 import ResultsPanel from "@/components/generator/ResultsPanel";
 import AuthButton from "@/components/AuthButton";
+import LiveProgressTracker from "@/components/generator/LiveProgressTracker";
 
 export default function GeneratePage() {
   const { data: session, status } = useSession();
@@ -389,6 +390,17 @@ export default function GeneratePage() {
               ✕
             </button>
           </div>
+        )}
+
+        {/* Real-Time Live Execution Progress Tracker */}
+        {(step === "researching" || step === "generating" || step === "approval_gate") && (
+          <LiveProgressTracker
+            step={step}
+            progress={progress}
+            analysisData={analysisData}
+            companyData={companyData}
+            letterData={letterData}
+          />
         )}
 
         {/* Real-Time MCP Live Agent Execution Terminal Stream */}
