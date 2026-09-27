@@ -135,7 +135,7 @@ To guarantee rock-solid enterprise extraction and zero Vercel Serverless crashes
 
 ## 6. Model Context Protocol (MCP) Integration
 
-The project includes an official MCP Server (`/mcp-server/server.py`) and a real-time execution trace terminal in the UI (`ResultsPanel.jsx` Tab 7):
+CoverCraft includes a standalone Python MCP server (`/mcp-server/server.py`) using the official **MCP stdio transport** (`stdio_server`), providing execution transparency through standard I/O streams, server-side diagnostic logging, and a real-time execution trace terminal in the UI (`ResultsPanel.jsx` Tab 7):
 - **4 Registered Tools:**
   1. `company_research`: Search the web for company information using Tavily. Returns grounded data with source citations. Every claim is traceable to a source URL.
   2. `evidence_validator`: Validate AI-generated claims against actual source data via Claim Ledger pattern. Returns `VERIFIED` / `PARTIAL` / `UNSUPPORTED` per claim.

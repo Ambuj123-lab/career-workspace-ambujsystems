@@ -99,7 +99,7 @@ When LLM JSON structures are delayed or partially populated, a deterministic reg
 
 ### 4. Native Model Context Protocol (MCP) Integration
 - Contains a standalone **Anthropic Model Context Protocol (MCP)** server written in Python 3.11 (`mcp-server/`).
-- Exposes **4 Registered Tools** via standard I/O (`stdio`) and Streamable HTTP:
+- Exposes **4 Registered Tools** via the standard Model Context Protocol **stdio transport**:
   1. `company_research`: Real-time web search via Tavily with traceable source citations.
   2. `evidence_validator`: Claim Ledger validation against source data returning `VERIFIED` / `PARTIAL` / `UNSUPPORTED`.
   3. `jd_analyzer`: Evidence-backed JD matching against resume with actual proof anchors.

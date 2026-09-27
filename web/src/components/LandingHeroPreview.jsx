@@ -34,7 +34,7 @@ const SAMPLE_SKILLS = [
     status: "STRONG MATCH",
     badgeColor: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20",
     quote:
-      '"Engineered official Model Context Protocol (MCP) servers supporting Streamable HTTP and stdio transports for autonomous AI tool use."',
+      '"Engineered official Model Context Protocol (MCP) servers using standard stdio transport for autonomous agentic tool orchestration."',
     strategy:
       "Demonstrates rare early-adopter protocol expertise for enterprise agentic integration.",
   },

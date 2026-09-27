@@ -2,13 +2,15 @@
 AI Cover Letter Generator - MCP Server
 4 Tools: company_research, evidence_validator, jd_analyzer, ats_readiness
 
-Transport: Stdio (local dev) | Streamable HTTP (production)
+Transport: Stdio transport (Standard I/O)
 Dependencies: pip install "mcp[cli]" google-generativeai tavily-python python-dotenv
 
 Run: python server.py
 """
 import asyncio
 import json
+import logging
+import sys
 from mcp.server import Server
 from mcp.server.stdio import stdio_server
 from mcp.types import Tool, TextContent
@@ -18,6 +20,14 @@ from tools.evidence_validator import evidence_validator
 from tools.jd_analyzer import jd_analyzer
 from tools.ats_readiness import ats_readiness
 from config import MAX_JD_CHARS, MAX_RESUME_CHARS, MAX_COMPANY_NAME_CHARS
+
+# Configure server-side diagnostic logger (outputs to stderr to protect stdio JSON-RPC transport on stdout)
+logging.basicConfig(
+    stream=sys.stderr,
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s"
+)
+logger = logging.getLogger("covercraft-mcp")
 
 # Create MCP Server
 server = Server("ai-cover-letter-mcp")
@@ -130,7 +140,7 @@ async def list_tools() -> list[Tool]:
 
 @server.call_tool()
 async def call_tool(name: str, arguments: dict) -> list[TextContent]:
-    """Route tool calls to their implementations."""
+    """Route tool calls to their implementations with structured error handling and internal diagnostics."""
     try:
         if name == "company_research":
             result = await company_research(
@@ -153,12 +163,40 @@ async def call_tool(name: str, arguments: dict) -> list[TextContent]:
                 jd_text=arguments["jd_text"],
             )
         else:
-            result = {"error": f"Unknown tool: {name}"}
+            logger.warning(f"Rejected invocation for unregistered tool: {name}")
+            result = {
+                "error": {
+                    "code": "UNKNOWN_TOOL",
+                    "message": f"Tool '{name}' is not registered on this MCP server.",
+                    "registered_tools": ["company_research", "evidence_validator", "jd_analyzer", "ats_readiness"],
+                }
+            }
+            return [TextContent(type="text", text=json.dumps(result, indent=2))]
         
         return [TextContent(type="text", text=json.dumps(result, indent=2))]
     
+    except KeyError as e:
+        logger.error(f"Missing required parameter for tool '{name}': {e}", exc_info=True)
+        sanitized_error = {
+            "error": {
+                "code": "INVALID_ARGUMENT",
+                "message": f"Missing required parameter: {str(e)}",
+                "tool": name,
+            }
+        }
+        return [TextContent(type="text", text=json.dumps(sanitized_error, indent=2))]
     except Exception as e:
-        return [TextContent(type="text", text=json.dumps({"error": str(e)}))]
+        # Internal log captures full traceback on stderr for production diagnostics
+        logger.error(f"Internal execution failure in tool '{name}': {e}", exc_info=True)
+        # Client receives structured, sanitized error payload without raw internal leaks
+        sanitized_error = {
+            "error": {
+                "code": "INTERNAL_TOOL_ERROR",
+                "message": "Tool execution encountered an unexpected internal error. Consult server diagnostic logs.",
+                "tool": name,
+            }
+        }
+        return [TextContent(type="text", text=json.dumps(sanitized_error, indent=2))]
 
 
 async def main():

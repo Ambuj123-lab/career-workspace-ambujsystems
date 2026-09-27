@@ -1556,7 +1556,7 @@ export default function ResultsPanel({
             </div>
             <div className="p-3 rounded-lg bg-black/40 border border-white/5">
               <div className="text-[10px] uppercase font-bold text-gray-500">Transport</div>
-              <div className="text-xs font-mono font-semibold text-emerald-400 mt-0.5">Streamable SSE / Stdio</div>
+              <div className="text-xs font-mono font-semibold text-emerald-400 mt-0.5">Standard I/O (stdio)</div>
             </div>
             <div className="p-3 rounded-lg bg-black/40 border border-white/5">
               <div className="text-[10px] uppercase font-bold text-gray-500">Registered Tools</div>

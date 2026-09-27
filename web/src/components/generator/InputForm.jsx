@@ -18,7 +18,7 @@ const SAMPLE_DATA = {
 
 Key Highlights & Experience:
 • Built Agentic Financial Parser processing complex 10-K reports with LangGraph, enforcing strict source citation grounding and eliminating unverified claims.
-• Engineered official Model Context Protocol (MCP) servers supporting Streamable HTTP and stdio transports for autonomous AI tool use.
+• Engineered official Model Context Protocol (MCP) servers using standard stdio transport for autonomous agentic tool orchestration.
 • Fine-tuned open-source LLMs (Llama 3, Mistral) using QLoRA, achieving 45% inference latency reduction on edge server environments.
 • Architected hybrid vector retrieval pipelines (BM25 + Jina v3 MRL dense embeddings) with Cohere reranking, reaching 92% top-3 retrieval precision.
 • Technologies: Python, FastAPI, Next.js, LangGraph, Tavily API, MCP SDK, PostgreSQL, Redis, Docker, GCP.`,
