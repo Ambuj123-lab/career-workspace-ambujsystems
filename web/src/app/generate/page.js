@@ -353,6 +353,14 @@ export default function GeneratePage() {
           </a>
           <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
             <Link
+              href="/"
+              className="text-xs font-medium text-gray-300 hover:text-white transition-all px-2.5 sm:px-3 py-1 sm:py-1.5 border border-white/10 hover:border-white/20 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] flex items-center gap-1.5 shrink-0"
+              title="Return to CoverCraft Home Page"
+            >
+              <span>←</span>
+              <span>Home</span>
+            </Link>
+            <Link
               href="/docs"
               className="text-xs font-semibold text-cyan-400 hover:text-cyan-300 transition-colors px-2 sm:px-2.5 py-1 border border-cyan-500/20 rounded-lg bg-cyan-500/10 flex items-center gap-1"
             >
@@ -467,6 +475,16 @@ export default function GeneratePage() {
         {step === "input" && (
           <div className="max-w-3xl mx-auto">
             <div className="text-center mb-8">
+              <div className="flex items-center justify-center gap-2 mb-3">
+                <Link
+                  href="/"
+                  className="inline-flex items-center gap-1.5 text-xs text-gray-400 hover:text-cyan-400 transition-colors px-3 py-1 rounded-lg bg-white/[0.03] border border-white/5 hover:border-white/10"
+                  title="Return to CoverCraft Landing Page"
+                >
+                  <span>←</span>
+                  <span>Back to Landing Page</span>
+                </Link>
+              </div>
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs font-semibold mb-3">
                 <span>🛡️</span> EVIDENCE-FIRST AI GENERATOR
               </div>
@@ -483,7 +501,30 @@ export default function GeneratePage() {
 
         {/* Step 2: Human Approval Gate (Requirements D8a, D8b, D8c) */}
         {step === "approval_gate" && companyData && (
-          <div className="max-w-3xl mx-auto glass-card p-6 md:p-8 space-y-6">
+          <div className="max-w-3xl mx-auto glass-card p-6 md:p-8 space-y-6 pb-24 sm:pb-8">
+            {/* Prominent High-Visibility Action Alert Banner */}
+            <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-md shadow-amber-950/20">
+              <div className="flex items-start gap-2.5">
+                <span className="text-xl shrink-0 mt-0.5 sm:mt-0">⚠️</span>
+                <div>
+                  <div className="text-xs font-bold text-amber-300 uppercase tracking-wide flex items-center gap-2">
+                    <span>Pipeline Paused &mdash; Action Required</span>
+                    <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping shrink-0" />
+                  </div>
+                  <p className="text-xs text-amber-200/80 mt-1 leading-relaxed">
+                    AI generation is on hold. The system will <strong>NOT</strong> proceed until you approve sources. Click below or review individual sources to continue.
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={handleProceedToGeneration}
+                className="px-4 py-2 rounded-xl text-xs font-bold text-slate-950 bg-gradient-to-r from-amber-400 via-orange-400 to-rose-400 hover:from-amber-300 hover:to-rose-300 shadow-md shadow-amber-500/20 shrink-0 transition-all active:scale-95 flex items-center justify-center gap-1.5"
+              >
+                <span>✓</span>
+                <span>Approve &amp; Resume Now &rarr;</span>
+              </button>
+            </div>
+
             <div className="border-b border-white/5 pb-4">
               <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-semibold mb-2">
                 <span>🛡️</span> HUMAN APPROVAL GATE
@@ -548,6 +589,36 @@ export default function GeneratePage() {
                 className="px-6 py-2.5 rounded-xl text-xs font-bold bg-gradient-to-r from-rose-500 to-orange-500 text-white hover:from-rose-600 hover:to-orange-600 shadow-lg shadow-rose-500/25 transition-all flex items-center gap-2"
               >
                 <span>✓</span> Approve Sources &amp; Generate Letter
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Sticky Floating Bottom Action Bar during Human Approval Gate (Always Visible) */}
+        {step === "approval_gate" && companyData && (
+          <div className="fixed bottom-4 left-3 right-3 sm:left-6 sm:right-6 max-w-3xl mx-auto z-40 p-3 sm:p-4 rounded-2xl bg-[#090e1a]/95 border border-amber-500/40 backdrop-blur-xl shadow-2xl flex flex-wrap items-center justify-between gap-3 animate-in slide-in-from-bottom-5">
+            <div className="flex items-center gap-2.5">
+              <span className="relative flex h-2.5 w-2.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75" />
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-400" />
+              </span>
+              <span className="text-xs font-mono text-gray-300">
+                <strong className="text-amber-300">PAUSED:</strong> {Object.values(approvedSources).filter(Boolean).length} of {(companyData?.raw_sources || []).length} Sources Approved
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setStep("input")}
+                className="px-3 py-1.5 rounded-xl text-xs font-medium text-gray-400 hover:text-white border border-white/10 hover:bg-white/5 transition-all"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleProceedToGeneration}
+                className="px-4 sm:px-5 py-2 rounded-xl text-xs font-bold text-slate-950 bg-gradient-to-r from-amber-400 via-orange-400 to-rose-400 hover:from-amber-300 hover:to-rose-300 shadow-lg shadow-amber-500/25 active:scale-95 transition-all flex items-center gap-1.5"
+              >
+                <span>✓</span>
+                <span>Approve &amp; Generate Letter &rarr;</span>
               </button>
             </div>
           </div>

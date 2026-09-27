@@ -68,7 +68,7 @@ export default function LiveProgressTracker({ step, progress, analysisData, comp
       telemetry: isStep3Done ? "Claims Approved" : "Awaiting Verification",
       done: isStep3Done,
       active: isStep3Active,
-      statusTag: isStep3Done ? "VERIFIED" : isStep3Active ? "AWAITING USER" : "STANDBY",
+      statusTag: isStep3Done ? "VERIFIED" : isStep3Active ? "PAUSED (INPUT)" : "STANDBY",
     },
     {
       code: "STAGE 04",
@@ -180,9 +180,11 @@ export default function LiveProgressTracker({ step, progress, analysisData, comp
 
         <div className="flex items-center justify-between text-[10px] sm:text-[11px] font-mono text-gray-400">
           <div className="flex items-center gap-1.5 truncate max-w-[85%]">
-            <span className="text-indigo-400 font-bold shrink-0">&gt;</span>
-            <span className="truncate text-gray-300">
-              {progress || "Orchestrating agentic proof verification pipeline..."}
+            <span className={`font-bold shrink-0 ${isStep3Active ? "text-amber-400 animate-pulse" : "text-indigo-400"}`}>&gt;</span>
+            <span className={`truncate ${isStep3Active ? "text-amber-300 font-semibold" : "text-gray-300"}`}>
+              {isStep3Active
+                ? "[PIPELINE PAUSED]: Candidate approval required below to resume generation."
+                : (progress || "Orchestrating agentic proof verification pipeline...")}
             </span>
           </div>
           <span className="text-indigo-400 shrink-0 font-bold">
