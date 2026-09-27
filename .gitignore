@@ -31,3 +31,8 @@ npm-debug.log*
 
 # Local master checklist
 MASTER_CHECKLIST.md
+
+# Local master dossiers & documentation exports (NEVER push to git)
+CoverCraft_Master_Engineering_Dossier.html
+CoverCraft_*.html
+CoverCraft_*.pdf

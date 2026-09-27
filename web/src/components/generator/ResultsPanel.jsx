@@ -242,14 +242,14 @@ export default function ResultsPanel({
         type: "gate",
         tool: "human_approval_gate",
         message: "Human approval gate: Verified company claims approved by candidate.",
-        payload: { status: "APPROVED", zero_hallucination_guarantee: true },
+        payload: { status: "APPROVED", evidence_grounding_verified: true },
       },
       {
         id: 6,
         time: "01:54:06.220",
         type: "call",
         tool: "evidence_validator",
-        message: "Quarantined candidate claims against resume evidence. 0 fabrications.",
+        message: "Quarantined candidate claims against resume evidence with Claim Ledger validation.",
         payload: { status: "PASS", boundary: "<user_resume>" },
       },
       {
@@ -1560,7 +1560,7 @@ export default function ResultsPanel({
             </div>
             <div className="p-3 rounded-lg bg-black/40 border border-white/5">
               <div className="text-[10px] uppercase font-bold text-gray-500">Registered Tools</div>
-              <div className="text-xs font-mono font-semibold text-purple-400 mt-0.5">6 Tools Registered</div>
+              <div className="text-xs font-mono font-semibold text-purple-400 mt-0.5">4 Tools Registered</div>
             </div>
             <div className="p-3 rounded-lg bg-black/40 border border-white/5">
               <div className="text-[10px] uppercase font-bold text-gray-500">Execution Events</div>

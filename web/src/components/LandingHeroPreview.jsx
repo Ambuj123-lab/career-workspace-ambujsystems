@@ -39,11 +39,11 @@ const SAMPLE_SKILLS = [
       "Demonstrates rare early-adopter protocol expertise for enterprise agentic integration.",
   },
   {
-    name: "Zero-Hallucination RAG",
+    name: "Evidence-Grounded RAG",
     status: "STRONG MATCH",
     badgeColor: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20",
     quote:
-      '"Built Agentic Financial Parser processing complex 10-K reports with LangGraph, reducing query hallucination to zero with exact source citation grounding."',
+      '"Built Agentic Financial Parser processing complex 10-K reports with LangGraph, enforcing strict source citation grounding with zero unverified claims."',
     strategy:
       "Positions candidate as a high-reliability engineer who builds auditable AI systems, not fragile wrappers.",
   },
@@ -338,13 +338,13 @@ export default function LandingHeroPreview() {
                   <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-400 border border-purple-500/30">
                     HUMAN APPROVAL GATE
                   </span>
-                  <span className="text-xs text-gray-400">Zero-Hallucination Policy</span>
+                  <span className="text-xs text-gray-400">Evidence Grounding Policy</span>
                 </div>
                 <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
                   Review Verified Company Sources
                 </h3>
                 <p className="text-xs text-gray-400 mt-1">
-                  To guarantee zero AI hallucinations, review the sources discovered for target enterprise <RedactedMarker chars="████████" />. Only approved claims enter your cover letter.
+                  To enforce strict evidence grounding and claim validation, review the sources discovered for target enterprise <RedactedMarker chars="████████" />. Only approved claims enter your cover letter.
                 </p>
               </div>
 

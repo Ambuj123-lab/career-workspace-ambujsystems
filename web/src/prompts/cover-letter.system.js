@@ -1,6 +1,6 @@
 /**
  * CoverCraft Cover Letter Generation Engine — System Policy
- * Explicit Trust Boundaries & Anti-Hallucination Guardrails
+ * Explicit Trust Boundaries & Evidence-Grounded Claim Validation Guardrails
  */
 
 export const COVER_LETTER_SYSTEM_INSTRUCTION = `You are CoverCraft's Cover Letter Generation Engine.

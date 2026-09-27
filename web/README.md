@@ -5,7 +5,7 @@
 
 <br/>
 
-<a href="https://git.io/typing-svg"><img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=20&pause=1000&color=6EE7B7&background=00000000&center=true&vCenter=true&repeat=true&width=750&height=70&lines=Zero+Hallucination+%E2%80%A2+0%25+Overclaim+Guarantee;Tavily+8-Page+Crawl+%2B+Jina+AI+Reader+Markdown+Extractor;Third-Party+%26+Payroll+Detection+via+Verbatim+JD+Quotes;Anthropic+MCP+Server+%2B+Next.js+16+Multi-Stage+Docker" alt="Typing SVG" /></a>
+<a href="https://git.io/typing-svg"><img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=20&pause=1000&color=6EE7B7&background=00000000&center=true&vCenter=true&repeat=true&width=750&height=70&lines=Evidence-Grounded+Generation+%E2%80%A2+Claim+Validation;Tavily+8-Page+Crawl+%2B+Jina+AI+Reader+Markdown+Extractor;Third-Party+%26+Payroll+Detection+via+Verbatim+JD+Quotes;Anthropic+MCP+Server+%2B+Next.js+16+Multi-Stage+Docker" alt="Typing SVG" /></a>
 
 <br/>
 
@@ -64,7 +64,7 @@ Candidate Resume (PDF)          Job Description (JD)           Live Web (Tavily 
                         ┌─────────────────────────────────┐
                         │   Evidence-Grounded Generator   │
                         │   • Strict Verbatim Anchors     │
-                        │   • 0% Overclaim Constraint     │
+                        │   • Evidence-Grounded Claim Validation │
                         │   • Citation Footnotes [1], [2] │
                         └───────────────┬─────────────────┘
                                         │
@@ -92,14 +92,19 @@ When LLM JSON structures are delayed or partially populated, a deterministic reg
 - **⚡ Hiring Signals Sub-Tab:** Isolates technology focuses, active initiatives, and recent hiring surges with cited references `[1]`, `[2]`.
 - **🔗 Sources Coverage Sub-Tab:** Displays full URL citations and scrape statuses.
 
-### 3. Strict 0% Overclaim & Zero-Hallucination Policy
+### 3. Evidence-Grounded Generation & Claim Validation Policy
 - **Evidence-Grounded Synthesizer:** System instructions enforce that **every single achievement claim** in the cover letter must map directly to a verified bullet in the candidate's resume.
 - **No Fabricated Bridges:** If a candidate lacks a required skill (e.g., Kubernetes), the engine does not claim proficiency; it anchors to adjacent foundational experience (e.g., Docker containerization) or leaves it unstated.
 - **Human-in-the-Loop (HITL) Gate:** Users explicitly inspect and toggle on/off scraped web sources before any intelligence enters the LLM generation prompt.
 
 ### 4. Native Model Context Protocol (MCP) Integration
 - Contains a standalone **Anthropic Model Context Protocol (MCP)** server written in Python 3.11 (`mcp-server/`).
-- Exposes tools via standard I/O (`stdio`), allowing AI agents (Claude Desktop, Cursor, Windsurf, Custom Agents) to programmatically trigger evidence analysis, web grounding, and letter generation.
+- Exposes **4 Registered Tools** via standard I/O (`stdio`) and Streamable HTTP:
+  1. `company_research`: Real-time web search via Tavily with traceable source citations.
+  2. `evidence_validator`: Claim Ledger validation against source data returning `VERIFIED` / `PARTIAL` / `UNSUPPORTED`.
+  3. `jd_analyzer`: Evidence-backed JD matching against resume with actual proof anchors.
+  4. `ats_readiness`: Deterministic heuristic audit on keyword coverage, format integrity, and length.
+- Allows AI agents (Claude Desktop, Cursor, Windsurf, Custom Agents) to programmatically trigger evidence analysis, web grounding, and claim verification.
 
 ### 5. Production Observability & Multi-Stage Containerization
 - **MongoDB Atlas Telemetry:** Logs anonymized generation latency, token volume, tone selections, and error distributions.
@@ -153,7 +158,7 @@ sequenceDiagram
 
     Candidate->>Web: Select Tone & Click "Generate Cover Letter"
     Web->>API: POST /api/generate { approvedSources, evidenceMap }
-    API->>LLM: Evidence-Grounded Generation Prompt (0% Overclaim)
+    API->>LLM: Evidence-Grounded Generation Prompt (Claim Validation)
     LLM-->>API: Streamed Verified Cover Letter + Citations
     API->>DB: Log Telemetry & Audit Record
     API-->>Web: Render Final Letter with Copy, Download & Interview Defense

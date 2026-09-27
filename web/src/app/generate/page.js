@@ -473,7 +473,7 @@ export default function GeneratePage() {
               </div>
               <h2 className="text-2xl font-bold text-white">Review Verified Company Sources</h2>
               <p className="text-xs text-gray-400 mt-1">
-                To guarantee zero AI hallucinations, review the sources discovered for <strong>{formData.company}</strong>. Only approved claims will enter your cover letter.
+                To ensure rigorous claim validation and evidence grounding, review the sources discovered for <strong>{formData.company}</strong>. Only approved claims will enter your cover letter.
               </p>
             </div>
 

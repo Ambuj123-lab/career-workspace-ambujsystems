@@ -17,7 +17,7 @@ const SAMPLE_DATA = {
   resume: `Senior AI & Agentic Systems Engineer with 4+ years specializing in Agentic RAG, Model Context Protocol (MCP), and production LLM orchestration.
 
 Key Highlights & Experience:
-• Built Agentic Financial Parser processing complex 10-K reports with LangGraph, reducing query hallucination to zero with exact source citation grounding.
+• Built Agentic Financial Parser processing complex 10-K reports with LangGraph, enforcing strict source citation grounding and eliminating unverified claims.
 • Engineered official Model Context Protocol (MCP) servers supporting Streamable HTTP and stdio transports for autonomous AI tool use.
 • Fine-tuned open-source LLMs (Llama 3, Mistral) using QLoRA, achieving 45% inference latency reduction on edge server environments.
 • Architected hybrid vector retrieval pipelines (BM25 + Jina v3 MRL dense embeddings) with Cohere reranking, reaching 92% top-3 retrieval precision.
@@ -26,7 +26,7 @@ Key Highlights & Experience:
 
 Responsibilities:
 • Design and implement autonomous agentic workflows and tool-calling infrastructure using MCP.
-• Develop grounded retrieval-augmented generation (RAG) systems with strict zero-hallucination guardrails and source verification.
+• Develop grounded retrieval-augmented generation (RAG) systems with strict evidence-grounded guardrails and source verification.
 • Optimize LLM inference, embedding latency, and token efficiency for production workloads.
 • Build reliable full-stack evaluation and monitoring for agent execution loops.
 

@@ -317,7 +317,7 @@ export default function DocsPage() {
               CoverCraft Architecture: From Naive GenAI to Evidence-Grounded Application Intelligence
             </h1>
             <p className="text-sm sm:text-base text-gray-400 leading-relaxed max-w-3xl">
-              An architectural deep dive into technical honesty, zero-hallucination trust boundaries,
+              An architectural deep dive into technical honesty, evidence-grounded trust boundaries,
               deterministic application-layer scoring, real-time web grounding, and Model Context Protocol (MCP) orchestration.
             </p>
           </div>
@@ -384,7 +384,7 @@ export default function DocsPage() {
                 {/* Level 2: Strict XML Boundary Layer */}
                 <rect x="60" y="125" width="760" height="55" rx="10" fill="url(#gradPolicy)" stroke="#f43f5e" strokeWidth="1.5" />
                 <text x="440" y="148" fill="#fda4af" fontSize="12" fontWeight="bold" textAnchor="middle">TIER 1: IMMUTABLE SYSTEM INSTRUCTION &amp; STRICT TRUST BOUNDARIES</text>
-                <text x="440" y="166" fill="#cbd5e1" fontSize="11" textAnchor="middle">&lt;user_resume&gt; [Zero Hallucination Quarantine] &middot; &lt;job_description&gt; &middot; &lt;verified_web_sources&gt; [Citations Bound]</text>
+                <text x="440" y="166" fill="#cbd5e1" fontSize="11" textAnchor="middle">&lt;user_resume&gt; [Evidence Grounding Quarantine] &middot; &lt;job_description&gt; &middot; &lt;verified_web_sources&gt; [Citations Bound]</text>
 
                 {/* Connecting Arrow */}
                 <path d="M 440 180 L 440 210" fill="none" stroke="#64748b" strokeWidth="1.5" />
@@ -528,7 +528,7 @@ export default function DocsPage() {
             </div>
 
             <p className="text-sm text-gray-300 leading-relaxed">
-              One of the most critical engineering decisions in CoverCraft is eliminating <strong>Black-Box LLM Score Hallucination</strong>. When an LLM is asked to output an overall fit percentage, it generates an impressionistic, non-reproducible number. CoverCraft removes scoring authority from the LLM entirely.
+              One of the most critical engineering decisions in CoverCraft is eliminating <strong>Black-Box LLM Score Fabrication</strong>. When an LLM is asked to output an overall fit percentage, it generates an impressionistic, non-reproducible number. CoverCraft removes scoring authority from the LLM entirely.
             </p>
 
             {/* DIAGRAM 2: Zoomable Deterministic Scoring Engine Flowchart */}

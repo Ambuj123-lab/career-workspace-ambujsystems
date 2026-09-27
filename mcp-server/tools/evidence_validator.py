@@ -9,7 +9,7 @@ Pipeline:
     -> Validated / Unsupported classification
     -> Confidence score (deterministic, not LLM-invented)
 
-This is the anti-hallucination architecture layer.
+This is the evidence grounding & claim validation layer.
 """
 import google.generativeai as genai
 from config import GEMINI_API_KEY, GEMINI_MODEL, validate_range, VALID_CONFIDENCE_RANGE

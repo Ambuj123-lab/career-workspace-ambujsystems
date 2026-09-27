@@ -1,7 +1,7 @@
 """
 MCP Tool: company_research
 Searches the web for company information using Tavily API.
-Returns grounded, cited results - NO hallucination.
+Returns grounded, cited results with strict source verification.
 Gemini summarizes ONLY from search results.
 """
 from tavily import TavilyClient
