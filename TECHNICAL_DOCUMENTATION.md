@@ -308,7 +308,7 @@ During Phase 3 of the intelligence pipeline (`/generate`), the system pauses aut
 
 ---
 
-## 19. FAANG-Grade Dark Aesthetic, Fine Square Grid & Official Google CTA System
+## 19. Enterprise Dark Aesthetic, Fine Square Grid & Official Google CTA System
 
 CoverCraft adheres to top-tier enterprise design standards inspired by Linear, Vercel, and Stripe:
 
