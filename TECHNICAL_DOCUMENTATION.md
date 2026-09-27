@@ -285,3 +285,51 @@ Rather than presenting a static spinner during multi-agent orchestration, CoverC
 4. **04. Evidence Synthesis:** Adversarial Red-Teamer veracity audit and grounded cover letter generation.
 
 Features a live elapsed millisecond timer (`⏱️ 00:04s`) and dynamic active MCP tool readout for complete operational visibility.
+
+---
+
+## 17. Interactive Verbatim Resume Audit Modal & Line-Exact Highlighting
+
+To maximize candidate trust and provide infallible evidence traceability, CoverCraft implements an interactive full-resume audit modal in `ResultsPanel.jsx`:
+
+- **Complete Resume Text Transparency:** When candidates click any interactive `[Resume Anchor: ...]` badge, an accessible high-contrast audit modal opens containing the entire raw parsed candidate resume.
+- **Line-Exact Highlighting & Auto-Scroll:** The modal features sequential line numbers (`01`, `02`, `03`...), automatically executes smooth scrolling directly to the target paragraph, and applies an ambient amber highlight glow around the matching verbatim passage.
+- **Unrestricted Context Exploration:** Candidates and recruiters can freely scroll above and below the matched excerpt to verify that quotes are represented authentically in full context, without truncations or artificial context boundaries.
+
+---
+
+## 18. Human-in-the-Loop Gate UX & Navigational Safeguards
+
+During Phase 3 of the intelligence pipeline (`/generate`), the system pauses autonomous synthesis to let candidates audit company intelligence cards discovered via MCP research:
+
+- **Floating Sticky Action Bar:** A high-contrast fixed bottom approval toolbar (`flex items-center justify-between`) ensures the candidate can audit dense company cards without losing access to "Approve Selected & Synthesize" or "Reject / Regenerate".
+- **Home Navigation Breadcrumb:** Candidates can safely navigate back to the landing page or documentation without abandoning active session state.
+- **Attention-Guiding Action Alert:** An animated alert banner explicitly clarifies that model synthesis is held in escrow until explicit human review, preventing accidental unreviewed generation.
+
+---
+
+## 19. FAANG-Grade Dark Aesthetic, Fine Square Grid & Official Google CTA System
+
+CoverCraft adheres to top-tier enterprise design standards inspired by Linear, Vercel, and Stripe:
+
+- **Obsidian Dark Aesthetic & Fine Square Grid:** The hero section integrates a subtle 20px fine square grid with a radial vignette mask fading into `#070b14`, overlaid by a tri-color ambient glow (rose, cyan, emerald).
+- **Official Google Dark Mode CTA System:** In strict compliance with Google OAuth Brand Guidelines, all sign-in CTA buttons adopt the official dark mode theme (`#131314` container, `#ffffff` typography, subtle 8% white border, inline Google multi-color SVG logo) across navigation, hero, and gate interfaces.
+- **Dual-Action Bottom CTA Architecture:** Replaced redundant bottom sign-in triggers with high-trust engineering actions: a gradient "Architecture Docs →" link (`/docs`) and a frosted-glass "View Source →" link to the GitHub repository.
+
+---
+
+## 20. Grounded Scoped Evidence Metrics & Credibility Calibration
+
+To prevent deceptive marketing promises and uphold strict scientific credibility, all UI metrics and copy are calibrated around evidence-grounding:
+
+- **Scoped Radar Assessment:** In `LandingHeroPreview.jsx` and the audit radar, the headline was refactored from blanket claims to `100% Evidence Coverage — Current Analysis` paired with `No unsupported claims detected in this analysis`, accurately scoping the score to the evaluated candidate-JD pair.
+- **Philosophy-Aligned Hero Copy:** The hero subheadline in `page.js` was refactored from absolute technical guarantees ("eliminate generative hallucinations") to truthful architectural principles: *designed to keep generated claims grounded in candidate evidence*.
+
+---
+
+## 21. NextAuth Multi-Account Chooser Enactment (`prompt: select_account`)
+
+In multi-user or multi-account environments, default Google OAuth behaviors frequently auto-select the browser's active profile, preventing candidates from switching identities:
+
+- **OAuth 2.0 Authorization Parameters:** Configured `authorization: { params: { prompt: "select_account", access_type: "offline", response_type: "code" } }` in NextAuth's `GoogleProvider` (`web/src/app/api/auth/[...nextauth]/route.js`).
+- **Deterministic Account Chooser:** Guarantees that every sign-in interaction triggers Google's account selection screen, allowing candidates to pick from multiple Google identities or authenticate with an alternate account seamlessly.
