@@ -106,7 +106,7 @@ When LLM JSON structures are delayed or partially populated, a deterministic reg
   2. `evidence_validator`: Claim Ledger validation against source data returning `VERIFIED` / `PARTIAL` / `UNSUPPORTED`.
   3. `jd_analyzer`: Evidence-backed JD matching against resume with actual proof anchors.
   4. `ats_readiness`: Deterministic heuristic audit on keyword coverage, format integrity, and length.
-  5. `source_filter`: Algorithmic domain authority tiering, noise suppression, and temporal freshness validation (>18m filter).
+  5. `source_filter`: Algorithmic domain authority tiering, noise suppression, and Temporal Freshness Gate (<9m company initiatives, <18m engineering stack, [Historical Context] tag).
   6. `cover_letter_generator`: Evidence-grounded synthesis with structured in-line citation markers and zero-overclaim enforcement.
 - Dual-transport support: run locally with Claude Desktop/Cursor via `stdio_server` or deploy as an independent streaming microservice using `--transport=sse`.
 
