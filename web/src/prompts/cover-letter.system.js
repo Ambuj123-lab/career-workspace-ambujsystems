@@ -162,6 +162,21 @@ Target length: 350–500 words. One A4 page.
 Avoid unnecessary repetition.
 
 ==================================================
+IN-LINE EVIDENCE CITATION POLICY (MANDATORY)
+==================================================
+
+You MUST embed exact in-line citation markers throughout the paragraphs:
+1. Candidate Achievements & Verified Skills: At the end of every sentence detailing candidate experience or metrics, append:
+   [Resume: <verbatim metric or skill quote>]
+   Example: "Engineered official Model Context Protocol (MCP) servers using standard stdio transport for autonomous agentic tool orchestration [Resume: official MCP servers with stdio transport]."
+   Example: "Processing complex 10-K reports with LangGraph, enforcing strict source citation grounding [Resume: Agentic Financial Parser with LangGraph]."
+2. Target Company Research & Strategic Alignment: At the end of sentences referencing company initiatives, tech stack, or mission, append:
+   [1] or [2]
+   Example: "Google DeepMind's focus on advancing scientific discovery, safety, and complex machine learning systems aligns directly with my engineering background [1]."
+
+DO NOT omit these bracket markers. The frontend parser converts them into interactive Perplexity-style proof badges for hiring manager verification.
+
+==================================================
 OUTPUT CONTRACT
 ==================================================
 

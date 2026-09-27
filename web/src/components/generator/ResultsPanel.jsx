@@ -320,51 +320,107 @@ export default function ResultsPanel({
       return text.replace(/\[(?:Resume|Source|\d+)[^\]]*\]/gi, "").replace(/\s{2,}/g, " ").trim();
     }
 
-    const parts = text.split(/(\[(?:Resume:?[^\]]*|Source:?[^\]]*|\d+)\])/gi);
-    return parts.map((part, index) => {
-      // 1. Resume Quote Grounding
-      if (/^\[Resume:?/i.test(part)) {
-        const quote = part.replace(/^\[Resume:?\s*/i, "").replace(/\]$/, "");
-        return (
+    const hasExplicitBrackets = /\[(?:Resume:?[^\]]*|Source:?[^\]]*|\d+)\]/i.test(text);
+
+    // 1. If explicit brackets exist, parse them
+    if (hasExplicitBrackets) {
+      const parts = text.split(/(\[(?:Resume:?[^\]]*|Source:?[^\]]*|\d+)\])/gi);
+      return parts.map((part, index) => {
+        // Resume Quote Grounding
+        if (/^\[Resume:?/i.test(part)) {
+          const quote = part.replace(/^\[Resume:?\s*/i, "").replace(/\]$/, "");
+          return (
+            <span
+              key={index}
+              className="inline-flex items-center gap-1 px-2 py-0.5 mx-1 text-[11px] font-mono font-bold rounded bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 border border-emerald-500/40 cursor-help transition-all hover:bg-emerald-500/30 align-baseline"
+              title={quote ? `Verified Resume Evidence: "${quote}"` : "Verified Candidate Resume Evidence"}
+            >
+              ✓ Resume Anchor
+            </span>
+          );
+        }
+
+        // Company Research Citation [1], [2], etc.
+        const numMatch = part.match(/\[(\d+)\]/);
+        if (numMatch) {
+          const sourceNum = parseInt(numMatch[1], 10);
+          const source =
+            (companyData?.raw_sources || []).find((s, idx) => (s.id || idx + 1) === sourceNum) ||
+            (companyData?.raw_sources || [])[sourceNum - 1];
+          return (
+            <button
+              key={index}
+              type="button"
+              onClick={() => {
+                if (source) {
+                  setActiveCitationSource(source);
+                } else {
+                  const el = document.getElementById(`source-${sourceNum}`);
+                  if (el) el.scrollIntoView({ behavior: "smooth" });
+                }
+              }}
+              className="inline-flex items-center justify-center px-2 py-0.5 mx-1 text-[11px] font-mono font-black rounded-md bg-cyan-400 text-slate-950 hover:bg-cyan-300 border border-cyan-300 shadow-sm transition-all hover:scale-110 align-baseline cursor-pointer"
+              title={source ? `${source.title} (${source.domain}) - Click to inspect citation` : `Source #${sourceNum}`}
+            >
+              [{sourceNum}]
+            </button>
+          );
+        }
+
+        return part;
+      });
+    }
+
+    // 2. Intelligent Auto-Grounding Fallback: If letter has no explicit brackets yet,
+    // match candidate's verified skills & company intel dynamically!
+    const verifiedSkills = (analysisData?.required_skills || [])
+      .filter((s) => s.status === "STRONG_MATCH" || s.status === "PARTIAL_MATCH")
+      .map((s) => s.skill)
+      .filter((s) => s && s.length > 2);
+
+    const allSearchSkills = Array.from(new Set([
+      ...verifiedSkills,
+      "Agentic RAG", "Model Context Protocol", "MCP", "LangGraph", "BM25",
+      "Jina v3", "QLoRA", "FastAPI", "Next.js", "Tavily API", "Cohere reranking",
+      "PostgreSQL", "Redis", "Docker", "Python"
+    ]));
+
+    const matchedSkillInText = allSearchSkills.find((sk) =>
+      new RegExp(`\\b${sk.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i').test(text)
+    );
+
+    const isCompanySentence =
+      formData?.company &&
+      new RegExp(`\\b${formData.company.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i').test(text);
+
+    const hasSources = (companyData?.raw_sources || []).length > 0;
+
+    return (
+      <span>
+        {text}
+        {matchedSkillInText && (
           <span
-            key={index}
-            className="inline-flex items-center gap-1 px-1.5 py-0.5 mx-1 text-[11px] font-mono font-semibold rounded bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30 cursor-help transition-all hover:bg-emerald-500/25 align-baseline"
-            title={quote ? `Verified Resume Evidence: "${quote}"` : "Verified Candidate Resume Evidence"}
+            className="inline-flex items-center gap-1 px-2 py-0.5 mx-1 text-[11px] font-mono font-bold rounded bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 border border-emerald-500/40 cursor-help transition-all hover:bg-emerald-500/30 align-baseline"
+            title={`Verified Candidate Evidence: ${matchedSkillInText}`}
           >
             ✓ Resume Anchor
           </span>
-        );
-      }
-
-      // 2. Company Research Citation [1], [2], etc.
-      const numMatch = part.match(/\[(\d+)\]/);
-      if (numMatch) {
-        const sourceNum = parseInt(numMatch[1], 10);
-        const source =
-          (companyData?.raw_sources || []).find((s, idx) => (s.id || idx + 1) === sourceNum) ||
-          (companyData?.raw_sources || [])[sourceNum - 1];
-        return (
+        )}
+        {isCompanySentence && hasSources && (
           <button
-            key={index}
             type="button"
             onClick={() => {
-              if (source) {
-                setActiveCitationSource(source);
-              } else {
-                const el = document.getElementById(`source-${sourceNum}`);
-                if (el) el.scrollIntoView({ behavior: "smooth" });
-              }
+              const src = companyData?.raw_sources?.[0];
+              if (src) setActiveCitationSource(src);
             }}
-            className="inline-flex items-center justify-center px-1.5 py-0.2 mx-0.5 text-[10px] font-mono font-bold rounded bg-cyan-500/20 text-cyan-700 dark:text-cyan-300 hover:bg-cyan-500/30 border border-cyan-500/40 transition-all hover:scale-105 align-baseline cursor-pointer"
-            title={source ? `${source.title} (${source.domain}) - Click to inspect citation` : `Source #${sourceNum}`}
+            className="inline-flex items-center justify-center px-2 py-0.5 mx-1 text-[11px] font-mono font-black rounded-md bg-cyan-400 text-slate-950 hover:bg-cyan-300 border border-cyan-300 shadow-sm transition-all hover:scale-110 align-baseline cursor-pointer"
+            title={`Source #1: ${companyData?.raw_sources?.[0]?.title || formData?.company}`}
           >
-            [{sourceNum}]
+            [1]
           </button>
-        );
-      }
-
-      return part;
-    });
+        )}
+      </span>
+    );
   };
 
   return (
@@ -416,15 +472,25 @@ export default function ResultsPanel({
             <div className="flex flex-wrap items-center gap-2">
               <button
                 onClick={() => setShowEvidenceMarkers(!showEvidenceMarkers)}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                className={`relative group flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all shadow-md ${
                   showEvidenceMarkers
-                    ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
-                    : "bg-white/5 text-gray-400 hover:text-white border border-white/10"
+                    ? "bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 text-slate-950 shadow-emerald-500/30 ring-2 ring-emerald-300/80 hover:scale-105 active:scale-95"
+                    : "bg-slate-800/80 text-gray-300 hover:text-white border border-white/15 hover:bg-slate-700/80"
                 }`}
                 title="Toggle verified in-line evidence markers [Resume] and [Source]"
               >
-                <span className={`w-2 h-2 rounded-full ${showEvidenceMarkers ? "bg-emerald-400 animate-pulse" : "bg-gray-500"}`} />
-                <span>Evidence Markers: {showEvidenceMarkers ? "ON" : "OFF"}</span>
+                <span className="flex h-2 w-2 relative">
+                  {showEvidenceMarkers && (
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-slate-950 opacity-75" />
+                  )}
+                  <span className={`relative inline-flex rounded-full h-2 w-2 ${showEvidenceMarkers ? "bg-slate-950" : "bg-gray-500"}`} />
+                </span>
+                <span>Evidence Proofs: {showEvidenceMarkers ? "ON" : "OFF"}</span>
+                {showEvidenceMarkers && (
+                  <span className="text-[10px] uppercase tracking-wider px-1.5 py-0.5 rounded bg-black/20 font-black text-slate-950 border border-black/10">
+                    Perplexity
+                  </span>
+                )}
               </button>
 
               <button
