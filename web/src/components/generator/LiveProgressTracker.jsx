@@ -90,9 +90,9 @@ export default function LiveProgressTracker({ step, progress, analysisData, comp
       <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-white/10">
         {/* Left: Active Engine Telemetry */}
         <div className="flex items-center gap-2.5">
-          <div className="relative flex items-center justify-center w-5 h-5 rounded-full bg-emerald-500/10 border border-emerald-500/30">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping opacity-80" />
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 absolute" />
+          <div className="relative flex items-center justify-center w-5 h-5 rounded-full bg-indigo-500/10 border border-indigo-500/30">
+            <span className="w-2 h-2 rounded-full bg-indigo-400 animate-ping opacity-80" />
+            <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 absolute" />
           </div>
           <div>
             <div className="flex items-center gap-2">
@@ -109,7 +109,7 @@ export default function LiveProgressTracker({ step, progress, analysisData, comp
         {/* Right: Chrono Stopwatch in Clean Dark Pill */}
         <div className="flex items-center gap-2 px-3 py-1 rounded-xl bg-slate-900 border border-white/10 font-mono text-xs">
           <span className="text-gray-400">Elapsed:</span>
-          <span className="font-bold text-emerald-400">{formatPrecisionTime(elapsedMs)}</span>
+          <span className="font-bold text-indigo-400">{formatPrecisionTime(elapsedMs)}</span>
         </div>
       </div>
 
@@ -120,23 +120,23 @@ export default function LiveProgressTracker({ step, progress, analysisData, comp
             key={i}
             className={`p-3 rounded-xl border transition-all text-left ${
               st.done
-                ? "bg-[#0c1424] border-emerald-500/30 text-emerald-300"
+                ? "bg-[#0c1424] border-indigo-500/30 text-indigo-300"
                 : st.active
-                ? "bg-[#0f172a] border-emerald-400/60 text-white shadow-md shadow-emerald-500/10"
+                ? "bg-[#0f172a] border-indigo-500/60 text-white shadow-md shadow-indigo-500/10"
                 : "bg-white/[0.02] border-white/5 text-gray-500"
             }`}
           >
             {/* Top Node Header: Code + Live Status Pill */}
             <div className="flex items-center justify-between text-[10px] font-mono mb-1">
-              <span className={`font-semibold ${st.done ? "text-emerald-400" : st.active ? "text-emerald-300" : "text-gray-500"}`}>
+              <span className={`font-semibold ${st.done ? "text-indigo-400" : st.active ? "text-indigo-300" : "text-gray-500"}`}>
                 {st.code}
               </span>
               <span
                 className={`text-[8px] font-bold px-1.5 py-0.2 rounded uppercase ${
                   st.done
-                    ? "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30"
+                    ? "bg-indigo-500/15 text-indigo-400 border border-indigo-500/30"
                     : st.active
-                    ? "bg-emerald-500/20 text-emerald-300 border border-emerald-400 animate-pulse"
+                    ? "bg-indigo-500/20 text-indigo-300 border border-indigo-400 animate-pulse"
                     : "bg-white/5 text-gray-600"
                 }`}
               >
@@ -156,9 +156,9 @@ export default function LiveProgressTracker({ step, progress, analysisData, comp
             <div
               className={`pt-1.5 border-t text-[10px] font-mono truncate flex items-center gap-1 ${
                 st.done
-                  ? "border-emerald-500/20 text-emerald-400"
+                  ? "border-indigo-500/20 text-indigo-400"
                   : st.active
-                  ? "border-emerald-500/30 text-emerald-300 font-semibold"
+                  ? "border-indigo-500/30 text-indigo-300 font-semibold"
                   : "border-white/5 text-gray-600"
               }`}
             >
@@ -173,19 +173,19 @@ export default function LiveProgressTracker({ step, progress, analysisData, comp
       <div className="space-y-1.5 pt-1 border-t border-white/5">
         <div className="w-full h-1.5 rounded-full bg-slate-800 overflow-hidden">
           <div
-            className="h-full bg-gradient-to-r from-emerald-500 to-teal-400 transition-all duration-300 rounded-full"
+            className="h-full bg-gradient-to-r from-indigo-500 via-purple-500 to-rose-500 transition-all duration-300 rounded-full"
             style={{ width: `${progressPercent}%` }}
           />
         </div>
 
         <div className="flex items-center justify-between text-[10px] sm:text-[11px] font-mono text-gray-400">
           <div className="flex items-center gap-1.5 truncate max-w-[85%]">
-            <span className="text-emerald-400 font-bold shrink-0">&gt;</span>
+            <span className="text-indigo-400 font-bold shrink-0">&gt;</span>
             <span className="truncate text-gray-300">
               {progress || "Orchestrating agentic proof verification pipeline..."}
             </span>
           </div>
-          <span className="text-emerald-400 shrink-0 font-bold">
+          <span className="text-indigo-400 shrink-0 font-bold">
             {progressPercent}%
           </span>
         </div>
