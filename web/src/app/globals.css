@@ -1,5 +1,8 @@
 
-/* Strict horizontal overflow prevention on all viewports */
+/* Strict horizontal overflow prevention on all viewports & smooth anchor scrolling */
+html {
+  scroll-behavior: smooth;
+}
 html, body {
   max-width: 100vw;
   overflow-x: hidden;

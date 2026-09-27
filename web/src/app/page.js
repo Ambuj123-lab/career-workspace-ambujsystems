@@ -237,13 +237,13 @@ export default function Home() {
                   <span className="tracking-tight text-white font-bold">Start with Google &rarr;</span>
                 </button>
               )}
-              <Link
-                href="/docs"
-                className="w-full sm:w-auto px-7 sm:px-8 py-4 rounded-xl sm:rounded-2xl border border-white/10 hover:border-cyan-500/30 text-gray-300 hover:text-white font-semibold text-base hover:bg-white/5 transition-all flex items-center justify-center gap-2.5 whitespace-nowrap"
+              <a
+                href="#how-it-works"
+                className="w-full sm:w-auto px-7 sm:px-8 py-4 rounded-xl sm:rounded-2xl border border-white/15 hover:border-white/30 text-gray-200 hover:text-white font-semibold text-base bg-white/5 hover:bg-white/10 transition-all flex items-center justify-center gap-2.5 whitespace-nowrap group shadow-sm active:scale-[0.98]"
               >
-                <span>🏛️</span>
-                <span>Architecture &amp; Docs</span>
-              </Link>
+                <span>See How It Works</span>
+                <span className="text-gray-400 group-hover:translate-y-0.5 transition-transform">&darr;</span>
+              </a>
             </div>
           </div>
 
