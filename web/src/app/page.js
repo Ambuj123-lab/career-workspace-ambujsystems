@@ -187,8 +187,14 @@ export default function Home() {
 
       {/* ===== HERO ===== */}
       <main className="flex-1">
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-20 pb-16 md:pt-32 md:pb-28">
-          <div className="max-w-4xl mx-auto text-center">
+        <section className="relative overflow-hidden pt-20 pb-16 md:pt-32 md:pb-28">
+          {/* Subtle Minimal Small Square Grid Pattern (Original ambient gradients preserved) */}
+          <div 
+            className="absolute inset-0 pointer-events-none -z-10 bg-[linear-gradient(to_right,rgba(255,255,255,0.035)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.035)_1px,transparent_1px)] [background-size:20px_20px] [mask-image:radial-gradient(ellipse_80%_60%_at_50%_35%,#000_30%,transparent_100%)]" 
+          />
+
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
+            <div className="max-w-4xl mx-auto text-center">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/10 bg-white/5 mb-8">
               <span className="status-dot" />
               <span className="text-xs font-medium text-gray-400 tracking-wide uppercase">
@@ -243,6 +249,7 @@ export default function Home() {
 
           {/* Interactive Evidence Engine Showcase */}
           <LandingHeroPreview />
+          </div>
         </section>
 
         {/* ===== TRUST BAR ===== */}
