@@ -135,14 +135,20 @@ To guarantee rock-solid enterprise extraction and zero Vercel Serverless crashes
 
 ## 6. Model Context Protocol (MCP) Integration
 
-CoverCraft includes a standalone Python MCP server (`/mcp-server/server.py`) using the official **MCP stdio transport** (`stdio_server`), providing execution transparency through standard I/O streams, server-side diagnostic logging, and a real-time execution trace terminal in the UI (`ResultsPanel.jsx` Tab 7):
-- **4 Registered Tools:**
-  1. `company_research`: Search the web for company information using Tavily. Returns grounded data with source citations. Every claim is traceable to a source URL.
-  2. `evidence_validator`: Validate AI-generated claims against actual source data via Claim Ledger pattern. Returns `VERIFIED` / `PARTIAL` / `UNSUPPORTED` per claim.
-  3. `jd_analyzer`: Evidence-backed JD matching. Extracts skills from JD, matches each against resume with actual proof anchors (`STRONG_MATCH`, `PARTIAL_MATCH`, `TRANSFERABLE`, `MISSING`).
-  4. `ats_readiness`: Honest ATS readiness check (deterministic heuristic analysis of keyword coverage, skills, evidence, and length; not an arbitrary score).
+CoverCraft features a fully compliant, production-grade Model Context Protocol (MCP) server (`/mcp-server/server.py`) supporting **Dual-Transport Architecture**: high-performance standard I/O (`stdio`) for local CLI & desktop agent runtimes (e.g. Claude Desktop), and Server-Sent Events (`SSE` / Streamable HTTP) via Starlette & Uvicorn for distributed agentic environments:
+- **6 Production-Grade Registered MCP Tools:**
+  1. `company_research`: Multi-source web intelligence via Tavily Advanced and Jina AI Deep Page Reader. Extracts strategic initiatives, tech stack signals, and workplace reviews across Naukri, AmbitionBox, and LinkedIn.
+  2. `evidence_validator`: High-stakes Claim Ledger verification engine. Compares draft propositions against source data to output deterministic `VERIFIED`, `PARTIAL`, or `UNSUPPORTED` verdicts with verbatim proof snippets.
+  3. `jd_analyzer`: Proof-anchored JD skill extraction. Maps requirements against parsed candidate achievements into four strict tiers: `STRONG_MATCH`, `PARTIAL_MATCH`, `TRANSFERABLE`, and `MISSING`.
+  4. `ats_readiness`: Deterministic algorithmic readiness audit. Evaluates keyword density, structural formatting, proof metrics, and word counts without arbitrary randomness.
+  5. `source_filter`: Algorithmic domain authority tiering, social spam suppression, and **Temporal Freshness Gating** (<9m strategic initiatives, <18m engineering stack).
+  6. `cover_letter_generator`: Evidence-grounded synthesis tool that synthesizes defensible applications bound to exact resume anchors and verified company intel.
+- **Dual Transport & Vercel Serverless Safety:**
+  - **Stdio Mode (Default):** Standard I/O subprocess communication with zero network socket overhead or external attack surface.
+  - **SSE / HTTP Mode (`--transport=sse`):** Activated optionally on port 8000 for network-based agent integrations.
+  - **Vercel Free-Tier Isolation:** Vercel hosts Next.js serverless API routes that call Tavily/Jina/Groq directly over standard HTTP POST. Python MCP code does not run persistent background processes on Vercel, ensuring **100% zero risk of Vercel serverless execution timeouts, connection leaks, or billing charges**.
 - **Execution Event Stream:**
-  - Streams execution timestamps, input parameters, and expanded JSON payloads for complete transparency.
+  - Streams execution timestamps, input parameters, and expanded JSON payloads in the UI (`ResultsPanel.jsx` Tab 7) for complete operational transparency.
 
 ---
 
@@ -182,7 +188,11 @@ If a request arrives from an unregistered origin or redirects to an unlisted cal
 | **Generative Job Fit** | Multi-axis Radar & Donut charts | Explicit deterministic formula box `(Strong×1.0 + Partial×0.6 + Transferable×0.4)/Total` |
 | **Company Intel** | 4-Card dossier with live web research strip | Tavily Advanced Search + Gemini 3.5; clickable `[1]`, `[2]` citation drawer |
 | **Sources Repository** | Search Sources ledger with category pills | `[All]`, `[Official]`, `[Research]`, `[News]` with verified domain attribution |
-| **MCP Tool Trace** | 4 Registered tools with streamable JSON payloads | Complete execution event ledger with copyable JSON trace |
+| **MCP Tool Trace** | 6 Registered tools with Dual Transport (Stdio + SSE) | Complete execution event ledger with copyable JSON trace |
+| **Adversarial Red-Teamer** | Veracity Audit Gate checking senior verbs vs resume facts | Replaces unverified executive claims with safe defensible equivalents |
+| **Temporal Freshness Gate** | Recency Verification (<9m initiatives, <18m tech stack) | Penalizes and tags stale web search articles (>18m/2y) as [Historical Context] |
+| **In-Line Citations & Export** | Dual-mode [Resume Line X] [Source Y] with tooltips | Interactive badges for audit, auto-stripped for clean recruiter submission |
+| **Live Progress Tracker** | 4-phase state machine with live millisecond timer | Real-time phase tracking (`LiveProgressTracker.jsx`) with active MCP tool readout |
 
 ---
 
@@ -226,3 +236,52 @@ Full social metadata configuration for high-signal professional distribution:
 - **Public Domain:** `https://career-workspace-ambujsystems.vercel.app`
 - **Authentication:** Google OAuth 2.0 via NextAuth.js.
 - **Privacy Standard:** Zero personal phone numbers or identifiable data in demo payloads; sample feed data utilizes mathematically invalid Indian telecom standard (`+91 00000 00000`).
+
+
+---
+
+## 13. Adversarial Seniority Overclaim Red-Teamer (Veracity Audit Gate)
+
+One of the most dangerous failure modes in AI-assisted applications is **generative seniority overclaiming**: models inserting hyperbolic executive verbs (such as *"spearheaded"*, *"pioneered"*, *"solely architected"*, or *"headed the entire"*) that cannot be backed up during adversarial technical interviews.
+
+| Detected Hyperbolic Trigger | Auto-Adjusted Veracity Verb | Audit Reasoning |
+| :--- | :--- | :--- |
+| `spearheaded` | `led implementation of` | Downgraded to verified collaborative leadership baseline |
+| `pioneered` | `developed` | Replaced with authentic engineering deliverable |
+| `solely architected` | `architected` | Eliminated non-defensible absolutist claim |
+| `headed the entire` | `contributed to the` | Aligned with verified team scope |
+| `commanded the` | `coordinated the` | Replaced with collaborative professional framing |
+
+**Pipeline Placement (`/api/generate/route.js`):** Every generated paragraph is audited against the candidate's parsed resume baseline. Any unverified executive verb is logged in an `overclaimAudit` ledger and automatically replaced before rendering.
+
+---
+
+## 14. Temporal Freshness Gate (Strict Recency Verification: <9m / <18m)
+
+Web search tools frequently hallucinate timeliness by surfacing legacy news articles from 2022 or 2023. Presenting an obsolete tech stack or past leadership initiative as an active strategic priority immediately discredits an applicant in front of a hiring team.
+
+- **Strategic Company Initiatives (<9 Months):** Recent product launches, funding rounds, and executive priorities must fall within a 9-month recency window (2025–2026). Articles older than 9 months are strictly tagged as `[Historical Context]` and forbidden from being portrayed as active roadmaps.
+- **Engineering Architecture & Tech Stack (<18 Months):** Technology migrations and framework citations must be verified within the past 18 months to prevent citing discarded legacy systems.
+- **Algorithmic Score Penalization:** In both `source_filter.py` and `/api/research/route.js`, articles older than 18 months or from 2023 receive a **-15 trust score penalty** and are downranked below Tier-1 authoritative sources.
+
+---
+
+## 15. Dual-Mode Interactive Evidence Citations & Clean Recruiter Export
+
+To eliminate hallucination while preserving recruitment-ready aesthetics, CoverCraft implements a decoupled dual-presentation paradigm:
+
+- **Interactive Candidate Audit Mode:** In the application workspace, every generated claim displays interactive badges (e.g. `[Resume: Line 24]` and `[Source 2: TechBlog]`). Clicking or hovering reveals tooltips displaying the exact verbatim excerpt and source URL.
+- **Deterministic Clean Recruiter Export:** When candidates click **Copy Letter**, **Download Markdown**, or **Export PDF**, the system invokes `cleanFullLetterText()`, which strips internal bracket citations via regex (`/\s*\[(?:Resume|Source|\d+)[^\]]*\]/gi`). The resulting document is 100% natural, polished prose without machine brackets.
+
+---
+
+## 16. Live Execution State Machine & Millisecond Progress Tracker
+
+Rather than presenting a static spinner during multi-agent orchestration, CoverCraft features `LiveProgressTracker.jsx`, an interactive 4-phase deterministic state machine:
+
+1. **01. Competency Match:** Extraction of JD core competencies and resume proof mapping.
+2. **02. MCP Company Recon:** Real-time Tavily deep crawl, Jina reader extraction, and Temporal Freshness filtering.
+3. **03. Human Approval Gate:** Human-in-the-loop audit pausing synthesis until candidate selects approved sources.
+4. **04. Evidence Synthesis:** Adversarial Red-Teamer veracity audit and grounded cover letter generation.
+
+Features a live elapsed millisecond timer (`⏱️ 00:04s`) and dynamic active MCP tool readout for complete operational visibility.

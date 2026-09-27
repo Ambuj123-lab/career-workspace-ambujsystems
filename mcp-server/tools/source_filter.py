@@ -58,17 +58,21 @@ async def source_filter(sources: list[dict], company_domain: str = "") -> dict:
             trust_score = 55
             category = "Supporting Context"
 
-        # Temporal check
+        # Temporal Freshness Gate: <9m Initiatives, <18m Tech Stack
         blob = (s.get("title", "") + " " + s.get("snippet", "") + " " + s.get("content", "")).lower()
-        old_match = re.search(r"\b(201[0-9]|202[0-3])\b", blob)
-        recent_match = re.search(r"\b(202[4-6])\b", blob)
+        pub_date = s.get("published_date") or ""
+        old_match = re.search(r"\b(201[0-9]|202[0-3])\b", blob + " " + pub_date)
+        recent_match = re.search(r"\b(202[5-6])\b", blob + " " + pub_date)
 
-        freshness = "CURRENT (2024-2026)"
+        freshness = "CURRENT (<9m)"
+        historical_tag = False
         if old_match and not recent_match:
-            freshness = "HISTORICAL (>2y)"
-            trust_score -= 10
+            freshness = "HISTORICAL CONTEXT (>18m)"
+            trust_score -= 15
+            historical_tag = True
         elif recent_match:
-            trust_score += 5
+            freshness = "RECENT (<9m)"
+            trust_score += 8
 
         filtered.append({
             "url": url,
@@ -78,6 +82,7 @@ async def source_filter(sources: list[dict], company_domain: str = "") -> dict:
             "trust_score": trust_score,
             "category": category,
             "freshness": freshness,
+            "is_historical_context": historical_tag,
             "recommended_action": "RETAIN" if trust_score >= 60 else "OPTIONAL_SUPPORT"
         })
 

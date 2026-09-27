@@ -192,17 +192,18 @@ export async function POST(req) {
         category = "Supporting Media";
       }
 
-      // Temporal recency check
+      // Temporal Freshness Gate (Strict Recency Verification: <9m Initiatives, <18m Tech Stack)
       const textBlob = (r.title + " " + (r.content || "")).toLowerCase();
       const oldYearMatch = textBlob.match(/\b(201[0-9]|202[0-3])\b/);
       const recentYearMatch = textBlob.match(/\b(202[4-6])\b/);
 
-      let freshness = "CURRENT (2024-2026)";
+      let freshness = "CURRENT (<9m)";
       if (oldYearMatch && !recentYearMatch) {
-        freshness = "HISTORICAL (>2y)";
-        trustScore -= 10;
+        freshness = "HISTORICAL CONTEXT (>18m)";
+        trustScore -= 15; // Downrank stale articles
       } else if (recentYearMatch) {
-        trustScore += 5;
+        freshness = "RECENT (<9m)";
+        trustScore += 8; // Prioritize current engineering initiatives
       }
 
       scoredSources.push({
@@ -243,6 +244,9 @@ Given verified web search sources about a target company, synthesize a structure
 
 Rules:
 1. ONLY make claims supported by the provided sources. Use citation markers like [1], [2] at the end of statements.
+2. TEMPORAL FRESHNESS GATE:
+   - For company initiatives & news: STRICTLY prioritize developments from the last 9 months (2025-2026). If an article is older than 9 months or from 2023/earlier, explicitly tag it as '[Historical Context]' and never present it as an active current initiative.
+   - For tech stack & engineering architecture: Only cite technologies confirmed within the last 18 months. Discard obsolete legacy migrations.
 2. For company_snapshot: write 2-3 crisp sentences summarizing what the company does, their engineering mission, and technological scale.
 3. For role_relevant_signals: extract 2 to 3 technical capability areas relevant to a "${role || "Software/AI Engineer"}" and explain "why_it_matters" for a candidate's application.
 4. For recent_signals: extract 3 to 5 real publications, announcements, or product launches with date or source domain.

@@ -247,10 +247,17 @@ export default function Home() {
 
         {/* ===== TRUST BAR ===== */}
         <section className="border-y border-white/5 bg-white/[0.02]">
-          <div className="max-w-7xl mx-auto px-6 py-6 flex flex-wrap items-center justify-center gap-x-12 gap-y-4 text-sm text-gray-500">
-            {["Evidence-backed matching", "Source-cited company research", "Claim validation layer", "Human-in-the-loop approval"].map((item) => (
-              <span key={item} className="flex items-center gap-2">
-                <svg className="w-4 h-4 text-emerald-400" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/></svg>
+          <div className="max-w-7xl mx-auto px-6 py-6 flex flex-wrap items-center justify-center gap-x-8 sm:gap-x-12 gap-y-4 text-xs sm:text-sm text-gray-400">
+            {[
+              "6 Production MCP Tools",
+              "Temporal Freshness Gate (<9m/<18m)",
+              "Adversarial Overclaim Red-Teamer",
+              "In-Line Evidence Citations",
+              "Clean Recruiter Export",
+              "Human-in-the-Loop Gate"
+            ].map((item) => (
+              <span key={item} className="flex items-center gap-2 font-medium">
+                <svg className="w-4 h-4 text-emerald-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/></svg>
                 {item}
               </span>
             ))}
@@ -371,11 +378,11 @@ export default function Home() {
 
             <div className="grid md:grid-cols-5 gap-3 max-w-4xl mx-auto">
               {[
-                { step: "1", label: "Your Resume + JD", color: "from-gray-500 to-gray-600", desc: "Paste your data" },
-                { step: "2", label: "MCP: JD Analyzer", color: "from-rose-500 to-orange-500", desc: "Evidence matching" },
-                { step: "3", label: "MCP: Company Research", color: "from-cyan-500 to-blue-500", desc: "Tavily + validation" },
-                { step: "4", label: "Human Approval", color: "from-emerald-500 to-teal-500", desc: "You verify sources" },
-                { step: "5", label: "Letter + Defense", color: "from-violet-500 to-purple-500", desc: "Gemini generation" },
+                { step: "1", label: "Your Resume + JD", color: "from-gray-500 to-gray-600", desc: "Regex PII stripping" },
+                { step: "2", label: "MCP: JD Analyzer", color: "from-rose-500 to-orange-500", desc: "Skill evidence matching" },
+                { step: "3", label: "MCP: Recon & Filter", color: "from-cyan-500 to-blue-500", desc: "Tavily + Temporal Gate" },
+                { step: "4", label: "Human Approval", color: "from-emerald-500 to-teal-500", desc: "Candidate audits sources" },
+                { step: "5", label: "Synthesis & Red-Team", color: "from-violet-500 to-purple-500", desc: "Overclaim veracity check" },
               ].map((item) => (
                 <div key={item.step} className="glass-card p-5 text-center group hover:scale-105 transition-transform">
                   <div className={`w-10 h-10 mx-auto rounded-full bg-gradient-to-br ${item.color} flex items-center justify-center text-white font-black text-sm mb-3`}>
@@ -388,7 +395,7 @@ export default function Home() {
             </div>
 
             <div className="flex flex-wrap gap-2 justify-center mt-12">
-              {["Next.js", "Gemini AI", "MCP Server", "Tavily Search", "Recharts", "Tailwind CSS", "Vercel"].map((tech) => (
+              {["Next.js 15", "Gemini 2.5 Flash", "6 MCP Tools", "Tavily Advanced", "Jina Reader", "Overclaim Red-Teamer", "Temporal Gate", "Recharts", "Tailwind CSS", "Vercel Edge"].map((tech) => (
                 <span key={tech} className="px-3 py-1 rounded-full text-xs font-medium border border-white/10 bg-white/5 text-gray-400">{tech}</span>
               ))}
             </div>
@@ -404,16 +411,17 @@ export default function Home() {
             <p className="text-gray-400 max-w-xl mx-auto">Built for professional integrity. Not a toy.</p>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {[
-              { icon: "🛡️", title: "PII Protection", desc: "Resume data stripped of PII via regex before any external API call. Never sent to web search.", glow: "glow-card-emerald" },
-              { icon: "🔒", title: "Server-Side Keys", desc: "All API keys stored server-side in environment variables. Browser never contacts external APIs directly.", glow: "glow-card-cyan" },
-              { icon: "🧪", title: "Claim Validation", desc: "Every company claim checked against web search sources via evidence validator. Unsupported claims flagged.", glow: "glow-card-violet" },
-              { icon: "🚫", title: "Injection Defense", desc: "JD and resume treated as untrusted data. Prompt injection patterns detected and flagged.", glow: "glow-card-rose" },
-              { icon: "📊", title: "Output Validation", desc: "LLM JSON responses validated against schemas. Invalid ranges and malformed data rejected.", glow: "glow-card-amber" },
-              { icon: "⚡", title: "Rate Limiting", desc: "IP-based rate limits, max input sizes, generation cooldown. Google OAuth required.", glow: "glow-card-emerald" },
-              { icon: "👁️", title: "Source Transparency", desc: "Every company research claim shows its source URL. User can verify independently.", glow: "glow-card-cyan" },
-              { icon: "✋", title: "Human Approval Gate", desc: "Company research requires approval before inclusion in your letter. AI never auto-injects.", glow: "glow-card-violet" },
+              { icon: "⚔️", title: "Adversarial Overclaim Red-Teamer", desc: "Audits draft senior verbs against actual resume facts. Flags and safely adjusts unbacked assertions to prevent interview defense failure.", glow: "glow-card-rose" },
+              { icon: "⏳", title: "Temporal Freshness Gate", desc: "Strict recency filter: <9 months for company initiatives, <18 months for engineering stack. Stale news tagged as [Historical Context].", glow: "glow-card-amber" },
+              { icon: "📑", title: "Dual-Mode Citations & Clean Export", desc: "Interactive [Resume Anchor] and [Source] badges for candidate verification, automatically stripped for clean recruiter export.", glow: "glow-card-cyan" },
+              { icon: "⏱️", title: "Live State Machine Tracker", desc: "4-phase execution tracker with live millisecond elapsed timer and dynamic MCP execution status readout.", glow: "glow-card-violet" },
+              { icon: "🛡️", title: "Deterministic PII Protection", desc: "Resume data stripped of emails, phone numbers, and addresses via regex before any external web search or research call.", glow: "glow-card-emerald" },
+              { icon: "🔒", title: "Server-Side Zero-Leak Keys", desc: "All API keys stored strictly server-side in environment variables. Browser client never communicates with LLM APIs directly.", glow: "glow-card-cyan" },
+              { icon: "🧪", title: "Claim Ledger Validation", desc: "Every extracted company claim checked against web search sources via evidence validator. Unsupported claims marked UNSUPPORTED.", glow: "glow-card-violet" },
+              { icon: "🚫", title: "Prompt Injection Defense", desc: "JD and resume treated as untrusted data. Adversarial prompt injection attacks detected and neutralized before model reasoning.", glow: "glow-card-rose" },
+              { icon: "✋", title: "Human-in-the-Loop Gate", desc: "Company research findings require explicit human review and approval before inclusion in the final synthesis. AI never auto-injects.", glow: "glow-card-emerald" },
             ].map((item) => (
               <div key={item.title} className={`faang-card ${item.glow} hover-jiggle p-5 cursor-default`}>
                 <div className="text-2xl mb-3">{item.icon}</div>
