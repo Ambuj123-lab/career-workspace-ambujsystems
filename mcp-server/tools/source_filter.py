@@ -1,6 +1,6 @@
 """
 Source Filter MCP Tool
-Heuristic evaluation of domain credibility, tier ranking, and temporal freshness.
+Heuristic evaluation of domain credibility, tier ranking, and outdated news & stale tech filtering.
 """
 from urllib.parse import urlparse
 import re
@@ -58,7 +58,7 @@ async def source_filter(sources: list[dict], company_domain: str = "") -> dict:
             trust_score = 55
             category = "Supporting Context"
 
-        # Temporal Freshness Gate: <9m Initiatives, <18m Tech Stack
+        # Outdated News & Stale Tech Filter: <9m Initiatives, <18m Tech Stack
         blob = (s.get("title", "") + " " + s.get("snippet", "") + " " + s.get("content", "")).lower()
         pub_date = s.get("published_date") or ""
         old_match = re.search(r"\b(201[0-9]|202[0-3])\b", blob + " " + pub_date)

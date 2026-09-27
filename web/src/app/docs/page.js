@@ -773,7 +773,7 @@ export default function DocsPage() {
                 { tool: "evidence_validator", desc: "Claim Ledger gatekeeper: Quarantines statements inside <user_resume> boundary and validates candidate claims against source data (VERIFIED / PARTIAL / UNSUPPORTED)." },
                 { tool: "jd_analyzer", desc: "Evidence-backed JD matching: Extracts required competency vectors from JD and matches each against resume with actual evidence." },
                 { tool: "ats_readiness", desc: "Deterministic heuristic audit: Evaluates keyword coverage, skills presence, and length without fake commercial ATS vendor scores." },
-                { tool: "source_filter", desc: "Domain credibility & temporal filter: Evaluates source tiers (Official company newsroom, SEC filings, tech media) and discards outdated articles (>18m)." },
+                { tool: "source_filter", desc: "Domain credibility & recency filter: Evaluates source tiers (Official company newsroom, SEC filings, tech media) and discards outdated articles (>18m)." },
                 { tool: "cover_letter_generator", desc: "Evidence-grounded synthesis engine: Generates structured letter paragraphs with verified in-line citation markers and zero-overclaim enforcement." },
               ].map((t, idx) => (
                 <div key={idx} className="p-3.5 rounded-xl bg-black/40 border border-white/5 space-y-1.5">

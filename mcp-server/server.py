@@ -142,7 +142,7 @@ async def list_tools() -> list[Tool]:
             name="source_filter",
             description=(
                 "Evaluate, rank, and filter web research sources based on domain credibility "
-                "and temporal freshness. Tier 1: Official company domains & verified newsrooms, "
+                "and outdated news & stale tech filtering. Tier 1: Official company domains & verified newsrooms, "
                 "Tier 2: Job boards & tech media, Tier 3: Noise/scrapers."
             ),
             inputSchema={

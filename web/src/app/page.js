@@ -250,7 +250,7 @@ export default function Home() {
           <div className="max-w-7xl mx-auto px-6 py-6 flex flex-wrap items-center justify-center gap-x-8 sm:gap-x-12 gap-y-4 text-xs sm:text-sm text-gray-400">
             {[
               "6 Production MCP Tools",
-              "Temporal Freshness Gate (<9m/<18m)",
+              "Outdated News & Stale Tech Filter",
               "Adversarial Overclaim Red-Teamer",
               "In-Line Evidence Citations",
               "Clean Recruiter Export",
@@ -380,7 +380,7 @@ export default function Home() {
               {[
                 { step: "1", label: "Your Resume + JD", color: "from-gray-500 to-gray-600", desc: "Regex PII stripping" },
                 { step: "2", label: "MCP: JD Analyzer", color: "from-rose-500 to-orange-500", desc: "Skill evidence matching" },
-                { step: "3", label: "MCP: Recon & Filter", color: "from-cyan-500 to-blue-500", desc: "Tavily + Temporal Gate" },
+                { step: "3", label: "MCP: Recon & Filter", color: "from-cyan-500 to-blue-500", desc: "Tavily + Stale Tech Filter" },
                 { step: "4", label: "Human Approval", color: "from-emerald-500 to-teal-500", desc: "Candidate audits sources" },
                 { step: "5", label: "Synthesis & Red-Team", color: "from-violet-500 to-purple-500", desc: "Overclaim veracity check" },
               ].map((item) => (
@@ -395,7 +395,7 @@ export default function Home() {
             </div>
 
             <div className="flex flex-wrap gap-2 justify-center mt-12">
-              {["Next.js 15", "Gemini 2.5 Flash", "6 MCP Tools", "Tavily Advanced", "Jina Reader", "Overclaim Red-Teamer", "Temporal Gate", "Recharts", "Tailwind CSS", "Vercel Edge"].map((tech) => (
+              {["Next.js 15", "Gemini 2.5 Flash", "6 MCP Tools", "Tavily Advanced", "Jina Reader", "Overclaim Red-Teamer", "Stale Tech Filter", "Recharts", "Tailwind CSS", "Vercel Edge"].map((tech) => (
                 <span key={tech} className="px-3 py-1 rounded-full text-xs font-medium border border-white/10 bg-white/5 text-gray-400">{tech}</span>
               ))}
             </div>
@@ -414,7 +414,7 @@ export default function Home() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {[
               { icon: "⚔️", title: "Adversarial Overclaim Red-Teamer", desc: "Audits draft senior verbs against actual resume facts. Flags and safely adjusts unbacked assertions to prevent interview defense failure.", glow: "glow-card-rose" },
-              { icon: "⏳", title: "Temporal Freshness Gate", desc: "Strict recency filter: <9 months for company initiatives, <18 months for engineering stack. Stale news tagged as [Historical Context].", glow: "glow-card-amber" },
+              { icon: "⏳", title: "Outdated News & Stale Tech Filter", desc: "Strict recency filter: <9 months for company initiatives, <18 months for tech stack. Suppresses obsolete 2022-2023 articles or tags them as [Historical Context].", glow: "glow-card-amber" },
               { icon: "📑", title: "Dual-Mode Citations & Clean Export", desc: "Interactive [Resume Anchor] and [Source] badges for candidate verification, automatically stripped for clean recruiter export.", glow: "glow-card-cyan" },
               { icon: "⏱️", title: "Live State Machine Tracker", desc: "4-phase execution tracker with live millisecond elapsed timer and dynamic MCP execution status readout.", glow: "glow-card-violet" },
               { icon: "🛡️", title: "Deterministic PII Protection", desc: "Resume data stripped of emails, phone numbers, and addresses via regex before any external web search or research call.", glow: "glow-card-emerald" },

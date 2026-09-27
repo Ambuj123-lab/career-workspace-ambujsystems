@@ -129,7 +129,7 @@ export async function POST(req) {
       );
     }
 
-    // 2. Deterministic Source Credibility & Temporal Freshness Filter (MCP: source_filter)
+    // 2. Deterministic Source Credibility & Outdated News & Stale Tech Filter (MCP: source_filter)
     const TIER1_DOMAINS = [
       "github.com", "sec.gov", "greenhouse.io", "lever.co", "workday.com",
       "reuters.com", "techcrunch.com", "bloomberg.com", "forbes.com", "cnbc.com",
@@ -192,7 +192,7 @@ export async function POST(req) {
         category = "Supporting Media";
       }
 
-      // Temporal Freshness Gate (Strict Recency Verification: <9m Initiatives, <18m Tech Stack)
+      // Outdated News & Stale Tech Filter (Strict Recency Verification: <9m Initiatives, <18m Tech Stack)
       const textBlob = (r.title + " " + (r.content || "")).toLowerCase();
       const oldYearMatch = textBlob.match(/\b(201[0-9]|202[0-3])\b/);
       const recentYearMatch = textBlob.match(/\b(202[4-6])\b/);
@@ -244,7 +244,7 @@ Given verified web search sources about a target company, synthesize a structure
 
 Rules:
 1. ONLY make claims supported by the provided sources. Use citation markers like [1], [2] at the end of statements.
-2. TEMPORAL FRESHNESS GATE:
+2. OUTDATED NEWS & STALE TECH FILTER (RECENCY GATE):
    - For company initiatives & news: STRICTLY prioritize developments from the last 9 months (2025-2026). If an article is older than 9 months or from 2023/earlier, explicitly tag it as '[Historical Context]' and never present it as an active current initiative.
    - For tech stack & engineering architecture: Only cite technologies confirmed within the last 18 months. Discard obsolete legacy migrations.
 2. For company_snapshot: write 2-3 crisp sentences summarizing what the company does, their engineering mission, and technological scale.

@@ -141,7 +141,7 @@ CoverCraft features a fully compliant, production-grade Model Context Protocol (
   2. `evidence_validator`: High-stakes Claim Ledger verification engine. Compares draft propositions against source data to output deterministic `VERIFIED`, `PARTIAL`, or `UNSUPPORTED` verdicts with verbatim proof snippets.
   3. `jd_analyzer`: Proof-anchored JD skill extraction. Maps requirements against parsed candidate achievements into four strict tiers: `STRONG_MATCH`, `PARTIAL_MATCH`, `TRANSFERABLE`, and `MISSING`.
   4. `ats_readiness`: Deterministic algorithmic readiness audit. Evaluates keyword density, structural formatting, proof metrics, and word counts without arbitrary randomness.
-  5. `source_filter`: Algorithmic domain authority tiering, social spam suppression, and **Temporal Freshness Gating** (<9m strategic initiatives, <18m engineering stack).
+  5. `source_filter`: Algorithmic domain authority tiering, social spam suppression, and **Outdated News & Stale Tech Filter** (<9m strategic initiatives, <18m engineering stack).
   6. `cover_letter_generator`: Evidence-grounded synthesis tool that synthesizes defensible applications bound to exact resume anchors and verified company intel.
 - **Dual Transport & Vercel Serverless Safety:**
   - **Stdio Mode (Default):** Standard I/O subprocess communication with zero network socket overhead or external attack surface.
@@ -190,7 +190,7 @@ If a request arrives from an unregistered origin or redirects to an unlisted cal
 | **Sources Repository** | Search Sources ledger with category pills | `[All]`, `[Official]`, `[Research]`, `[News]` with verified domain attribution |
 | **MCP Tool Trace** | 6 Registered tools with Dual Transport (Stdio + SSE) | Complete execution event ledger with copyable JSON trace |
 | **Adversarial Red-Teamer** | Veracity Audit Gate checking senior verbs vs resume facts | Replaces unverified executive claims with safe defensible equivalents |
-| **Temporal Freshness Gate** | Recency Verification (<9m initiatives, <18m tech stack) | Penalizes and tags stale web search articles (>18m/2y) as [Historical Context] |
+| **Outdated News & Stale Tech Filter** | Recency Verification (<9m initiatives, <18m tech stack) | Penalizes and tags stale web search articles (>18m/2y) as [Historical Context] |
 | **In-Line Citations & Export** | Dual-mode [Resume Line X] [Source Y] with tooltips | Interactive badges for audit, auto-stripped for clean recruiter submission |
 | **Live Progress Tracker** | 4-phase state machine with live millisecond timer | Real-time phase tracking (`LiveProgressTracker.jsx`) with active MCP tool readout |
 
@@ -256,7 +256,7 @@ One of the most dangerous failure modes in AI-assisted applications is **generat
 
 ---
 
-## 14. Temporal Freshness Gate (Strict Recency Verification: <9m / <18m)
+## 14. Outdated News & Stale Tech Filter (Strict Recency Verification: <9m / <18m)
 
 Web search tools frequently hallucinate timeliness by surfacing legacy news articles from 2022 or 2023. Presenting an obsolete tech stack or past leadership initiative as an active strategic priority immediately discredits an applicant in front of a hiring team.
 
@@ -280,7 +280,7 @@ To eliminate hallucination while preserving recruitment-ready aesthetics, CoverC
 Rather than presenting a static spinner during multi-agent orchestration, CoverCraft features `LiveProgressTracker.jsx`, an interactive 4-phase deterministic state machine:
 
 1. **01. Competency Match:** Extraction of JD core competencies and resume proof mapping.
-2. **02. MCP Company Recon:** Real-time Tavily deep crawl, Jina reader extraction, and Temporal Freshness filtering.
+2. **02. MCP Company Recon:** Real-time Tavily deep crawl, Jina reader extraction, and Outdated News & Stale Tech filtering.
 3. **03. Human Approval Gate:** Human-in-the-loop audit pausing synthesis until candidate selects approved sources.
 4. **04. Evidence Synthesis:** Adversarial Red-Teamer veracity audit and grounded cover letter generation.
 
