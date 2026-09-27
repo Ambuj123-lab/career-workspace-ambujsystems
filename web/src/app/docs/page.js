@@ -353,15 +353,15 @@ export default function DocsPage() {
                     <stop offset="100%" stopColor="#0f172a" />
                   </linearGradient>
                   <linearGradient id="gradPolicy" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#881337" stopColorOpacity="0.4" />
+                    <stop offset="0%" stopColor="#881337" stopOpacity="0.4" />
                     <stop offset="100%" stopColor="#030712" />
                   </linearGradient>
                   <linearGradient id="gradEngine" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#064e3b" stopColorOpacity="0.5" />
+                    <stop offset="0%" stopColor="#064e3b" stopOpacity="0.5" />
                     <stop offset="100%" stopColor="#030712" />
                   </linearGradient>
                   <linearGradient id="gradOutput" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#0c4a6e" stopColorOpacity="0.5" />
+                    <stop offset="0%" stopColor="#0c4a6e" stopOpacity="0.5" />
                     <stop offset="100%" stopColor="#030712" />
                   </linearGradient>
                 </defs>
