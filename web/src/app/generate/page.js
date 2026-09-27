@@ -104,7 +104,7 @@ export default function GeneratePage() {
       const domains = Array.from(new Set((company.raw_sources || []).map((s) => s.domain).filter(Boolean)));
 
       // Step 2a: Log Tavily Search Call
-      addMcpLog("call", "web_search", `Searching Tavily: "${company.query_used || data.company + ' AI research engineering'}"`, {
+      addMcpLog("call", "company_research", `Searching Tavily: "${company.query_used || data.company + ' AI research engineering'}"`, {
         provider: "tavily",
         query: company.query_used,
         results_retrieved: sourcesRetrieved,
@@ -112,7 +112,7 @@ export default function GeneratePage() {
       });
 
       // Step 2b: Log Source Filter & Deduplication
-      addMcpLog("call", "source_filter", `Filtering ${sourcesRetrieved} retrieved sources: Deduplicated & verified domains.`, {
+      addMcpLog("call", "company_research", `Filtering ${sourcesRetrieved} retrieved sources: Deduplicated & verified domains.`, {
         sources_retrieved: sourcesRetrieved,
         sources_retained: company.raw_sources?.length || 0,
         official_sources: company.official_sources_count || 0,
@@ -120,7 +120,7 @@ export default function GeneratePage() {
       });
 
       // Step 2c: Log Company Intelligence Synthesis
-      addMcpLog("result", "company_intelligence", `Synthesized 4 evidence-backed sections with ${sourcesUsed} citations attached.`, {
+      addMcpLog("result", "company_research", `Synthesized 4 evidence-backed sections with ${sourcesUsed} citations attached.`, {
         sections: ["company_snapshot", "role_relevant_signals", "recent_signals", "cited_supporting_sources"],
         citations_attached: sourcesUsed,
         confidence: company.confidence || "HIGH",
