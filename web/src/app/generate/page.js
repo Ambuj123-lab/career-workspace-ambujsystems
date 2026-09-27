@@ -338,12 +338,17 @@ export default function GeneratePage() {
       <nav className="sticky top-0 z-50 border-b border-white/5 bg-[#030712]/80 backdrop-blur-xl">
         <div className="max-w-7xl mx-auto px-3 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between gap-2">
           <a href="/" className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-rose-500 to-orange-400 flex items-center justify-center text-white font-black text-xs shadow-sm">
+            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-rose-500 to-orange-400 flex items-center justify-center text-white font-black text-xs shadow-sm shrink-0">
               CL
             </div>
-            <span className="text-sm sm:text-base font-bold">
-              Cover<span className="gradient-text-warm">Craft</span>
-            </span>
+            <div className="flex flex-col">
+              <span className="text-sm sm:text-base font-bold leading-tight">
+                Cover<span className="gradient-text-warm">Craft</span>
+              </span>
+              <span className="text-[9px] sm:text-[10px] font-mono text-gray-400 leading-tight">
+                built by Ambuj Kumar Tripathi
+              </span>
+            </div>
           </a>
           <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
             <Link

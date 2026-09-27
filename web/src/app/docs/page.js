@@ -186,10 +186,13 @@ export default function DocsPage() {
             </button>
 
             <Link href="/" className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-rose-500 to-orange-400 flex items-center justify-center text-white font-bold text-sm shadow-lg shadow-rose-500/20">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-rose-500 to-orange-400 flex items-center justify-center text-white font-bold text-sm shadow-lg shadow-rose-500/20 shrink-0">
                 CL
               </div>
-              <span className="text-base font-bold text-white tracking-tight">CoverCraft</span>
+              <div className="flex flex-col">
+                <span className="text-base font-bold text-white tracking-tight leading-tight">CoverCraft</span>
+                <span className="text-[10px] font-mono text-gray-400 leading-tight">built by Ambuj Kumar Tripathi</span>
+              </div>
             </Link>
             <span className="text-gray-600 text-sm hidden sm:inline">/</span>
             <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-rose-500/10 text-rose-400 border border-rose-500/20 hidden sm:inline">
