@@ -734,7 +734,7 @@ export default function DocsPage() {
                 <text x="547" y="142" fill="#fde68a" fontSize="11" fontWeight="bold" textAnchor="middle">CARD 3: RECENT SIGNALS</text>
                 <text x="547" y="160" fill="#94a3b8" fontSize="9" textAnchor="middle">Latest 2026 Announcements</text>
                 <text x="547" y="176" fill="#94a3b8" fontSize="9" textAnchor="middle">arXiv Papers &amp; Launches</text>
-                <text x="547" y="192" fill="#f59e0b" fontSize="9" textAnchor="middle">Direct [Open &nearr;] External Links</text>
+                <text x="547" y="192" fill="#f59e0b" fontSize="9" textAnchor="middle">Direct [Open ↗] External Links</text>
 
                 <rect x="665" y="120" width="195" height="85" rx="8" fill="#111827" stroke="#10b981" strokeWidth="1" />
                 <text x="762" y="142" fill="#6ee7b7" fontSize="11" fontWeight="bold" textAnchor="middle">CARD 4: CITED SOURCES</text>

@@ -692,7 +692,7 @@ export default function Home() {
                   >
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
                     <span>UptimeRobot Spotlight</span>
-                    <span className="text-emerald-500">&nearr;</span>
+                    <svg className="w-3 h-3 text-emerald-400 shrink-0 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5"><path strokeLinecap="round" strokeLinejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" /></svg>
                   </a>
                 </li>
                 <li>
