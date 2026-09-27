@@ -216,16 +216,16 @@ export default function Home() {
               {status === "authenticated" && session?.user ? (
                 <Link
                   href="/generate"
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 sm:px-9 py-4 rounded-xl sm:rounded-2xl bg-white hover:bg-gray-50 text-gray-950 font-bold text-base hover:scale-[1.02] active:scale-[0.98] transition-all shadow-[0_1px_2px_rgba(0,0,0,0.05),0_8px_24px_-4px_rgba(255,255,255,0.12)] border border-white/80 text-center whitespace-nowrap cursor-pointer group"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 sm:px-9 py-4 rounded-xl sm:rounded-2xl bg-[#131314] hover:bg-[#1f1f21] text-white font-semibold text-base hover:scale-[1.02] active:scale-[0.98] transition-all shadow-[0_1px_3px_rgba(0,0,0,0.3),0_6px_20px_-4px_rgba(0,0,0,0.5)] border border-white/[0.08] hover:border-white/15 text-center whitespace-nowrap cursor-pointer group"
                 >
-                  <span className="text-gray-950 text-lg">⚡</span>
+                  <span className="text-white/90 text-lg">⚡</span>
                   <span className="tracking-tight">Launch Generator</span>
-                  <span className="text-gray-950 font-bold group-hover:translate-x-1 transition-transform">&rarr;</span>
+                  <span className="text-white/50 font-semibold group-hover:translate-x-1 transition-transform">&rarr;</span>
                 </Link>
               ) : (
                 <button
                   onClick={() => signIn("google", { callbackUrl: "/generate" })}
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 sm:px-9 py-4 rounded-xl sm:rounded-2xl bg-white hover:bg-gray-50 text-gray-950 font-bold text-base hover:scale-[1.02] active:scale-[0.98] transition-all shadow-[0_1px_2px_rgba(0,0,0,0.05),0_8px_24px_-4px_rgba(255,255,255,0.12)] border border-white/80 text-center whitespace-nowrap cursor-pointer group"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 sm:px-9 py-4 rounded-xl sm:rounded-2xl bg-[#131314] hover:bg-[#1f1f21] text-white font-semibold text-base hover:scale-[1.02] active:scale-[0.98] transition-all shadow-[0_1px_3px_rgba(0,0,0,0.3),0_6px_20px_-4px_rgba(0,0,0,0.5)] border border-white/[0.08] hover:border-white/15 text-center whitespace-nowrap cursor-pointer group"
                 >
                   <svg className="w-[18px] h-[18px] shrink-0" viewBox="0 0 24 24">
                     <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -233,8 +233,8 @@ export default function Home() {
                     <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
                     <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
                   </svg>
-                  <span className="tracking-tight text-gray-950 font-bold">Sign in with Google</span>
-                  <span className="text-gray-400 font-bold group-hover:translate-x-1 transition-transform">&rarr;</span>
+                  <span className="tracking-tight">Sign in with Google</span>
+                  <span className="text-white/40 font-semibold group-hover:translate-x-1 transition-transform">&rarr;</span>
                 </button>
               )}
               <a
@@ -612,16 +612,16 @@ export default function Home() {
               {status === "authenticated" && session?.user ? (
                 <Link
                   href="/generate"
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-4 sm:px-10 sm:py-4.5 rounded-xl sm:rounded-2xl bg-white hover:bg-gray-50 text-gray-950 font-bold text-sm sm:text-base hover:scale-[1.02] active:scale-[0.98] transition-all shadow-[0_1px_2px_rgba(0,0,0,0.05),0_8px_24px_-4px_rgba(255,255,255,0.12)] border border-white/80 whitespace-nowrap cursor-pointer group"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-4 sm:px-10 sm:py-4.5 rounded-xl sm:rounded-2xl bg-[#131314] hover:bg-[#1f1f21] text-white font-semibold text-base hover:scale-[1.02] active:scale-[0.98] transition-all shadow-[0_1px_3px_rgba(0,0,0,0.3),0_6px_20px_-4px_rgba(0,0,0,0.5)] border border-white/[0.08] hover:border-white/15 text-sm sm:text-base whitespace-nowrap cursor-pointer group"
                 >
-                  <span className="text-gray-950 text-lg">⚡</span>
+                  <span className="text-white/90 text-lg">⚡</span>
                   <span>Launch Generator</span>
-                  <span className="text-gray-950 font-bold group-hover:translate-x-1 transition-transform">&rarr;</span>
+                  <span className="text-white/50 font-semibold group-hover:translate-x-1 transition-transform">&rarr;</span>
                 </Link>
               ) : (
                 <button
                   onClick={() => signIn("google", { callbackUrl: "/generate" })}
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 sm:px-10 sm:py-4.5 rounded-xl sm:rounded-2xl bg-white hover:bg-gray-50 text-gray-950 font-bold text-sm sm:text-base hover:scale-[1.02] active:scale-[0.98] transition-all shadow-[0_1px_2px_rgba(0,0,0,0.05),0_8px_24px_-4px_rgba(255,255,255,0.12)] border border-white/80 whitespace-nowrap cursor-pointer group"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 sm:px-10 sm:py-4.5 rounded-xl sm:rounded-2xl bg-[#131314] hover:bg-[#1f1f21] text-white font-semibold text-base hover:scale-[1.02] active:scale-[0.98] transition-all shadow-[0_1px_3px_rgba(0,0,0,0.3),0_6px_20px_-4px_rgba(0,0,0,0.5)] border border-white/[0.08] hover:border-white/15 text-sm sm:text-base whitespace-nowrap cursor-pointer group"
                 >
                   <svg className="w-[18px] h-[18px] shrink-0" viewBox="0 0 24 24">
                     <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -629,8 +629,8 @@ export default function Home() {
                     <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
                     <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
                   </svg>
-                  <span className="tracking-tight text-gray-950 font-bold">Sign in with Google</span>
-                  <span className="text-gray-400 font-bold group-hover:translate-x-1 transition-transform">&rarr;</span>
+                  <span className="tracking-tight">Sign in with Google</span>
+                  <span className="text-white/40 font-semibold group-hover:translate-x-1 transition-transform">&rarr;</span>
                 </button>
               )}
             </div>
