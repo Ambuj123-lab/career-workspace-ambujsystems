@@ -209,7 +209,7 @@ export default function Home() {
             </h1>
 
             <p className="text-base sm:text-lg md:text-xl text-gray-400 max-w-3xl mx-auto mb-10 leading-relaxed">
-              An <span className="text-gray-200 font-medium">engineering-first workspace</span> designed to eliminate generative hallucinations. Every qualification is audited against verified resume quotes, grounded with cited MCP company research, and prepared for adversarial interview defense.
+              An <span className="text-gray-200 font-medium">engineering-first workspace</span> designed to keep generated claims grounded in candidate evidence. Every qualification is audited against verified resume quotes, grounded with cited MCP company research, and prepared for adversarial interview defense.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3.5 sm:gap-4 justify-center items-center max-w-md sm:max-w-none mx-auto">

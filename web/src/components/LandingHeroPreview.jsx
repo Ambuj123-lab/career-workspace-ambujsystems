@@ -169,12 +169,12 @@ export default function LandingHeroPreview() {
                 </div>
 
                 <div className="flex items-center gap-3 px-4 py-2 rounded-2xl bg-emerald-500/10 border border-emerald-500/20">
-                  <div className="w-8 h-8 rounded-full border-2 border-emerald-400 flex items-center justify-center text-emerald-400 font-black text-xs">
+                  <div className="w-8 h-8 rounded-full border-2 border-emerald-400 flex items-center justify-center text-emerald-400 font-black text-xs shrink-0">
                     ✓
                   </div>
                   <div>
-                    <div className="text-xs font-bold text-white">100% EVIDENCE COVERAGE</div>
-                    <div className="text-[10px] text-emerald-400 font-medium">Zero unsupported claims detected</div>
+                    <div className="text-xs font-bold text-white">100% Evidence Coverage &mdash; Current Analysis</div>
+                    <div className="text-[10px] text-emerald-400 font-medium">No unsupported claims detected in this analysis</div>
                   </div>
                 </div>
               </div>
