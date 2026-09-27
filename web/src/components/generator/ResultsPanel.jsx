@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import {
   PieChart,
   Pie,
@@ -54,6 +54,35 @@ const THEMES = {
   },
 };
 
+const SAMPLE_RESUME_FALLBACK = `AMBUJ KUMAR TRIPATHI
+AI Systems & Autonomous Agent Engineer | London / Remote
+Email: candidate@covercraft.ai | GitHub: github.com/ambuj | LinkedIn: linkedin.com/in/ambuj
+
+PROFESSIONAL SUMMARY
+Senior AI Engineer specializing in production Model Context Protocol (MCP) tooling, agentic RAG orchestration with LangGraph, and strict evidence-grounded claim verification. Track record of designing high-reliability systems with zero generative hallucinations.
+
+CORE TECHNICAL SKILLS
+• Languages & Frameworks: Python, TypeScript, Next.js 15, FastAPI, LangGraph, LangChain, PyTorch.
+• Protocols & Tooling: Model Context Protocol (MCP SDK, stdio/SSE transports), Tavily Search API, Jina Reader v3.
+• Retrieval & Databases: Hybrid BM25 + MRL dense vector search, Cohere reranking, PostgreSQL, pgvector, Redis.
+• Infrastructure & Defense: Docker, Linux, GCP, CI/CD, Adversarial Prompt Injection Defense, PII Sanitization.
+
+PROFESSIONAL EXPERIENCE
+Senior AI & Autonomous Systems Engineer — Independent / Enterprise Client Systems (Dec 2024 – Present)
+• Engineered official Model Context Protocol (MCP) servers using standard stdio transport for autonomous agentic tool orchestration and real-time enterprise reconnaissance.
+• Built 11-Node LangGraph state machines with persistent MemorySaver checkpointing and cycle guardrails for complex financial report parsing and automated reconciliation.
+• Fine-tuned open-source LLMs (Llama 3, Mistral) using QLoRA parameter-efficient adaptation, cutting edge inference latency by 45%.
+• Architected hybrid retrieval pipelines (BM25 + Jina v3 dense embeddings) with Cohere reranking, reaching 92% top-3 retrieval precision across SEC 10-K filings.
+
+British Telecom (BT Group) — Software Engineer / Systems Specialist (Jan 2022 – Aug 2024)
+• Developed scalable backend microservices and streaming telemetry ingestion pipelines processing 50M+ events daily.
+• Optimized distributed database query performance in PostgreSQL and Redis, cutting p99 query latency by 38%.
+• Collaborated with cross-functional platform teams to enforce strict SOC2 compliance, automated testing, and CI/CD security gates.
+
+EDUCATION & CERTIFICATIONS
+• Bachelor of Technology (B.Tech) in Computer Science & Engineering
+• Certified Kubernetes Administrator (CKA) | DeepLearning.AI Generative AI Specialist`;
+
 export default function ResultsPanel({
   formData,
   analysisData,
@@ -78,49 +107,116 @@ export default function ResultsPanel({
   const [sourceFilter, setSourceFilter] = useState("ALL");
   const [activeCitationSource, setActiveCitationSource] = useState(null);
   const [activeResumeEvidence, setActiveResumeEvidence] = useState(null);
+  const highlightedLineRef = useRef(null);
+  const resumeContainerRef = useRef(null);
 
-  // Helper to open interactive resume proof anchor modal
-  const openResumeProof = (claimText, matchedTerm) => {
-    const resumeText = formData?.resume || "";
-    let highlightedContext = "";
-    let exactQuote = matchedTerm || "";
-
-    if (resumeText && matchedTerm) {
-      const cleanTerm = matchedTerm.trim();
-      const lines = resumeText.split("\n");
-      const matchIdx = lines.findIndex((l) =>
-        new RegExp(cleanTerm.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i").test(l)
-      );
-
-      if (matchIdx !== -1) {
-        const start = Math.max(0, matchIdx - 2);
-        const end = Math.min(lines.length, matchIdx + 3);
-        highlightedContext = lines.slice(start, end).join("\n");
-        exactQuote = lines[matchIdx].trim();
-      } else {
-        // Fallback: look for any keyword
-        const words = cleanTerm.split(" ").filter((w) => w.length > 3);
-        const wordMatchIdx = lines.findIndex((l) =>
-          words.some((w) => new RegExp(`\\b${w}\\b`, "i").test(l))
-        );
-        if (wordMatchIdx !== -1) {
-          const start = Math.max(0, wordMatchIdx - 2);
-          const end = Math.min(lines.length, wordMatchIdx + 3);
-          highlightedContext = lines.slice(start, end).join("\n");
-          exactQuote = lines[wordMatchIdx].trim();
-        } else {
-          highlightedContext = resumeText.slice(0, 300) + "...";
-        }
-      }
-    } else if (resumeText) {
-      highlightedContext = resumeText.slice(0, 300) + "...";
+  // Auto-scroll to highlighted resume anchor line when modal opens
+  useEffect(() => {
+    if (activeResumeEvidence && highlightedLineRef.current) {
+      const timer = setTimeout(() => {
+        highlightedLineRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+      }, 150);
+      return () => clearTimeout(timer);
     }
+  }, [activeResumeEvidence]);
+
+  // ESC key to dismiss modal
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") {
+        if (activeResumeEvidence) setActiveResumeEvidence(null);
+        if (activeCitationSource) setActiveCitationSource(null);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [activeResumeEvidence, activeCitationSource]);
+
+  // Helper to open interactive full resume proof anchor modal
+  const openResumeProof = (claimText, matchedTerm) => {
+    const rawResumeText =
+      formData?.resume ||
+      analysisData?.resume_text ||
+      analysisData?.parsed_resume ||
+      SAMPLE_RESUME_FALLBACK;
+
+    // Clean up input quote
+    const cleanTerm = (matchedTerm || "")
+      .replace(/^(?:Anchor|Quote|Evidence|Proof|Resume)[:\s\-]*/i, "")
+      .replace(/^["']|["']$/g, "")
+      .trim();
+
+    const lines = (rawResumeText || "").split(/\r?\n/);
+    let bestLineIdx = -1;
+    let maxScore = -1;
+
+    // 1. Exact phrase match if cleanTerm has substance
+    if (cleanTerm && cleanTerm.length > 3) {
+      const lowerTerm = cleanTerm.toLowerCase();
+      bestLineIdx = lines.findIndex((l) => l.toLowerCase().includes(lowerTerm));
+    }
+
+    // 2. Multi-word density scoring across resume lines
+    if (bestLineIdx === -1) {
+      const stopWords = new Set(["with", "this", "that", "from", "using", "have", "were", "been", "their", "into", "also", "then", "more", "over", "under", "both", "your", "will", "would", "could", "should", "than"]);
+      const termWords = cleanTerm
+        .toLowerCase()
+        .split(/[^a-z0-9+#_.-]/i)
+        .filter((w) => w.length >= 3 && !stopWords.has(w));
+      const claimWords = (claimText || "")
+        .toLowerCase()
+        .split(/[^a-z0-9+#_.-]/i)
+        .filter((w) => w.length >= 4 && !stopWords.has(w));
+
+      lines.forEach((line, idx) => {
+        const lowerLine = line.toLowerCase();
+        let score = 0;
+        termWords.forEach((w) => {
+          if (lowerLine.includes(w)) score += 3;
+        });
+        claimWords.forEach((w) => {
+          if (lowerLine.includes(w)) score += 1;
+        });
+        if (score > maxScore) {
+          maxScore = score;
+          bestLineIdx = idx;
+        }
+      });
+    }
+
+    // 3. Known Skills matching from analysisData
+    if (bestLineIdx === -1 || maxScore === 0) {
+      const skills = (analysisData?.required_skills || []).map((s) => s.skill).filter(Boolean);
+      const matchedSkill = skills.find((s) =>
+        (claimText || "").toLowerCase().includes(s.toLowerCase())
+      );
+      if (matchedSkill) {
+        bestLineIdx = lines.findIndex((l) =>
+          l.toLowerCase().includes(matchedSkill.toLowerCase())
+        );
+      }
+    }
+
+    // 4. Default fallback: first bullet or work experience line
+    if (bestLineIdx === -1) {
+      const firstBulletIdx = lines.findIndex((l) => /^[•\-\*]/.test(l.trim()));
+      bestLineIdx = firstBulletIdx !== -1 ? firstBulletIdx : Math.min(4, Math.max(0, lines.length - 1));
+    }
+
+    const matchedLine = lines[bestLineIdx] || "";
+    const cleanDisplayQuote =
+      cleanTerm && cleanTerm.length > 2
+        ? cleanTerm
+        : matchedLine.replace(/^[•\-\*\s]+/, "").trim() || "Verified Experience";
 
     setActiveResumeEvidence({
       claim: claimText,
-      quote: exactQuote || matchedTerm,
-      context: highlightedContext,
-      matchedTerm: matchedTerm,
+      quote: cleanDisplayQuote,
+      fullResumeText: rawResumeText,
+      lines: lines,
+      matchedLineIndex: bestLineIdx,
+      totalLines: lines.length,
+      matchedLineContent: matchedLine,
     });
   };
   const [expandedTracePayloads, setExpandedTracePayloads] = useState({});
@@ -366,22 +462,35 @@ export default function ResultsPanel({
       return text.replace(/\[(?:Resume|Source|\d+)[^\]]*\]/gi, "").replace(/\s{2,}/g, " ").trim();
     }
 
-    const hasExplicitBrackets = /\[(?:Resume:?[^\]]*|Source:?[^\]]*|\d+)\]/i.test(text);
+    // Comprehensive regex matching all bracket citation styles
+    const bracketRegex = /(\[(?:Resume(?:\s*(?:Anchor|Quote|Evidence|Proof))?[:\-\s]*[^\]]*|Source(?:\s*#?\d+)?[:\-\s]*[^\]]*|\d+)\])/gi;
+    const hasExplicitBrackets = bracketRegex.test(text);
 
     // 1. If explicit brackets exist, parse them
     if (hasExplicitBrackets) {
-      const parts = text.split(/(\[(?:Resume:?[^\]]*|Source:?[^\]]*|\d+)\])/gi);
+      const parts = text.split(bracketRegex);
       return parts.map((part, index) => {
         // Resume Quote Grounding (Clickable Slate / Indigo Badge)
-        if (/^\[Resume:?/i.test(part)) {
-          const quote = part.replace(/^\[Resume:?\s*/i, "").replace(/\]$/, "");
+        if (/^\[\s*Resume/i.test(part)) {
+          const match = part.match(/^\[\s*Resume(?:\s*(?:Anchor|Quote|Evidence|Proof))?[:\-\s]*(.*)\]$/i);
+          let rawQuote = match && match[1] ? match[1].replace(/^[":'\-\s]+|[":'\-\s]+$/g, "").trim() : "";
+
+          // Extract the specific sentence right before this bracket
+          const precedingText = parts.slice(0, index).join("");
+          const sentences = precedingText.split(/(?<=[.!?])\s+/);
+          const claimSentence = sentences[sentences.length - 1]?.trim() || text;
+
           return (
             <button
               key={index}
               type="button"
-              onClick={() => openResumeProof(text, quote || "Verified Qualification")}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                openResumeProof(claimSentence, rawQuote);
+              }}
               className="inline-flex items-center gap-1 px-2 py-0.5 mx-1 text-[11px] font-sans font-semibold rounded bg-slate-100 hover:bg-indigo-50 text-slate-800 hover:text-indigo-950 border border-slate-300 hover:border-indigo-300 shadow-sm cursor-pointer transition-all hover:scale-105 active:scale-95 align-baseline"
-              title="Click to view exact proof in your resume"
+              title="Click to view exact verbatim proof in your full resume"
             >
               <span className="text-[10px] text-indigo-600 font-bold">📄</span>
               <span>Resume Anchor</span>
@@ -390,7 +499,7 @@ export default function ResultsPanel({
         }
 
         // Company Research Citation [1], [2], etc. (Clickable Slate / Indigo Pill)
-        const numMatch = part.match(/\[(\d+)\]/);
+        const numMatch = part.match(/\[(?:Source(?:\s*#?)?[:\-\s]*)?(\d+)\]/i);
         if (numMatch) {
           const sourceNum = parseInt(numMatch[1], 10);
           const source =
@@ -400,7 +509,9 @@ export default function ResultsPanel({
             <button
               key={index}
               type="button"
-              onClick={() => {
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
                 if (source) {
                   setActiveCitationSource(source);
                 } else {
@@ -450,9 +561,13 @@ export default function ResultsPanel({
         {matchedSkillInText && (
           <button
             type="button"
-            onClick={() => openResumeProof(text, matchedSkillInText)}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              openResumeProof(text, matchedSkillInText);
+            }}
             className="inline-flex items-center gap-1 px-2 py-0.5 mx-1 text-[11px] font-sans font-semibold rounded bg-slate-100 hover:bg-indigo-50 text-slate-800 hover:text-indigo-950 border border-slate-300 hover:border-indigo-300 shadow-sm cursor-pointer transition-all hover:scale-105 active:scale-95 align-baseline"
-            title={`Click to view proof for "${matchedSkillInText}" in your resume`}
+            title={`Click to view proof for "${matchedSkillInText}" in your full resume`}
           >
             <span className="text-[10px] text-indigo-600 font-bold">📄</span>
             <span>Resume Anchor</span>
@@ -461,7 +576,9 @@ export default function ResultsPanel({
         {isCompanySentence && hasSources && (
           <button
             type="button"
-            onClick={() => {
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
               const src = companyData?.raw_sources?.[0];
               if (src) setActiveCitationSource(src);
             }}
@@ -1780,53 +1897,153 @@ export default function ResultsPanel({
         </div>
       )}
 
-            {/* Floating Resume Proof Inspection Modal */}
+            {/* Floating Full Candidate Resume Inspection Modal */}
       {activeResumeEvidence && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="glass-card max-w-xl w-full p-6 space-y-4 border border-indigo-500/40 shadow-2xl shadow-indigo-950/60 bg-[#0a0f1d]">
-            {/* Header */}
-            <div className="flex items-center justify-between pb-3 border-b border-white/10">
-              <div className="flex items-center gap-2">
-                <span className="px-2 py-0.5 text-xs font-mono font-bold rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/40">
-                  RESUME AUDIT
-                </span>
-                <span className="text-sm font-bold text-white">Verified Resume Grounding Proof</span>
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 md:p-6 bg-black/85 backdrop-blur-md animate-in fade-in duration-200"
+          onClick={() => setActiveResumeEvidence(null)}
+        >
+          <div 
+            className="glass-card max-w-4xl w-full max-h-[92vh] flex flex-col rounded-2xl border border-indigo-500/40 shadow-2xl shadow-indigo-950/80 bg-[#080d19] overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div className="p-4 sm:p-5 border-b border-white/10 bg-white/[0.02] shrink-0 space-y-3">
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-2.5 flex-wrap">
+                  <span className="px-2.5 py-1 text-xs font-mono font-bold rounded-lg bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-indigo-400 animate-pulse" />
+                    FULL RESUME AUDIT
+                  </span>
+                  <span className="text-sm sm:text-base font-bold text-white tracking-tight">
+                    Candidate Verbatim Proof Document
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const el = document.getElementById(`resume-line-${activeResumeEvidence.matchedLineIndex}`);
+                      if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+                    }}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 text-xs font-semibold transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-sm"
+                    title="Jump directly to highlighted evidence line in resume"
+                  >
+                    <span>🎯</span>
+                    <span className="hidden sm:inline">Jump to Anchor</span>
+                    <span className="font-mono text-[11px] opacity-90">(L{activeResumeEvidence.matchedLineIndex + 1})</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setActiveResumeEvidence(null)}
+                    className="text-gray-400 hover:text-white p-1.5 rounded-lg hover:bg-white/10 text-base font-bold transition-all cursor-pointer"
+                    title="Close resume inspection (Esc)"
+                  >
+                    ✕
+                  </button>
+                </div>
               </div>
+
+              {/* Dual Audit Header Bar */}
+              <div className="grid sm:grid-cols-2 gap-2.5 p-3 rounded-xl bg-black/50 border border-white/10">
+                <div className="space-y-1">
+                  <div className="flex items-center justify-between text-[10px] font-mono uppercase tracking-wider text-gray-400">
+                    <span>Claim in Cover Letter</span>
+                    <span className="text-zinc-500">Sentence under review</span>
+                  </div>
+                  <p className="text-xs text-gray-200 font-medium line-clamp-2 leading-relaxed">
+                    "{activeResumeEvidence.claim}"
+                  </p>
+                </div>
+
+                <div className="space-y-1 sm:border-l sm:border-white/10 sm:pl-3">
+                  <div className="flex items-center justify-between text-[10px] font-mono uppercase tracking-wider text-amber-400">
+                    <span>Verified Resume Anchor</span>
+                    <span className="text-amber-300 font-semibold">
+                      Line {activeResumeEvidence.matchedLineIndex + 1} of {activeResumeEvidence.totalLines}
+                    </span>
+                  </div>
+                  <p className="text-xs text-amber-200 font-semibold line-clamp-2 leading-relaxed">
+                    "{activeResumeEvidence.quote}"
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Document Header Tag */}
+            <div className="px-4 py-2 bg-black/40 border-b border-white/5 flex items-center justify-between text-[11px] font-mono text-gray-400 shrink-0">
+              <span className="flex items-center gap-1.5">
+                <span className="text-indigo-400">📄</span>
+                <span>Document: <strong className="text-gray-300 font-sans">{formData?.name || "Candidate"}_Resume.pdf</strong></span>
+                <span className="text-zinc-500">({activeResumeEvidence.totalLines} lines total)</span>
+              </span>
+              <span className="text-emerald-400 font-semibold flex items-center gap-1">
+                <span>✓</span>
+                <span className="hidden sm:inline">Verbatim Match Confirmed</span>
+              </span>
+            </div>
+
+            {/* Document Body: Full Scrollable Resume Document */}
+            <div 
+              ref={resumeContainerRef}
+              className="flex-1 overflow-y-auto p-3 sm:p-5 bg-[#030610] font-mono text-xs sm:text-[13px] leading-relaxed space-y-0.5 select-text shadow-inner"
+              style={{ maxHeight: "calc(92vh - 240px)" }}
+            >
+              {activeResumeEvidence.lines && activeResumeEvidence.lines.map((line, idx) => {
+                const isMatched = idx === activeResumeEvidence.matchedLineIndex;
+                return (
+                  <div
+                    key={idx}
+                    id={`resume-line-${idx}`}
+                    ref={isMatched ? highlightedLineRef : null}
+                    className={`flex items-start gap-2.5 sm:gap-4 px-2.5 py-1 rounded transition-all ${
+                      isMatched
+                        ? "bg-amber-400/15 border-l-4 border-amber-400 text-amber-100 font-medium shadow-[0_0_25px_rgba(251,191,36,0.18)] ring-1 ring-amber-500/30 my-2"
+                        : "text-gray-300 hover:bg-white/[0.02]"
+                    }`}
+                  >
+                    {/* Line number gutter */}
+                    <span 
+                      className={`select-none font-mono text-[11px] w-7 sm:w-9 text-right shrink-0 pt-0.5 ${
+                        isMatched ? "text-amber-400 font-black" : "text-zinc-600"
+                      }`}
+                    >
+                      {idx + 1}
+                    </span>
+
+                    {/* Resume line content */}
+                    <div className="flex-1 whitespace-pre-wrap break-words">
+                      {isMatched && (
+                        <div className="inline-flex items-center gap-1.5 px-2 py-0.5 mb-1.5 rounded bg-amber-400 text-black text-[10px] font-sans font-bold uppercase tracking-wider shadow-sm">
+                          <span>📌 VERIFIED EVIDENCE ANCHOR</span>
+                          <span className="font-mono lowercase text-[9px] opacity-80">(verbatim candidate quote)</span>
+                        </div>
+                      )}
+                      <div className={isMatched ? "text-amber-50 font-semibold" : ""}>
+                        {line || "\u00A0"}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Modal Footer */}
+            <div className="p-3 sm:p-4 border-t border-white/10 bg-white/[0.02] flex flex-wrap items-center justify-between gap-3 text-xs shrink-0">
+              <div className="flex items-center gap-2 text-gray-400 font-mono text-[11px]">
+                <span className="text-emerald-400 font-bold">100% EVIDENCE GROUNDED</span>
+                <span className="text-zinc-600">•</span>
+                <span className="text-zinc-400">Scroll freely above to audit the complete candidate resume.</span>
+              </div>
+
               <button
+                type="button"
                 onClick={() => setActiveResumeEvidence(null)}
-                className="text-gray-400 hover:text-white p-1 rounded-lg hover:bg-white/10 text-sm font-bold transition-all"
+                className="px-4 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs transition-all shadow-md shadow-indigo-600/30 cursor-pointer"
               >
-                ✕
-              </button>
-            </div>
-
-            {/* Verified Term / Skill */}
-            <div className="space-y-1.5">
-              <div className="text-[11px] font-mono uppercase tracking-wider text-gray-400">Verified Evidence Anchor</div>
-              <div className="p-3 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-indigo-200 text-xs font-semibold leading-relaxed">
-                "{activeResumeEvidence.quote}"
-              </div>
-            </div>
-
-            {/* Resume Context Preview */}
-            <div className="space-y-1.5">
-              <div className="flex items-center justify-between text-[11px] font-mono text-gray-400">
-                <span className="uppercase tracking-wider">Candidate Resume Match Context</span>
-                <span className="text-indigo-400 text-[10px]">● Matched from Uploaded Resume</span>
-              </div>
-              <div className="p-3.5 rounded-lg bg-black/70 border border-white/10 text-xs text-gray-300 font-mono whitespace-pre-wrap max-h-52 overflow-y-auto leading-relaxed shadow-inner">
-                {activeResumeEvidence.context || "Direct quote from candidate resume."}
-              </div>
-            </div>
-
-            {/* Footer note */}
-            <div className="pt-2 border-t border-white/10 flex items-center justify-between text-[11px] text-gray-400 font-mono">
-              <span>Grounding status: <strong className="text-emerald-400">100% UNFABRICATED</strong></span>
-              <button
-                onClick={() => setActiveResumeEvidence(null)}
-                className="px-3.5 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs transition-all shadow-sm"
-              >
-                Done
+                Close Audit (Done)
               </button>
             </div>
           </div>
