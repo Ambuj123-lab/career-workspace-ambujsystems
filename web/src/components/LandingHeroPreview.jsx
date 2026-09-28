@@ -139,6 +139,18 @@ export default function LandingHeroPreview() {
               </button>
 
               <button
+                onClick={() => setActiveTab("github")}
+                className={`px-3 py-1.5 rounded-lg font-semibold transition-all flex items-center gap-1.5 cursor-pointer ${
+                  activeTab === "github"
+                    ? "bg-rose-500/20 text-rose-300 border border-rose-500/30 shadow-sm"
+                    : "text-gray-400 hover:text-white"
+                }`}
+              >
+                <span>🐙</span>
+                <span>GitHub Code Proof</span>
+              </button>
+
+              <button
                 onClick={() => setActiveTab("company")}
                 className={`px-3 py-1.5 rounded-lg font-semibold transition-all flex items-center gap-1.5 cursor-pointer ${
                   activeTab === "company"
@@ -394,6 +406,120 @@ export default function LandingHeroPreview() {
               </div>
             </div>
           )}
+          {/* TAB 4: GITHUB CODE EVIDENCE PROOFER (MCP TOOL #7) */}
+          {activeTab === "github" && (
+            <div className="p-6 sm:p-8 space-y-6">
+              <div className="flex flex-wrap items-center justify-between gap-4">
+                <div>
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                      MCP TOOL #7 &middot; GITHUB PORTFOLIO PROOFER
+                    </span>
+                    <span className="text-xs text-gray-400">Live Codebase &amp; Commit Hash Verification</span>
+                  </div>
+                  <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+                    Verifiable GitHub Commit Grounding
+                  </h3>
+                </div>
+
+                <div className="flex items-center gap-3 px-4 py-2 rounded-2xl bg-emerald-500/10 border border-emerald-500/20">
+                  <div className="w-8 h-8 rounded-full border-2 border-emerald-400 flex items-center justify-center text-emerald-400 font-black text-xs shrink-0">
+                    ✓
+                  </div>
+                  <div>
+                    <div className="text-xs font-bold text-white">4,999 / 5,000 req/hr &middot; $0 Free PAT Active</div>
+                    <div className="text-[10px] text-emerald-400 font-medium">Public repo &amp; commit tree verified with zero cost</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Candidate Verified Repositories Display */}
+              <div className="grid lg:grid-cols-2 gap-4">
+                {/* Repo 1 */}
+                <div className="p-4 sm:p-5 rounded-2xl bg-white/[0.02] border border-white/10 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-bold text-cyan-400 font-mono">Ambuj123-lab/agentic-rag-financial-parser</span>
+                      <span className="text-[10px] px-1.5 py-0.5 rounded bg-cyan-500/10 text-cyan-300 border border-cyan-500/20 font-mono">Python</span>
+                    </div>
+                    <span className="text-[10px] font-semibold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-md border border-emerald-500/20">
+                      VERIFIED PROOF
+                    </span>
+                  </div>
+
+                  <p className="text-xs text-gray-300">
+                    Autonomous multi-agent 10-K financial document parser using LangGraph cyclic state machines, Pydantic validation, and MCP tools.
+                  </p>
+
+                  <div className="p-3 rounded-xl bg-black/40 border border-white/5 space-y-1.5 text-xs">
+                    <div className="flex items-center justify-between text-[11px]">
+                      <span className="text-gray-400 font-mono">Latest Commit:</span>
+                      <span className="text-emerald-400 font-mono">sha: 7f2a1b9 &middot; verified</span>
+                    </div>
+                    <div className="text-gray-300 text-xs italic font-mono bg-white/[0.02] p-2 rounded border border-white/5">
+                      &ldquo;feat: implement cyclic state machine checkpointing &amp; live audit logging&rdquo;
+                    </div>
+                  </div>
+
+                  <div className="p-3 rounded-xl bg-emerald-500/[0.04] border border-emerald-500/15 text-xs text-emerald-300">
+                    <span className="text-[10px] uppercase font-bold text-emerald-400 block mb-1">
+                      GROUNDED COVER LETTER EVIDENCE:
+                    </span>
+                    &ldquo;Directly demonstrated production agentic architecture in <span className="font-mono text-cyan-300 font-semibold">agentic-rag-financial-parser</span> (commit <span className="font-mono text-emerald-400 font-semibold">7f2a1b9</span>), implementing cyclic state persistence and deterministic human-in-the-loop audit gates.&rdquo;
+                  </div>
+                </div>
+
+                {/* Repo 2 */}
+                <div className="p-4 sm:p-5 rounded-2xl bg-white/[0.02] border border-white/10 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-bold text-rose-400 font-mono">Ambuj123-lab/ai-cover-letter</span>
+                      <span className="text-[10px] px-1.5 py-0.5 rounded bg-rose-500/10 text-rose-300 border border-rose-500/20 font-mono">Next.js &middot; Python</span>
+                    </div>
+                    <span className="text-[10px] font-semibold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-md border border-emerald-500/20">
+                      VERIFIED PROOF
+                    </span>
+                  </div>
+
+                  <p className="text-xs text-gray-300">
+                    Evidence-grounded career application workspace with Model Context Protocol (MCP) server, Tavily deep search, and Langfuse observability.
+                  </p>
+
+                  <div className="p-3 rounded-xl bg-black/40 border border-white/5 space-y-1.5 text-xs">
+                    <div className="flex items-center justify-between text-[11px]">
+                      <span className="text-gray-400 font-mono">Latest Commit:</span>
+                      <span className="text-emerald-400 font-mono">sha: 8c4d2e1 &middot; verified</span>
+                    </div>
+                    <div className="text-gray-300 text-xs italic font-mono bg-white/[0.02] p-2 rounded border border-white/5">
+                      &ldquo;feat: register github_proofer MCP tool with live commit hashing &amp; Langfuse tracing&rdquo;
+                    </div>
+                  </div>
+
+                  <div className="p-3 rounded-xl bg-emerald-500/[0.04] border border-emerald-500/15 text-xs text-emerald-300">
+                    <span className="text-[10px] uppercase font-bold text-emerald-400 block mb-1">
+                      GROUNDED COVER LETTER EVIDENCE:
+                    </span>
+                    &ldquo;Authored production-grade dual-transport MCP server (stdio / SSE) with Langfuse operational telemetry and zero-overclaim adversarial defense.&rdquo;
+                  </div>
+                </div>
+              </div>
+
+              {/* Overclaim Sentinel Note */}
+              <div className="p-4 rounded-xl bg-black/40 border border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+                <div className="flex items-center gap-2.5">
+                  <span className="text-base">🛡️</span>
+                  <div>
+                    <span className="font-semibold text-gray-200">Adversarial Overclaim Sentinel:</span>
+                    <span className="text-gray-400 ml-1.5">If a candidate claims a technology without public repository or commit backing, CoverCraft prompts them for specific clarification instead of hallucinating fictitious experience.</span>
+                  </div>
+                </div>
+                <span className="px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-mono text-[11px] shrink-0 font-medium">
+                  Zero Fluff Guarantee
+                </span>
+              </div>
+            </div>
+          )}
+
 
         </div>
       </div>

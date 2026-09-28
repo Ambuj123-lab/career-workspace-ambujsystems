@@ -20,6 +20,7 @@ export default function GeneratePage() {
   const [error, setError] = useState(null);
   const [progress, setProgress] = useState("");
   const [isDefenseLoading, setIsDefenseLoading] = useState(false);
+  const [githubData, setGithubData] = useState(null);
   const [mcpLogs, setMcpLogs] = useState([]);
 
   // Helper to append real-time MCP log events
@@ -81,6 +82,41 @@ export default function GeneratePage() {
       const analysis = await analysisRes.json();
       if (analysis.error) throw new Error(analysis.error);
       setAnalysisData(analysis);
+
+      // Step 1.5: Call MCP Tool: github_proofer (Real-Time Code Verification)
+      setProgress("Calling MCP Tool: github_proofer...");
+      addMcpLog("call", "github_proofer", `Inspecting candidate's public GitHub portfolio & commit history for "${data.name}"...`, {
+        action: "public_repository_code_grounding",
+        candidate: data.name,
+        target_role: data.role,
+        github_input: data.github || "Auto-extract from resume",
+        transport: "stdio (read-only)",
+      });
+
+      try {
+        const ghRes = await fetch("/api/github-verify", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            resume_text: data.resume,
+            candidate_name: data.name,
+            github_username: data.github,
+            required_skills: analysis.required_skills?.map((s) => s.skill) || [],
+          }),
+        });
+        const ghData = await ghRes.json();
+        setGithubData(ghData);
+
+        addMcpLog("result", "github_proofer", `Verified ${ghData.verified_repositories?.length || 0} repositories backing ${ghData.skills_backed_by_code?.length || 0} technical skills!`, {
+          github_handle: ghData.github_handle,
+          verified_repositories: ghData.verified_repositories?.map((r) => r.name),
+          code_grounded_skills: ghData.skills_backed_by_code,
+          proof_confidence: `${ghData.proof_confidence}%`,
+          audit_verdict: ghData.audit_verdict,
+        });
+      } catch (ghErr) {
+        console.warn("GitHub proofer non-fatal notice:", ghErr);
+      }
 
       addMcpLog("result", "jd_analyzer", `Analysis completed: Overall Fit ${analysis.overall_match}% with ${analysis.required_skills?.length || 0} skills mapped.`, {
         overall_match: analysis.overall_match,
@@ -633,6 +669,7 @@ export default function GeneratePage() {
             letterData={letterData}
             atsData={atsData}
             defenseData={defenseData}
+            githubData={githubData}
             mcpLogs={mcpLogs}
             onRefreshDefense={() => triggerDefense()}
             isDefenseLoading={isDefenseLoading}

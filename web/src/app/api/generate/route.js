@@ -1,3 +1,4 @@
+import { recordTrace } from "@/lib/langfuse";
 import { generateWithFallback } from "@/lib/gemini";
 import { NextResponse } from "next/server";
 import {
@@ -130,6 +131,37 @@ export async function POST(req) {
       tokens: tokenUsage,
       clientIp,
     });
+
+        // Asynchronously log execution trace & audit scores to Langfuse (non-blocking)
+    recordTrace({
+      name: "cover-letter-synthesis",
+      input: {
+        candidate: name,
+        role,
+        company,
+        tone,
+        strongSkillsCount,
+        totalSkillsCount,
+      },
+      output: {
+        wordCount: data.word_count,
+        verdict: data.overclaim_audit?.verdict,
+        flags_count: data.overclaim_audit?.flags_count || 0,
+      },
+      model,
+      metadata: {
+        role,
+        company,
+        tokens: tokenUsage,
+        clientIp,
+        overclaimFlags: overclaimAudit.length,
+      },
+      scores: [
+        { name: "overclaim_count", value: overclaimAudit.length },
+        { name: "strong_skills_used", value: strongSkillsCount },
+        { name: "grounding_fidelity", value: overclaimAudit.length === 0 ? 1.0 : 0.85 },
+      ],
+    }).catch(() => {});
 
     return NextResponse.json(data);
   } catch (err) {

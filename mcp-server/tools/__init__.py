@@ -4,6 +4,7 @@ from .jd_analyzer import jd_analyzer
 from .ats_readiness import ats_readiness
 from .source_filter import source_filter
 from .cover_letter_generator import cover_letter_generator
+from .github_proofer import github_proofer
 
 __all__ = [
     "company_research",
@@ -12,4 +13,5 @@ __all__ = [
     "ats_readiness",
     "source_filter",
     "cover_letter_generator",
+    "github_proofer",
 ]

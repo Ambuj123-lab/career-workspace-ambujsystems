@@ -9,7 +9,7 @@ const MAX_RESUME = 15000;
 const SAMPLE_DATA = {
   name: "Ambuj Kumar Tripathi",
   email: "ambuj.tripathi@example.com",
-  phone: "+91 00000 00000",
+  github: "https://github.com/Ambuj123-lab",
   linkedin: "linkedin.com/in/ambuj-tripathi",
   role: "Senior AI Engineer (Agentic Systems)",
   company: "Google DeepMind",
@@ -43,7 +43,7 @@ export default function InputForm({ onGenerate }) {
   const [form, setForm] = useState({
     name: "",
     email: "",
-    phone: "",
+    github: "",
     linkedin: "",
     role: "",
     company: "",
@@ -120,10 +120,43 @@ export default function InputForm({ onGenerate }) {
 
       update("resume", result.text);
       setFileMeta(result);
+
+      // Auto-extract candidate contact & profile details from uploaded resume
+      if (result.entities) {
+        setForm((prev) => ({
+          ...prev,
+          name: prev.name || result.entities.name || "",
+          email: prev.email || result.entities.email || "",
+          github: prev.github || result.entities.github || "",
+          linkedin: prev.linkedin || result.entities.linkedin || "",
+        }));
+      }
     } catch (err) {
       setUploadError(err.message || "Failed to process resume file");
     } finally {
       setUploading(false);
+    }
+  };
+
+    const handleJdChange = (val) => {
+    update("jd", val);
+    if (val && val.length > 20) {
+      setForm((prev) => {
+        let newRole = prev.role;
+        let newCompany = prev.company;
+
+        if (!newCompany) {
+          const compMatch = val.match(/(?:at\s+|company:\s*|welcome to\s+|join\s+)([A-Z][a-zA-Z0-9&.\s]{2,22})/i);
+          if (compMatch && compMatch[1]) newCompany = compMatch[1].trim();
+        }
+
+        if (!newRole) {
+          const roleMatch = val.match(/(?:looking for an?\s+|role:\s*|position:\s*|title:\s*|hiring an?\s+)([A-Z][a-zA-Z0-9\s-]{3,30})/i);
+          if (roleMatch && roleMatch[1]) newRole = roleMatch[1].trim();
+        }
+
+        return { ...prev, jd: val, role: newRole, company: newCompany };
+      });
     }
   };
 
@@ -209,15 +242,16 @@ export default function InputForm({ onGenerate }) {
             />
           </div>
           <div>
-            <label className="block text-xs font-semibold text-gray-400 mb-1.5 uppercase tracking-wide">
-              Phone
+            <label className="block text-xs font-semibold text-gray-400 mb-1.5 uppercase tracking-wide flex items-center justify-between">
+              <span>GitHub Profile</span>
+              <span className="text-[10px] text-cyan-400 font-normal font-mono">Auto-Verified by MCP</span>
             </label>
             <input
               type="text"
-              value={form.phone}
-              onChange={(e) => update("phone", e.target.value)}
-              placeholder="+91 00000 00000"
-              className="w-full px-4 py-3 bg-white/[0.04] border border-white/10 rounded-xl text-sm text-white placeholder-gray-600 focus:border-rose-500/50 focus:ring-1 focus:ring-rose-500/20 outline-none transition-all"
+              value={form.github}
+              onChange={(e) => update("github", e.target.value)}
+              placeholder="https://github.com/your-username"
+              className="w-full px-4 py-3 bg-white/[0.04] border border-white/10 rounded-xl text-sm text-white placeholder-gray-600 focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/20 outline-none transition-all"
             />
           </div>
           <div>
@@ -455,7 +489,7 @@ export default function InputForm({ onGenerate }) {
         <textarea
           rows={6}
           value={form.jd}
-          onChange={(e) => update("jd", e.target.value)}
+          onChange={(e) => handleJdChange(e.target.value)}
           placeholder="Paste the target job description here..."
           className={`w-full px-4 py-3 bg-white/[0.04] border rounded-xl text-sm text-white placeholder-gray-600 focus:ring-1 outline-none transition-all resize-y font-mono text-xs leading-relaxed ${
             form.jd.length > MAX_JD

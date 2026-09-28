@@ -22,6 +22,8 @@
 [![Tavily AI Search](https://img.shields.io/badge/Tavily_AI-8--Page_Web_Crawl-0ea5e9?style=flat-square)](https://tavily.com/)
 [![Jina AI Reader](https://img.shields.io/badge/Jina_AI-Markdown_Extractor-blueviolet?style=flat-square)](https://jina.ai/)
 [![MongoDB Atlas](https://img.shields.io/badge/MongoDB-Atlas_Telemetry-47A248?style=flat-square&logo=mongodb)](https://www.mongodb.com/atlas)
+[![Langfuse Observability](https://img.shields.io/badge/Langfuse-LLM_Observability-black?style=flat-square&logo=langfuse)](https://langfuse.com/)
+[![GitHub MCP Proofer](https://img.shields.io/badge/GitHub_MCP-Commit_Auditor-181717?style=flat-square&logo=github)](https://github.com/)
 [![Docker](https://img.shields.io/badge/Docker-Multi--Stage_120MB-2496ED?style=flat-square&logo=docker)](https://docker.com)
 [![Vercel Edge](https://img.shields.io/badge/Vercel-Serverless_Edge-000000?style=flat-square&logo=vercel)](https://vercel.com)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://opensource.org/licenses/MIT)
@@ -125,7 +127,9 @@ When LLM JSON structures are delayed or partially populated, a deterministic reg
 | **Language Model** | **Google Gemini 2.5 Flash Lite** (Fallback: `2.0-flash`) | Structured JSON extraction, fast inference, 1M context window |
 | **Web Crawling** | **Tavily AI Search API** (8-Page Crawl) | Real-time portal & news search with domain filtering |
 | **Page Extractor** | **Jina AI Reader (`r.jina.ai`)** | Deep page markdown conversion with Bearer token authentication |
-| **Agent Protocols** | **Anthropic Model Context Protocol (MCP)** | Python 3.11 stdio server for external LLM agent invocation |
+| **Agent Protocols** | **Anthropic Model Context Protocol (MCP)** | Python 3.11 stdio server for external LLM agent invocation (7 Tools) |
+| **Code Verification** | **GitHub REST API & MCP Proofer** | Real-time public commit SHA and repository grounding ($0 Free Tier) |
+| **LLM Observability** | **Langfuse Node SDK** | Full-trace latency, token consumption, and multi-agent child spans |
 | **Authentication** | **NextAuth.js v4** (Google OAuth 2.0 Provider) | Secure session management & OAuth callback flow |
 | **Database & Telemetry**| **MongoDB Atlas** (Mongoose Driver) | Persistent telemetry schema, audit trails, usage tracking |
 | **Deployment** | **Vercel Serverless Edge** + **Docker Standalone** | 0-second cold starts, global CDN caching, container portability |

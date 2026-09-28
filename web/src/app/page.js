@@ -402,7 +402,7 @@ export default function Home() {
             </div>
 
             <div className="flex flex-wrap gap-2 justify-center mt-12">
-              {["Next.js 15", "Gemini 2.5 Flash", "6 MCP Tools", "Tavily Advanced", "Jina Reader", "Overclaim Red-Teamer", "Stale Tech Filter", "Recharts", "Tailwind CSS", "Vercel Edge"].map((tech) => (
+              {["Next.js 15", "Gemini 2.5 Flash", "7 MCP Tools", "GitHub API Grounding", "Langfuse Telemetry", "Tavily Advanced", "Jina Reader", "Overclaim Red-Teamer", "Stale Tech Filter", "Recharts", "Tailwind CSS", "Vercel Edge"].map((tech) => (
                 <span key={tech} className="px-3 py-1 rounded-full text-xs font-medium border border-white/10 bg-white/5 text-gray-400">{tech}</span>
               ))}
             </div>

@@ -190,8 +190,27 @@ export async function POST(req) {
       truncated = true;
     }
 
+    // Smart Contact & Identity Entity Extraction
+    const lines = sanitizedText.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
+    let detectedName = null;
+    if (lines.length > 0 && lines[0].length < 50 && !/resume|curriculum|cv|profile|contact/i.test(lines[0])) {
+      detectedName = lines[0].replace(/[^a-zA-Z\s.-]/g, "").trim();
+    }
+
+    const emailMatch = sanitizedText.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
+    const githubMatch = sanitizedText.match(/github\.com\/([a-zA-Z0-9_-]+)/i);
+    const linkedinMatch = sanitizedText.match(/linkedin\.com\/in\/([a-zA-Z0-9_-]+)/i);
+
+    const entities = {
+      name: detectedName,
+      email: emailMatch ? emailMatch[0] : null,
+      github: githubMatch ? `https://github.com/${githubMatch[1]}` : null,
+      linkedin: linkedinMatch ? `https://linkedin.com/in/${linkedinMatch[1]}` : null,
+    };
+
     return NextResponse.json({
       success: true,
+      entities,
       filename,
       size_kb: Math.round(sizeBytes / 1024),
       char_count: sanitizedText.length,

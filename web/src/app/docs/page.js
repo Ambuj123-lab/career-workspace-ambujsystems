@@ -766,7 +766,7 @@ export default function DocsPage() {
               CoverCraft implements the open <strong>Model Context Protocol (MCP)</strong> standard, exposing an extensible tool server in <code className="text-purple-400 bg-white/5 px-1.5 py-0.5 rounded">mcp-server/server.py</code> and a streamable execution trace terminal in the frontend.
             </p>
 
-            {/* The 6 Registered Tools */}
+            {/* The 7 Registered Tools */}
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
               {[
                 { tool: "company_research", desc: "Executes real-time Tavily search queries for company developments and engineering initiatives with verifiable source citations and domain filtering." },

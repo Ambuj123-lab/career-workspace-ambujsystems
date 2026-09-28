@@ -229,6 +229,11 @@ async def call_tool(name: str, arguments: dict) -> list[TextContent]:
                 approved_company_facts=arguments.get("approved_company_facts"),
                 tone=arguments.get("tone", "professional"),
             )
+        elif name == "github_proofer":
+            result = await github_proofer(
+                candidate_github_or_resume=arguments["candidate_github_or_resume"],
+                technical_claims=arguments.get("technical_claims"),
+            )
         else:
             logger.warning(f"Rejected invocation for unregistered tool: {name}")
             result = {
@@ -237,7 +242,7 @@ async def call_tool(name: str, arguments: dict) -> list[TextContent]:
                     "message": f"Tool '{name}' is not registered on this MCP server.",
                     "registered_tools": [
                         "company_research", "evidence_validator", "jd_analyzer",
-                        "ats_readiness", "source_filter", "cover_letter_generator"
+                        "ats_readiness", "source_filter", "cover_letter_generator", "github_proofer"
                     ],
                 }
             }
@@ -298,7 +303,7 @@ async def main():
         except ImportError:
             logger.warning("Starlette/uvicorn not installed; falling back to standard stdio transport.")
 
-    logger.info("Starting CoverCraft MCP Server on stdio transport (6 Registered Tools)...")
+    logger.info("Starting CoverCraft MCP Server on stdio transport (7 Registered Tools)...")
     async with stdio_server() as (read_stream, write_stream):
         await server.run(
             read_stream,
