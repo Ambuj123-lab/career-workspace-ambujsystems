@@ -256,6 +256,23 @@ export default function ResultsPanel({
     formData?.name,
   ].join("\n");
 
+  // Helper to render markdown bold (**...**) as React <strong> elements
+  const renderFormattedText = (content) => {
+    if (!content || typeof content !== "string") return content;
+    if (!content.includes("**")) return content;
+    const parts = content.split(/(\**.*?\**)/g);
+    return parts.map((seg, i) => {
+      if (seg.startsWith("**") && seg.endsWith("**") && seg.length > 4) {
+        return (
+          <strong key={i} className="font-semibold text-slate-900">
+            {seg.slice(2, -2)}
+          </strong>
+        );
+      }
+      return seg;
+    });
+  };
+
   // Robust sanitization function that cleans all internal citation tags and fixes punctuation spacing
   const sanitizeLetterParagraph = (p) => {
     if (!p) return "";
@@ -416,7 +433,7 @@ export default function ResultsPanel({
     <div class="greeting">${greeting}</div>
 
     <div class="body-content">
-      ${cleanParagraphs.map((p) => `<p>${p}</p>`).join("\n      ")}
+      ${cleanParagraphs.map((p) => `<p>${p.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")}</p>`).join("\n      ")}
     </div>
 
     <div class="closing-block">
@@ -633,7 +650,7 @@ export default function ResultsPanel({
   const renderTextWithCitations = (text) => {
     if (!text) return null;
     if (!showEvidenceMarkers) {
-      return sanitizeLetterParagraph(text);
+      return renderFormattedText(sanitizeLetterParagraph(text));
     }
 
     // Comprehensive regex matching all bracket citation styles
@@ -701,7 +718,7 @@ export default function ResultsPanel({
           );
         }
 
-        return part;
+        return renderFormattedText(part);
       });
     }
 

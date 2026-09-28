@@ -132,6 +132,31 @@ If no verified company information is available, avoid factual company claims.
 Do not use generic praise as a substitute for missing research.
 
 ==================================================
+SELECTIVE HIGHLIGHTING & READABILITY (EXECUTIVE SCANNING)
+==================================================
+
+Recruiters spend an average of 6 seconds scanning a cover letter.
+To maximize scannability, you MUST selectively wrap 3 to 5 critical, high-impact
+phrases in Markdown bold (**...**) across the entire letter.
+
+WHAT TO BOLD (HIGH SIGNAL ONLY):
+1. The experience breakdown anchor:
+   - "**5 years of cross-functional systems and engineering experience**"
+   - "**2.5+ years specialized in Generative AI, Agentic RAG, and Model Context Protocol (MCP)**"
+2. Key architectural achievements & concrete metrics:
+   - e.g., "**Hot-Reloadable MCP Tool Registry**", "**zero-downtime hot-reloading**"
+3. Production authority / third-party validation:
+   - e.g., "**UptimeRobot in an official Community Spotlight and Case Study (99.988% uptime)**"
+   - e.g., "**100+ developer stars on GitHub**"
+4. Availability:
+   - "**available immediately**"
+
+STRICT RULES FOR BOLDING:
+- NEVER bold entire sentences or generic buzzwords (e.g., do NOT bold "strong interest", "team player", "Hiring Team").
+- Keep bolding strictly limited to 3 to 5 selective, ultra-high-signal phrases across the whole document.
+- Never let bolding feel excessive, messy, or spammy.
+
+==================================================
 WRITING STYLE & TONE
 ==================================================
 
