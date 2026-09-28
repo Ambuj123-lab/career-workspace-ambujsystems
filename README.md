@@ -18,7 +18,8 @@
 
 [![Next.js 16](https://img.shields.io/badge/Next.js-16.1.6-black?style=flat-square&logo=next.js)](https://nextjs.org/)
 [![React 19](https://img.shields.io/badge/React-19.0.0-61DAFB?style=flat-square&logo=react)](https://react.dev/)
-[![Google Gemini API](https://img.shields.io/badge/Gemini_API-2.5_Flash_Lite-4285F4?style=flat-square&logo=google)](https://ai.google.dev/)
+[![Google Gemini API](https://img.shields.io/badge/Gemini_API-3.5_Flash_Lite-4285F4?style=flat-square&logo=google)](https://ai.google.dev/)
+[![Multi-Provider Fallback](https://img.shields.io/badge/Fallback-OpenRouter_Nemotron_550B-7C3AED?style=flat-square)](https://openrouter.ai/)
 [![Tavily AI Search](https://img.shields.io/badge/Tavily_AI-8--Page_Web_Crawl-0ea5e9?style=flat-square)](https://tavily.com/)
 [![Jina AI Reader](https://img.shields.io/badge/Jina_AI-Markdown_Extractor-blueviolet?style=flat-square)](https://jina.ai/)
 [![MongoDB Atlas](https://img.shields.io/badge/MongoDB-Atlas_Telemetry-47A248?style=flat-square&logo=mongodb)](https://www.mongodb.com/atlas)
@@ -142,7 +143,7 @@ When LLM JSON structures are delayed or partially populated, a deterministic reg
 |---|---|---|
 | **Frontend Framework** | **Next.js 16.1.6 (App Router)** + **React 19** | Server Components, Streaming SSR, High-Performance Hydration |
 | **Styling & Motion** | **Vanilla Tailwind CSS v4** + HSL Design Tokens | Modern dark mode, frosted glass surfaces, tactile spring micro-interactions |
-| **Language Model** | **Google Gemini 2.5 Flash Lite** (Fallback: `2.0-flash`) | Structured JSON extraction, fast inference, 1M context window |
+| **Language Model** | **3-Tier Multi-Provider Cascade**: Primary `gemini-3.5-flash-lite`, Tier 2 `gemini-3.1-flash-lite-preview`, Tier 3 `nvidia/nemotron-3-ultra-550b-a55b:free` (OpenRouter) | Circuit breaker, exponential backoff, zero-downtime resilience |
 | **Web Crawling** | **Tavily AI Search API** (8-Page Crawl) | Real-time portal & news search with domain filtering |
 | **Page Extractor** | **Jina AI Reader (`r.jina.ai`)** | Deep page markdown conversion with Bearer token authentication |
 | **Agent Protocols** | **Anthropic Model Context Protocol (MCP)** | Python 3.11 stdio server for external LLM agent invocation (7 Tools) |
@@ -343,6 +344,6 @@ This project is open-source and licensed under the **[MIT License](LICENSE)**.
 
 <img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=10,12,14,16,18&height=100&section=footer" width="100%"/>
 
-<sub>Architected with ❤️ by Ambuj Kumar Tripathi • Powered by Google Gemini 2.5 • Tavily AI • Jina AI • Next.js 16</sub>
+<sub>Architected with ❤️ by Ambuj Kumar Tripathi • Powered by Google Gemini 3.5 & 3-Tier Multi-Provider Cascade (OpenRouter Nemotron 550B) • Langfuse Telemetry • Tavily AI • Jina AI • Next.js 16</sub>
 
 </div>

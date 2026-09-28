@@ -158,7 +158,8 @@ export default function DocsPage() {
     { id: "mcp-protocol", label: "6. Model Context Protocol (MCP)" },
     { id: "interview-defense", label: "7. Adversarial Interview Defense" },
     { id: "generative-ui", label: "8. Generative UI Architecture" },
-    { id: "code-audit", label: "9. Codebase & File Verification" },
+    { id: "resilience-telemetry", label: "9. 3-Tier Cascade & Langfuse Telemetry" },
+    { id: "code-audit", label: "10. Codebase & File Verification" },
   ];
 
   return (
@@ -884,10 +885,77 @@ export default function DocsPage() {
             </div>
           </section>
 
-          {/* SECTION 9: Codebase & File Verification */}
-          <section id="code-audit" className="space-y-6 scroll-mt-24 border-t border-white/10 pt-8">
+          {/* SECTION 9: Multi-Provider Resilience & Grounding Telemetry */}
+          <section id="resilience-telemetry" className="space-y-6 scroll-mt-24 border-t border-white/10 pt-8">
             <div className="flex items-center gap-3">
               <span className="text-rose-400 font-mono text-sm font-bold">09</span>
+              <h2 className="text-xl sm:text-2xl font-bold text-white">Multi-Provider Resilience: 3-Tier Fallback Cascade &amp; Langfuse Telemetry</h2>
+            </div>
+
+            <p className="text-sm text-gray-300 leading-relaxed">
+              Production LLM deployments cannot depend on a single AI provider or model checkpoint. Rate limits (<code className="text-amber-300 font-mono text-xs">429 Too Many Requests</code>), quota exhaustion (<code className="text-amber-300 font-mono text-xs">RESOURCE_EXHAUSTED</code>), and transient API outages require an automated multi-provider resilience cascade.
+            </p>
+
+            {/* 3-Tier Architecture Grid */}
+            <div className="grid sm:grid-cols-3 gap-4 pt-2">
+              <div className="p-4 rounded-xl bg-white/[0.02] border border-cyan-500/25 space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-cyan-400 font-mono uppercase">Tier 1 &middot; Primary</span>
+                  <span className="px-2 py-0.5 rounded text-[10px] bg-cyan-500/10 text-cyan-300 border border-cyan-500/20 font-mono">Google Native</span>
+                </div>
+                <div className="text-sm font-bold text-white">gemini-3.5-flash-lite</div>
+                <p className="text-xs text-gray-400 leading-relaxed">
+                  Default ultra-low latency engine for standard generation, JD vector extraction, and company intelligence synthesis.
+                </p>
+              </div>
+
+              <div className="p-4 rounded-xl bg-white/[0.02] border border-amber-500/25 space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-amber-400 font-mono uppercase">Tier 2 &middot; Secondary</span>
+                  <span className="px-2 py-0.5 rounded text-[10px] bg-amber-500/10 text-amber-300 border border-amber-500/20 font-mono">Google Fallback</span>
+                </div>
+                <div className="text-sm font-bold text-white">gemini-3.1-flash-lite-preview</div>
+                <p className="text-xs text-gray-400 leading-relaxed">
+                  Automatically activated on Tier 1 rate-limiting or quota exhaustion with exponential backoff retry.
+                </p>
+              </div>
+
+              <div className="p-4 rounded-xl bg-white/[0.02] border border-emerald-500/25 space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-emerald-400 font-mono uppercase">Tier 3 &middot; Failover</span>
+                  <span className="px-2 py-0.5 rounded text-[10px] bg-emerald-500/10 text-emerald-300 border border-emerald-500/20 font-mono">OpenRouter 550B</span>
+                </div>
+                <div className="text-sm font-bold text-white">nvidia/nemotron-3-ultra-550b</div>
+                <p className="text-xs text-gray-400 leading-relaxed">
+                  Independent multi-provider circuit breaker. Routes through OpenRouter to ensure 100% operational availability if Google endpoints degrade.
+                </p>
+              </div>
+            </div>
+
+            {/* Langfuse Telemetry & Grounding Ratio */}
+            <div className="p-5 sm:p-6 rounded-2xl bg-white/[0.02] border border-white/10 space-y-4">
+              <div className="flex items-center gap-2 text-rose-400 font-bold text-sm">
+                <span>Langfuse Observability &amp; Mathematical Grounding Ratio</span>
+              </div>
+              <p className="text-xs text-gray-300 leading-relaxed">
+                Every inference call across all 4 key routes (<code className="text-cyan-300 font-mono text-[11px]">/api/generate</code>, <code className="text-cyan-300 font-mono text-[11px]">/api/analyze</code>, <code className="text-cyan-300 font-mono text-[11px]">/api/research</code>, <code className="text-cyan-300 font-mono text-[11px]">/api/defense</code>) is recorded in Langfuse with end-to-end tracing and a dynamic mathematical grounding token ratio:
+              </p>
+
+              <div className="p-3.5 rounded-xl bg-black/40 border border-white/10 font-mono text-xs text-emerald-400 overflow-x-auto">
+                Grounding Ratio = (Resume_Tokens + JD_Tokens) / (Generated_Output_Tokens + 1)
+              </div>
+
+              <div className="text-xs text-gray-400 leading-relaxed space-y-1">
+                <div>&bull; <strong className="text-gray-200">Execution Tags:</strong> Model checkpoint, provider failover tier, duration milliseconds, and status.</div>
+                <div>&bull; <strong className="text-gray-200">Zero Silent Failures:</strong> All fallback events emit structured warning logs and metric increments for telemetry auditing.</div>
+              </div>
+            </div>
+          </section>
+
+          {/* SECTION 10: Codebase & File Verification */}
+          <section id="code-audit" className="space-y-6 scroll-mt-24 border-t border-white/10 pt-8">
+            <div className="flex items-center gap-3">
+              <span className="text-rose-400 font-mono text-sm font-bold">10</span>
               <h2 className="text-xl sm:text-2xl font-bold text-white">Codebase Audit &amp; Technical Verification Directory</h2>
             </div>
 

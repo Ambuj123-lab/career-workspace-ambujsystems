@@ -353,6 +353,23 @@ export default function ResultsPanel({
       margin: 0 auto;
       padding: 8px 0;
     }
+    @media screen {
+      body {
+        padding: 24px 16px;
+        background: #f8fafc !important;
+      }
+      .sheet {
+        background: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+        padding: 32px 28px;
+      }
+    }
+    @media (max-width: 640px) {
+      .name { font-size: 20px !important; }
+      .sheet { padding: 20px 16px !important; }
+      body { font-size: 13px !important; line-height: 1.55 !important; }
+    }
     .header {
       border-bottom: 2px solid #e2e8f0;
       padding-bottom: 14px;
@@ -445,7 +462,27 @@ export default function ResultsPanel({
 </body>
 </html>`;
 
-    // Robust persistent print iframe (prevents premature detachment while user is interacting with print dialog)
+    // Mobile detection: Mobile browsers (iOS Safari, Android Chrome) block hidden iframe printing
+    const isMobile = typeof navigator !== "undefined" && /Android|iPhone|iPad|iPod/i.test(navigator.userAgent || "");
+    if (isMobile) {
+      const printWin = window.open("", "_blank");
+      if (printWin) {
+        printWin.document.open();
+        printWin.document.write(printHtml);
+        printWin.document.close();
+        printWin.focus();
+        setTimeout(() => {
+          try {
+            printWin.print();
+          } catch (e) {
+            console.warn("Mobile print trigger:", e);
+          }
+        }, 500);
+        return;
+      }
+    }
+
+    // Desktop: Robust persistent print iframe (prevents premature detachment while user is interacting with print dialog)
     let iframe = document.getElementById("covercraft-print-iframe");
     if (!iframe) {
       iframe = document.createElement("iframe");
