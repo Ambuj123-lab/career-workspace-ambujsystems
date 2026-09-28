@@ -3,7 +3,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
 
 const PRIMARY_MODEL = process.env.GEMINI_PRIMARY_MODEL || "gemini-3.5-flash-lite";
-const FALLBACK_MODEL = process.env.GEMINI_FALLBACK_MODEL || "gemini-3.8-flash";
+const FALLBACK_MODEL = process.env.GEMINI_FALLBACK_MODEL || "gemini-3.1-flash-lite-preview";
 const OPENROUTER_MODEL = process.env.OPENROUTER_MODEL || "qwen/qwen3.8-27b:free";
 
 // ===== CIRCUIT BREAKER STATE MACHINE =====
@@ -158,7 +158,7 @@ async function callOpenRouter(config, prompt, systemInstruction = null) {
 /**
  * 3-Tier Multi-Provider LLM Pipeline:
  * Tier 1: Gemini Primary (gemini-3.5-flash-lite or GEMINI_PRIMARY_MODEL)
- * Tier 2: Gemini Secondary Fallback (gemini-3.8-flash or GEMINI_FALLBACK_MODEL)
+ * Tier 2: Gemini Secondary Fallback (gemini-3.1-flash-lite-preview or GEMINI_FALLBACK_MODEL)
  * Tier 3: OpenRouter Tertiary Fallback (qwen/qwen3.8-27b:free or OPENROUTER_MODEL)
  *
  * @param {object} config - { temperature, responseMimeType }
