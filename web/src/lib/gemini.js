@@ -2,8 +2,9 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
 
-const PRIMARY_MODEL = "gemini-3.5-flash-lite";
-const FALLBACK_MODEL = "gemini-3.8-flash";
+const PRIMARY_MODEL = process.env.GEMINI_PRIMARY_MODEL || "gemini-3.5-flash-lite";
+const FALLBACK_MODEL = process.env.GEMINI_FALLBACK_MODEL || "gemini-3.8-flash";
+const OPENROUTER_MODEL = process.env.OPENROUTER_MODEL || "qwen/qwen3.8-27b:free";
 
 // ===== CIRCUIT BREAKER STATE MACHINE =====
 const CircuitState = {
@@ -31,7 +32,7 @@ function checkCircuit() {
       return true; // allow canary
     }
     const waitSec = Math.ceil((circuit.cooldownPeriodMs - (now - circuit.lastFailureTime)) / 1000);
-    throw new Error(`[CircuitBreaker: OPEN] Gemini API service experiencing elevated downtime. Cooling down for ${waitSec}s to prevent cascading failure.`);
+    return false; // Circuit is OPEN
   }
   return true;
 }
@@ -64,71 +65,184 @@ function recordFailure(err) {
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 /**
- * Attempt generation with primary model, retry with exponential backoff, and fall back to secondary model.
+ * Tertiary fallback using OpenRouter API.
+ * Configurable via OPENROUTER_MODEL env var (defaults to qwen/qwen3.8-27b:free).
+ * Allows the user to freely change the OpenRouter model in .env or Vercel.
+ * Also configures OpenRouter-native fallback models so free-tier pool rate limits don't break generation.
+ */
+async function callOpenRouter(config, prompt, systemInstruction = null) {
+  const apiKey = process.env.OPENROUTER_API_KEY;
+  if (!apiKey) {
+    throw new Error("OPENROUTER_API_KEY is not configured.");
+  }
+
+  const model = process.env.OPENROUTER_MODEL || OPENROUTER_MODEL;
+  const messages = [];
+
+  if (systemInstruction) {
+    messages.push({ role: "system", content: systemInstruction });
+  }
+
+  let userPrompt = prompt;
+  if (Array.isArray(prompt)) {
+    userPrompt = prompt
+      .map((p) => (typeof p === "string" ? p : p.text || JSON.stringify(p)))
+      .join("\n\n");
+  } else if (typeof prompt !== "string") {
+    userPrompt = JSON.stringify(prompt);
+  }
+
+  messages.push({ role: "user", content: userPrompt });
+
+  // OpenRouter models array: primary chosen model first, followed by resilient free backups
+  const modelList = [model];
+  if (model.includes(":free")) {
+    if (model !== "nvidia/nemotron-3.5-lightning:free") modelList.push("nvidia/nemotron-3.5-lightning:free");
+    if (model !== "liquid/lfm-2.5-2.6b:free") modelList.push("liquid/lfm-2.5-2.6b:free");
+  }
+
+  const payload = {
+    model: model,
+    models: modelList,
+    messages: messages,
+    temperature: typeof config?.temperature === "number" ? config.temperature : 0.3,
+  };
+
+  if (config?.responseMimeType === "application/json") {
+    payload.response_format = { type: "json_object" };
+  }
+
+  console.log(`[OpenRouter Fallback] Initiating 3rd-tier fallback with model: ${model} (models list: ${modelList.join(", ")})...`);
+
+  const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${apiKey}`,
+      "Content-Type": "application/json",
+      "HTTP-Referer": "https://career-workspace-ambujsystems.vercel.app",
+      "X-Title": "CoverCraft AI",
+    },
+    body: JSON.stringify(payload),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok || data.error) {
+    const errorMsg = data.error?.message || `HTTP ${response.status}: ${response.statusText}`;
+    throw new Error(`[OpenRouter Error] ${errorMsg}`);
+  }
+
+  let text = data.choices?.[0]?.message?.content || "";
+
+  // Clean Markdown JSON wrapper if returned (e.g. ```json ... ```)
+  if (config?.responseMimeType === "application/json") {
+    const trimmed = text.trim();
+    if (trimmed.startsWith("```")) {
+      text = trimmed.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/i, "");
+    }
+  }
+
+  const usage = data.usage || {};
+  const tokenUsage = {
+    promptTokens: usage.prompt_tokens || 0,
+    completionTokens: usage.completion_tokens || 0,
+    totalTokens: usage.total_tokens || 0,
+  };
+
+  const resolvedModel = data.model || model;
+  console.log(`[OpenRouter Fallback] Model ${resolvedModel} succeeded. Tokens: ${tokenUsage.totalTokens} (in: ${tokenUsage.promptTokens}, out: ${tokenUsage.completionTokens})`);
+
+  return { text, model: `openrouter/${resolvedModel}`, tokenUsage };
+}
+
+/**
+ * 3-Tier Multi-Provider LLM Pipeline:
+ * Tier 1: Gemini Primary (gemini-3.5-flash-lite or GEMINI_PRIMARY_MODEL)
+ * Tier 2: Gemini Secondary Fallback (gemini-3.8-flash or GEMINI_FALLBACK_MODEL)
+ * Tier 3: OpenRouter Tertiary Fallback (qwen/qwen3.8-27b:free or OPENROUTER_MODEL)
+ *
  * @param {object} config - { temperature, responseMimeType }
  * @param {string|Array} prompt - The user prompt or content parts
  * @param {string} systemInstruction - Developer/System policy instruction
  * @returns {Promise<{ text: string, model: string, tokenUsage: { promptTokens: number, completionTokens: number, totalTokens: number } }>}
  */
 export async function generateWithFallback(config, prompt, systemInstruction = null) {
-  checkCircuit();
-
-  const models = [PRIMARY_MODEL, FALLBACK_MODEL];
+  const geminiAllowed = checkCircuit();
   let lastError = null;
 
-  for (const modelName of models) {
-    const maxRetries = 2; // 2 retries with exponential backoff per model
+  // If Gemini circuit is not OPEN, attempt Gemini Tier 1 and Tier 2
+  if (geminiAllowed) {
+    const models = [PRIMARY_MODEL, FALLBACK_MODEL];
 
-    for (let attempt = 0; attempt <= maxRetries; attempt++) {
-      try {
-        if (attempt > 0) {
-          const backoffMs = Math.min(500 * Math.pow(2, attempt - 1) + Math.random() * 250, 4000);
-          console.log(`[Gemini Retry] ${modelName} attempt ${attempt + 1}/${maxRetries + 1} after ${Math.round(backoffMs)}ms backoff...`);
-          await sleep(backoffMs);
-        }
+    for (const modelName of models) {
+      const maxRetries = 2; // 2 retries with exponential backoff per model
 
-        const modelOptions = {
-          model: modelName,
-          generationConfig: config,
-        };
+      for (let attempt = 0; attempt <= maxRetries; attempt++) {
+        try {
+          if (attempt > 0) {
+            const backoffMs = Math.min(500 * Math.pow(2, attempt - 1) + Math.random() * 250, 4000);
+            console.log(`[Gemini Retry] ${modelName} attempt ${attempt + 1}/${maxRetries + 1} after ${Math.round(backoffMs)}ms backoff...`);
+            await sleep(backoffMs);
+          }
 
-        if (systemInstruction) {
-          modelOptions.systemInstruction = systemInstruction;
-        }
+          const modelOptions = {
+            model: modelName,
+            generationConfig: config,
+          };
 
-        const model = genAI.getGenerativeModel(modelOptions);
-        const result = await model.generateContent(prompt);
-        const text = result.response.text();
+          if (systemInstruction) {
+            modelOptions.systemInstruction = systemInstruction;
+          }
 
-        // Extract token usage metadata from Gemini response
-        const usage = result.response.usageMetadata || {};
-        const tokenUsage = {
-          promptTokens: usage.promptTokenCount || 0,
-          completionTokens: usage.candidatesTokenCount || 0,
-          totalTokens: usage.totalTokenCount || 0,
-        };
+          const model = genAI.getGenerativeModel(modelOptions);
+          const result = await model.generateContent(prompt);
+          const text = result.response.text();
 
-        console.log(`[Gemini] Model ${modelName} succeeded. Tokens: ${tokenUsage.totalTokens} (in: ${tokenUsage.promptTokens}, out: ${tokenUsage.completionTokens})`);
-        recordSuccess();
+          // Extract token usage metadata from Gemini response
+          const usage = result.response.usageMetadata || {};
+          const tokenUsage = {
+            promptTokens: usage.promptTokenCount || 0,
+            completionTokens: usage.candidatesTokenCount || 0,
+            totalTokens: usage.totalTokenCount || 0,
+          };
 
-        return { text, model: modelName, tokenUsage };
-      } catch (err) {
-        lastError = err;
-        const isTransient = /503|429|resource exhausted|overloaded|fetch failed|timeout/i.test(err.message);
+          console.log(`[Gemini] Model ${modelName} succeeded. Tokens: ${tokenUsage.totalTokens} (in: ${tokenUsage.promptTokens}, out: ${tokenUsage.completionTokens})`);
+          recordSuccess();
 
-        console.warn(`[Gemini Attempt Failed] ${modelName} (attempt ${attempt + 1}): ${err.message}`);
+          return { text, model: modelName, tokenUsage };
+        } catch (err) {
+          lastError = err;
+          const isTransient = /503|429|resource exhausted|overloaded|fetch failed|timeout/i.test(err.message);
 
-        // If not transient (e.g. invalid argument or fatal prompt rejection), don't retry same model
-        if (!isTransient) {
-          break;
+          console.warn(`[Gemini Attempt Failed] ${modelName} (attempt ${attempt + 1}): ${err.message}`);
+
+          if (!isTransient) {
+            break;
+          }
         }
       }
+
+      console.warn(`[Gemini Model Exhausted] ${modelName} failed after retries. Moving to next fallback...`);
     }
 
-    console.warn(`[Gemini Model Exhausted] ${modelName} failed after retries. Moving to next fallback...`);
+    // Both Gemini models failed
+    recordFailure(lastError);
+  } else {
+    console.warn("[CircuitBreaker: OPEN] Gemini API experiencing downtime. Skipping to 3rd-tier OpenRouter fallback...");
   }
 
-  // If all models and retries failed
-  recordFailure(lastError);
-  throw lastError;
+  // Tier 3: OpenRouter Tertiary Fallback
+  if (process.env.OPENROUTER_API_KEY) {
+    try {
+      console.log(`[Fallback Cascade] Engaging Tier-3 OpenRouter (${process.env.OPENROUTER_MODEL || OPENROUTER_MODEL})...`);
+      const openRouterResult = await callOpenRouter(config, prompt, systemInstruction);
+      return openRouterResult;
+    } catch (openRouterErr) {
+      console.error(`[OpenRouter Fallback Failed] ${openRouterErr.message}`);
+      lastError = openRouterErr;
+    }
+  }
+
+  // If all tiers failed
+  throw lastError || new Error("All generation providers (Gemini and OpenRouter) failed.");
 }
