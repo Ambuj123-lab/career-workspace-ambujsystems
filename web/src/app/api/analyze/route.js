@@ -1,3 +1,4 @@
+import { recordTrace } from "@/lib/langfuse";
 import { checkRateLimit, getClientIp } from "@/lib/rateLimit";
 import { generateWithFallback } from "@/lib/gemini";
 import { NextResponse } from "next/server";
@@ -114,6 +115,44 @@ export async function POST(req) {
 
     data._model_used = model;
     data._scoring_method = "deterministic_application_layer";
+
+    
+    // Asynchronously log JD Match analysis trace to Langfuse (non-blocking)
+    recordTrace({
+      name: "job-description-analysis",
+      input: {
+        jd_length: jd_text.length,
+        resume_length: resume_text.length,
+        target_role: data.job_context?.role || "Target Role",
+      },
+      output: {
+        overall_match: data.overall_match,
+        required_skills_count: skills.length,
+        strong_matches: data.chart_data?.strong_match || 0,
+        partial_matches: data.chart_data?.partial_match || 0,
+        missing_skills: data.chart_data?.missing || 0,
+      },
+      model,
+      metadata: {
+        role: data.job_context?.role,
+        work_model: data.job_context?.work_model,
+        experience_bracket: data.job_context?.experience_bracket,
+        source_platform: data.job_context?.source_platform,
+        scoring_method: "deterministic_application_layer",
+      },
+      scores: [
+        {
+          name: "match_score",
+          value: Math.round(data.overall_match) / 100,
+          comment: `Deterministic match score based on ${skills.length} extracted competencies`,
+        },
+        {
+          name: "skills_coverage",
+          value: totalSkills > 0 ? Math.round(((data.chart_data?.strong_match + data.chart_data?.partial_match) / totalSkills) * 100) / 100 : 1.0,
+          comment: "Ratio of matched skills to total JD requirements",
+        },
+      ],
+    }).catch(() => {});
 
     return NextResponse.json(data);
   } catch (err) {
