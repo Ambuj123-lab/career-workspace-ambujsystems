@@ -908,6 +908,8 @@ export default function DocsPage() {
                 <div className="text-gray-300 truncate">src/app/api/analyze/route.js</div>
                 <div className="text-gray-300 truncate">src/app/api/research/route.js</div>
                 <div className="text-gray-300 truncate">src/app/api/parse-resume/route.js</div>
+                <div className="text-gray-300 truncate">src/lib/gemini.js (3-Tier Multi-Provider Fallback)</div>
+                <div className="text-gray-300 truncate">src/lib/langfuse.js (E2E Observability Traces)</div>
               </div>
 
               <div className="p-3 rounded-lg bg-white/[0.02] border border-white/5 space-y-1">
