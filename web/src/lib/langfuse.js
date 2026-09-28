@@ -1,4 +1,5 @@
 import { Langfuse } from "langfuse";
+import { recordLangsmithRun } from "./langsmith";
 
 let langfuseInstance = null;
 
@@ -29,7 +30,7 @@ export function getLangfuse() {
 }
 
 /**
- * Safely record an LLM generation trace with evaluation scores
+ * Safely record an LLM generation trace with evaluation scores in Langfuse AND LangSmith
  */
 export async function recordTrace({
   name,
@@ -38,7 +39,23 @@ export async function recordTrace({
   model = "gemini-3.5-flash-lite",
   metadata = {},
   scores = [],
+  sessionId = null,
 }) {
+  // 1. Dual-emit to LangSmith (asynchronous, non-blocking)
+  recordLangsmithRun({
+    name,
+    runType: "chain",
+    inputs: typeof input === "object" ? input : { prompt: input },
+    outputs: typeof output === "object" ? output : { completion: output },
+    extra: {
+      model,
+      scores,
+      ...metadata,
+    },
+    sessionId,
+  }).catch(() => {});
+
+  // 2. Emit to Langfuse
   const langfuse = getLangfuse();
   if (!langfuse) return null;
 
@@ -47,6 +64,7 @@ export async function recordTrace({
       name,
       input,
       output,
+      sessionId: sessionId || undefined,
       metadata: {
         timestamp: new Date().toISOString(),
         runtime: "nextjs-app-router",
