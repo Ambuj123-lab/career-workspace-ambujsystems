@@ -1,4 +1,5 @@
 import { Client } from "langsmith";
+import crypto from "crypto";
 
 let langsmithClient = null;
 
@@ -38,19 +39,28 @@ export async function recordLangsmithRun({
 
   try {
     const projectName = process.env.LANGCHAIN_PROJECT || "CoverCraft-AI";
-    const run = await client.createRun({
+    const startTime = Date.now() - 350;
+    const endTime = Date.now();
+
+    await client.createRun({
+      id: crypto.randomUUID(),
       name,
       run_type: runType,
       inputs,
       outputs,
       project_name: projectName,
+      start_time: startTime,
+      end_time: endTime,
       extra: {
         runtime: "nextjs-app-router",
         session_id: sessionId || undefined,
         ...extra,
       },
     });
-    return run;
+
+    if (client.awaitPendingTraceBatches) {
+      await client.awaitPendingTraceBatches();
+    }
   } catch (err) {
     console.warn(`[LangSmith] Error recording run "${name}":`, err.message);
     return null;
