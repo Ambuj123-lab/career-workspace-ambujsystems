@@ -260,7 +260,7 @@ export default function ResultsPanel({
   const renderFormattedText = (content) => {
     if (!content || typeof content !== "string") return content;
     if (!content.includes("**")) return content;
-    const parts = content.split(/(\**.*?\**)/g);
+    const parts = content.split(/(\*\*[^*]+?\*\*)/g);
     return parts.map((seg, i) => {
       if (seg.startsWith("**") && seg.endsWith("**") && seg.length > 4) {
         return (
@@ -748,7 +748,7 @@ export default function ResultsPanel({
 
     return (
       <span>
-        {text}
+        {renderFormattedText(text)}
         {matchedSkillInText && (
           <button
             type="button"
