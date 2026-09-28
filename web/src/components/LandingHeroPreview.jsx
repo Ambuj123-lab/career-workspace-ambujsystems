@@ -427,8 +427,8 @@ export default function LandingHeroPreview() {
                     ✓
                   </div>
                   <div>
-                    <div className="text-xs font-bold text-white">4,999 / 5,000 req/hr &middot; $0 Free PAT Active</div>
-                    <div className="text-[10px] text-emerald-400 font-medium">Public repo &amp; commit tree verified with zero cost</div>
+                    <div className="text-xs font-bold text-white">100% Cryptographic Code Proof Active</div>
+                    <div className="text-[10px] text-emerald-400 font-medium">Public repositories, live commit SHAs &amp; source trees grounded</div>
                   </div>
                 </div>
               </div>

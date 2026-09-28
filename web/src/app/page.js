@@ -256,7 +256,9 @@ export default function Home() {
         <section className="border-y border-white/5 bg-white/[0.02]">
           <div className="max-w-7xl mx-auto px-6 py-6 flex flex-wrap items-center justify-center gap-x-8 sm:gap-x-12 gap-y-4 text-xs sm:text-sm text-gray-400">
             {[
-              "6 Production MCP Tools",
+              "7 Production MCP Tools (Live GitHub Grounding)",
+              "Live GitHub Commit & Code Proof",
+              "Langfuse LLM Telemetry",
               "Outdated News & Stale Tech Filter",
               "Adversarial Overclaim Red-Teamer",
               "In-Line Evidence Citations",
@@ -275,14 +277,14 @@ export default function Home() {
         <section id="how-it-works" className="max-w-7xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">
-              Three Features. <span className="gradient-text-warm">Zero Fluff.</span>
+              Four Core Pillars. <span className="gradient-text-warm">Zero Fluff.</span>
             </h2>
             <p className="text-gray-400 max-w-xl mx-auto">
               Every feature earns its place. No vanity metrics. No overclaiming.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {/* Feature 1: Evidence Job Fit */}
             <div className="faang-card glow-card-rose hover-jiggle p-5 sm:p-8 group cursor-default">
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-rose-500/20 to-orange-500/20 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
@@ -368,6 +370,28 @@ export default function Home() {
                 </div>
               </div>
             </div>
+
+            {/* Feature 4: Live GitHub Code Proof & Commit Auditor (MCP Tool #7) */}
+            <div className="faang-card glow-card-emerald hover-jiggle p-5 sm:p-8 group cursor-default">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500/20 to-cyan-500/20 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
+                <svg className="w-6 h-6 text-emerald-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+              </div>
+              <h3 className="text-xl font-bold mb-3">Live GitHub Code Proof (Tool #7)</h3>
+              <p className="text-gray-400 text-sm leading-relaxed mb-4">
+                Queries candidate repos via <span className="text-emerald-400 font-semibold">GitHub MCP</span>. Grounds claims in <span className="text-cyan-300 font-semibold">real commit SHAs, file trees &amp; repos</span> for candidate trust.
+              </p>
+              <div className="mt-4 p-3 rounded-lg bg-white/[0.03] border border-white/5 text-xs space-y-2">
+                <div className="flex items-center justify-between text-[11px] pb-1 border-b border-white/5">
+                  <span className="text-emerald-400 font-semibold">✓ Live Commit Verified</span>
+                  <span className="text-cyan-300 font-mono text-[10px]">sha: 7f2a1b9</span>
+                </div>
+                <div className="text-gray-400 text-[11px] italic truncate">&ldquo;feat: implement cyclic state machine checkpointing...&rdquo;</div>
+                <div className="flex items-center justify-between pt-1 text-[11px]">
+                  <span className="text-purple-400 font-semibold">🐙 Verified Public Code</span>
+                  <span className="text-emerald-400 font-mono text-[10px]">100% Evidence Grounded</span>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -383,13 +407,14 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="grid md:grid-cols-5 gap-3 max-w-4xl mx-auto">
+            <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 max-w-5xl mx-auto">
               {[
-                { step: "1", label: "Your Resume + JD", color: "from-gray-500 to-gray-600", desc: "Regex PII stripping" },
+                { step: "1", label: "Resume + JD", color: "from-gray-500 to-gray-600", desc: "Auto-extract PII & profiles" },
                 { step: "2", label: "MCP: JD Analyzer", color: "from-rose-500 to-orange-500", desc: "Skill evidence matching" },
                 { step: "3", label: "MCP: Recon & Filter", color: "from-cyan-500 to-blue-500", desc: "Tavily + Stale Tech Filter" },
-                { step: "4", label: "Human Approval", color: "from-emerald-500 to-teal-500", desc: "Candidate audits sources" },
-                { step: "5", label: "Synthesis & Red-Team", color: "from-violet-500 to-purple-500", desc: "Overclaim veracity check" },
+                { step: "4", label: "MCP: GitHub Proof", color: "from-emerald-500 to-teal-500", desc: "Live commit & repo audit" },
+                { step: "5", label: "Human Approval", color: "from-amber-500 to-yellow-500", desc: "Candidate audits sources" },
+                { step: "6", label: "Synthesis & Red-Team", color: "from-violet-500 to-purple-500", desc: "Overclaim veracity check" },
               ].map((item) => (
                 <div key={item.step} className="glass-card p-5 text-center group hover:scale-105 transition-transform">
                   <div className={`w-10 h-10 mx-auto rounded-full bg-gradient-to-br ${item.color} flex items-center justify-center text-white font-black text-sm mb-3`}>
