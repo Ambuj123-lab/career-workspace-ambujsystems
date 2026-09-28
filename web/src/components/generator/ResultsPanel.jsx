@@ -280,6 +280,175 @@ export default function ResultsPanel({
     setTimeout(() => setCopied(false), 2500);
   };
 
+  const handlePrintPdf = () => {
+    // Deterministically clean paragraphs of ALL internal citation markers
+    const cleanParagraphs = paragraphs.map((p) => {
+      let clean = p
+        .replace(/\[(?:Resume|Source|Anchor|Cited|Proof|\d+)[^\]]*\]/gi, "")
+        .replace(/\s{2,}/g, " ")
+        .trim();
+      clean = clean.replace(/\s+([.,;:!?])/g, "$1");
+      return clean;
+    }).filter(Boolean);
+
+    const candidateName = formData?.name || "Candidate";
+    const contactParts = [formData?.email, formData?.phone, formData?.linkedin].filter(Boolean);
+    const contactLine = contactParts.join(" &bull; ");
+    const dateStr = new Date().toLocaleDateString("en-US", { day: "numeric", month: "long", year: "numeric" });
+    const targetCompany = formData?.company || "Hiring Organization";
+    const targetRole = formData?.role || "Position";
+    const subject = letterData?.subject_line || `Application for ${targetRole} at ${targetCompany}`;
+    const greeting = letterData?.greeting || `Dear Hiring Team at ${targetCompany},`;
+
+    const printHtml = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Cover Letter - ${candidateName} - ${targetCompany}</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 22mm 20mm;
+    }
+    * {
+      box-sizing: border-box;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #ffffff !important;
+      color: #0f172a !important;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.65;
+      font-size: 13.5px;
+      -webkit-font-smoothing: antialiased;
+    }
+    .sheet {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 8px 0;
+    }
+    .header {
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 14px;
+      margin-bottom: 22px;
+    }
+    .name {
+      font-size: 24px;
+      font-weight: 800;
+      color: #0f172a;
+      letter-spacing: -0.02em;
+      margin-bottom: 4px;
+    }
+    .contact {
+      font-size: 12px;
+      color: #475569;
+      font-family: "Segoe UI", Roboto, sans-serif;
+    }
+    .date {
+      font-size: 12px;
+      color: #64748b;
+      margin-top: 10px;
+    }
+    .recipient {
+      font-size: 13px;
+      color: #334155;
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+    .recipient-title {
+      font-weight: 700;
+      color: #0f172a;
+    }
+    .subject {
+      margin-top: 6px;
+      font-weight: 600;
+      color: #1e293b;
+    }
+    .greeting {
+      font-size: 14px;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 14px;
+    }
+    .body-content p {
+      margin: 0 0 15px 0;
+      text-align: justify;
+      color: #1e293b;
+    }
+    .closing-block {
+      margin-top: 26px;
+      page-break-inside: avoid;
+    }
+    .closing {
+      font-size: 13.5px;
+      color: #334155;
+      margin-bottom: 20px;
+    }
+    .signature {
+      font-size: 15px;
+      font-weight: 800;
+      color: #0f172a;
+    }
+  </style>
+</head>
+<body>
+  <div class="sheet">
+    <div class="header">
+      <div class="name">${candidateName}</div>
+      ${contactLine ? `<div class="contact">${contactLine}</div>` : ""}
+      <div class="date">${dateStr}</div>
+    </div>
+
+    <div class="recipient">
+      <div class="recipient-title">Hiring Team</div>
+      <div>${targetCompany}</div>
+      <div class="subject">Regarding: ${subject}</div>
+    </div>
+
+    <div class="greeting">${greeting}</div>
+
+    <div class="body-content">
+      ${cleanParagraphs.map((p) => `<p>${p}</p>`).join("\n      ")}
+    </div>
+
+    <div class="closing-block">
+      <div class="closing">Sincerely,</div>
+      <div class="signature">${candidateName}</div>
+    </div>
+  </div>
+</body>
+</html>`;
+
+    const iframe = document.createElement("iframe");
+    iframe.style.position = "fixed";
+    iframe.style.right = "0";
+    iframe.style.bottom = "0";
+    iframe.style.width = "0";
+    iframe.style.height = "0";
+    iframe.style.border = "none";
+    iframe.style.visibility = "hidden";
+    document.body.appendChild(iframe);
+
+    const doc = iframe.contentWindow?.document || iframe.contentDocument;
+    if (!doc) return;
+    doc.open();
+    doc.write(printHtml);
+    doc.close();
+
+    setTimeout(() => {
+      iframe.contentWindow?.focus();
+      iframe.contentWindow?.print();
+      setTimeout(() => {
+        try {
+          document.body.removeChild(iframe);
+        } catch (e) {}
+      }, 1500);
+    }, 250);
+  };
+
   const handleDownloadMarkdown = () => {
     // Downloads clean submission-ready Markdown (no internal markers)
     const mdContent = `# Cover Letter: ${formData?.role} at ${formData?.company}\n\n**Candidate:** ${formData?.name}\n**Date:** ${new Date().toLocaleDateString()}\n\n---\n\n${cleanFullLetterText}\n`;
@@ -674,15 +843,26 @@ export default function ResultsPanel({
               </button>
               <button
                 onClick={handleDownloadMarkdown}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-rose-500 hover:bg-rose-600 text-white text-xs font-semibold shadow-md shadow-rose-500/20 transition-all"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-rose-500 hover:bg-rose-600 text-white text-xs font-semibold shadow-md shadow-rose-500/20 transition-all cursor-pointer"
+                title="Download clean Markdown file"
               >
                 <span>📥 Markdown</span>
+              </button>
+              <button
+                type="button"
+                onClick={handlePrintPdf}
+                id="btn-print-cover-letter"
+                className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold shadow-md shadow-emerald-600/25 hover:shadow-emerald-600/40 transition-all cursor-pointer active:scale-95 shrink-0"
+                title="Print or Save clean PDF for recruiters (All citations stripped)"
+              >
+                <span>🖨️ Print / Save PDF</span>
               </button>
             </div>
           </div>
 
           {/* Rendered Document Container */}
           <div
+            id="printable-cover-letter"
             className="p-8 sm:p-12 rounded-2xl shadow-2xl transition-all"
             style={{
               backgroundColor: currentTheme.paperBg,
