@@ -4,7 +4,7 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
 
 const PRIMARY_MODEL = process.env.GEMINI_PRIMARY_MODEL || "gemini-3.5-flash-lite";
 const FALLBACK_MODEL = process.env.GEMINI_FALLBACK_MODEL || "gemini-3.1-flash-lite-preview";
-const OPENROUTER_MODEL = process.env.OPENROUTER_MODEL || "qwen/qwen3.8-27b:free";
+const OPENROUTER_MODEL = process.env.OPENROUTER_MODEL || "nvidia/nemotron-3-ultra-550b-a55b:free";
 
 // ===== CIRCUIT BREAKER STATE MACHINE =====
 const CircuitState = {
@@ -66,7 +66,7 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 /**
  * Tertiary fallback using OpenRouter API.
- * Configurable via OPENROUTER_MODEL env var (defaults to qwen/qwen3.8-27b:free).
+ * Configurable via OPENROUTER_MODEL env var (defaults to nvidia/nemotron-3-ultra-550b-a55b:free).
  * Allows the user to freely change the OpenRouter model in .env or Vercel.
  * Also configures OpenRouter-native fallback models so free-tier pool rate limits don't break generation.
  */
@@ -97,7 +97,7 @@ async function callOpenRouter(config, prompt, systemInstruction = null) {
   // OpenRouter models array: primary chosen model first, followed by resilient free backups
   const modelList = [model];
   if (model.includes(":free")) {
-    if (model !== "nvidia/nemotron-3.5-lightning:free") modelList.push("nvidia/nemotron-3.5-lightning:free");
+    if (model !== "nvidia/nemotron-3-ultra-550b-a55b:free") modelList.push("nvidia/nemotron-3-ultra-550b-a55b:free");
     if (model !== "liquid/lfm-2.5-2.6b:free") modelList.push("liquid/lfm-2.5-2.6b:free");
   }
 
@@ -159,7 +159,7 @@ async function callOpenRouter(config, prompt, systemInstruction = null) {
  * 3-Tier Multi-Provider LLM Pipeline:
  * Tier 1: Gemini Primary (gemini-3.5-flash-lite or GEMINI_PRIMARY_MODEL)
  * Tier 2: Gemini Secondary Fallback (gemini-3.1-flash-lite-preview or GEMINI_FALLBACK_MODEL)
- * Tier 3: OpenRouter Tertiary Fallback (qwen/qwen3.8-27b:free or OPENROUTER_MODEL)
+ * Tier 3: OpenRouter Tertiary Fallback (nvidia/nemotron-3-ultra-550b-a55b:free or OPENROUTER_MODEL)
  *
  * @param {object} config - { temperature, responseMimeType }
  * @param {string|Array} prompt - The user prompt or content parts
