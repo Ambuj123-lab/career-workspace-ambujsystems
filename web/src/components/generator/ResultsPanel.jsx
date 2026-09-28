@@ -2351,43 +2351,49 @@ export default function ResultsPanel({
             </div>
           </div>
 
-          {/* Execution Timeline */}
-          <div className="space-y-3 font-mono">
+                    {/* Execution Timeline */}
+          <div className="space-y-3 font-mono w-full max-w-full">
             {displayMcpLogs.map((log, idx) => {
               const isExpanded = !!expandedTracePayloads[log.id || idx];
               return (
                 <div
                   key={log.id || idx}
-                  className="p-3.5 rounded-xl bg-[#030712]/90 border border-white/5 hover:border-white/10 transition-all space-y-2 text-xs"
+                  className="p-3 sm:p-3.5 rounded-xl bg-[#030712]/90 border border-white/5 hover:border-white/10 transition-all space-y-2.5 text-xs w-full max-w-full overflow-hidden"
                 >
+                  {/* Top Bar: Timestamp, Tool Badge & View Payload button */}
                   <div className="flex flex-wrap items-center justify-between gap-2">
-                    <div className="flex items-center gap-2">
-                      <span className="text-gray-500 text-[11px]">[{log.time}]</span>
-                      <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+                    <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                      <span className="text-gray-500 text-[10px] sm:text-[11px] font-mono shrink-0">[{log.time}]</span>
+                      <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 shrink-0">
                         {log.tool}
                       </span>
-                      <span className="text-gray-200 font-sans font-medium">{log.message}</span>
                     </div>
 
                     {log.payload && (
                       <button
+                        type="button"
                         onClick={() =>
                           setExpandedTracePayloads((prev) => ({
                             ...prev,
                             [log.id || idx]: !isExpanded,
                           }))
                         }
-                        className="text-[11px] text-gray-400 hover:text-white px-2 py-0.5 rounded bg-white/5 border border-white/10"
+                        className="text-[10px] sm:text-[11px] text-gray-400 hover:text-white px-2.5 py-0.5 rounded bg-white/5 hover:bg-white/10 border border-white/10 shrink-0 transition-colors cursor-pointer"
                       >
                         {isExpanded ? "Hide Payload ▲" : "View Payload ▼"}
                       </button>
                     )}
                   </div>
 
+                  {/* Message: Full width on its own line so it NEVER cuts off on mobile screens */}
+                  <div className="text-gray-200 font-sans font-medium text-xs leading-relaxed break-words">
+                    {log.message}
+                  </div>
+
                   {/* Expanded JSON Payload */}
                   {isExpanded && log.payload && (
-                    <div className="mt-2 p-3 rounded-lg bg-black/80 border border-white/10 overflow-x-auto text-[11px] text-emerald-300">
-                      <pre>{JSON.stringify(log.payload, null, 2)}</pre>
+                    <div className="mt-2 p-2.5 sm:p-3 rounded-lg bg-black/80 border border-white/10 overflow-x-auto text-[11px] text-emerald-300 max-w-full">
+                      <pre className="whitespace-pre-wrap break-all sm:whitespace-pre sm:break-normal font-mono">{JSON.stringify(log.payload, null, 2)}</pre>
                     </div>
                   )}
                 </div>

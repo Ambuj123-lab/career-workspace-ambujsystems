@@ -274,7 +274,7 @@ export default function Home() {
         </section>
 
         {/* ===== 3 KILLER FEATURES ===== */}
-        <section id="how-it-works" className="max-w-7xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
+        <section id="how-it-works" className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-16 sm:py-24 overflow-hidden">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">
               Four Core Pillars. <span className="gradient-text-warm">Zero Fluff.</span>
@@ -284,9 +284,9 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6 w-full max-w-full">
             {/* Feature 1: Evidence Job Fit */}
-            <div className="faang-card glow-card-rose hover-jiggle p-5 sm:p-8 group cursor-default">
+            <div className="faang-card glow-card-rose hover-jiggle p-4 sm:p-8 group cursor-default w-full max-w-full overflow-hidden">
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-rose-500/20 to-orange-500/20 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
                 <svg className="w-6 h-6 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
               </div>
@@ -313,7 +313,7 @@ export default function Home() {
             </div>
 
             {/* Feature 2: Multi-Source Recon & Deep Reader */}
-            <div className="faang-card glow-card-cyan hover-jiggle p-5 sm:p-8 group cursor-default">
+            <div className="faang-card glow-card-cyan hover-jiggle p-4 sm:p-8 group cursor-default w-full max-w-full overflow-hidden">
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-500/20 to-blue-500/20 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
                 <svg className="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
               </div>
@@ -322,24 +322,24 @@ export default function Home() {
                 Deep 8-page crawl via <span className="text-cyan-400 font-semibold">Tavily Advanced</span> + <span className="text-emerald-400 font-semibold">Jina AI Reader</span>. Live workplace signals across{" "}
                 <span className="text-cyan-300 font-semibold">Naukri, AmbitionBox, Indeed &amp; LinkedIn</span> with 3-way categorized evidence.
               </p>
-              <div className="mt-4 p-3 rounded-lg bg-white/[0.03] border border-white/5 text-xs">
+              <div className="mt-4 p-3 rounded-lg bg-white/[0.03] border border-white/5 text-xs w-full max-w-full overflow-hidden">
                 <div className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-3">3-Way Evidence Distribution</div>
                 <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="flex items-center gap-2 text-cyan-400"><span>🏢</span> Company official sources</span>
-                    <span className="text-cyan-300 font-mono text-[10px]">Domain &middot; Careers</span>
+                  <div className="flex items-center justify-between gap-1 text-[11px] sm:text-xs">
+                    <span className="flex items-center gap-1.5 text-cyan-400 truncate"><span>🏢</span> Company official sources</span>
+                    <span className="text-cyan-300 font-mono text-[10px] shrink-0">Domain &middot; Careers</span>
                   </div>
-                  <div className="flex items-center justify-between">
-                    <span className="flex items-center gap-2 text-emerald-400"><span>💼</span> Job portals &amp; reviews</span>
-                    <span className="text-emerald-300 font-mono text-[10px]">Naukri &middot; AmbitionBox</span>
+                  <div className="flex items-center justify-between gap-1 text-[11px] sm:text-xs">
+                    <span className="flex items-center gap-1.5 text-emerald-400 truncate"><span>💼</span> Job portals &amp; reviews</span>
+                    <span className="text-emerald-300 font-mono text-[10px] shrink-0">Naukri &middot; AmbitionBox</span>
                   </div>
-                  <div className="flex items-center justify-between">
-                    <span className="flex items-center gap-2 text-purple-400"><span>🌐</span> External industry news</span>
-                    <span className="text-purple-300 font-mono text-[10px]">TechCrunch &middot; Research</span>
+                  <div className="flex items-center justify-between gap-1 text-[11px] sm:text-xs">
+                    <span className="flex items-center gap-1.5 text-purple-400 truncate"><span>🌐</span> External industry news</span>
+                    <span className="text-purple-300 font-mono text-[10px] shrink-0">TechCrunch &middot; Research</span>
                   </div>
-                  <div className="flex items-center justify-between mt-2 pt-2 border-t border-white/5">
-                    <span className="flex items-center gap-2 text-cyan-300"><span>⚡</span> Jina AI Deep Page Reader</span>
-                    <span className="text-emerald-400 font-mono text-[10px]">Markdown (No Ads)</span>
+                  <div className="flex items-center justify-between gap-1 mt-2 pt-2 border-t border-white/5 text-[11px] sm:text-xs">
+                    <span className="flex items-center gap-1.5 text-cyan-300 truncate"><span>⚡</span> Jina AI Deep Page Reader</span>
+                    <span className="text-emerald-400 font-mono text-[10px] shrink-0">Markdown (No Ads)</span>
                   </div>
                 </div>
                 <div className="mt-3 pt-2 border-t border-white/5 text-[10px] text-gray-500">
@@ -349,7 +349,7 @@ export default function Home() {
             </div>
 
             {/* Feature 3: Interview Defense & Vendor Shield */}
-            <div className="faang-card glow-card-violet hover-jiggle p-5 sm:p-8 group cursor-default">
+            <div className="faang-card glow-card-violet hover-jiggle p-4 sm:p-8 group cursor-default w-full max-w-full overflow-hidden">
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-500/20 to-purple-500/20 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
                 <svg className="w-6 h-6 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
               </div>
@@ -372,7 +372,7 @@ export default function Home() {
             </div>
 
             {/* Feature 4: Live GitHub Code Proof & Commit Auditor (MCP Tool #7) */}
-            <div className="faang-card glow-card-emerald hover-jiggle p-5 sm:p-8 group cursor-default">
+            <div className="faang-card glow-card-emerald hover-jiggle p-4 sm:p-8 group cursor-default w-full max-w-full overflow-hidden">
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500/20 to-cyan-500/20 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
                 <svg className="w-6 h-6 text-emerald-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
               </div>
@@ -407,7 +407,7 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 max-w-5xl mx-auto">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 max-w-5xl mx-auto w-full">
               {[
                 { step: "1", label: "Resume + JD", color: "from-gray-500 to-gray-600", desc: "Auto-extract PII & profiles" },
                 { step: "2", label: "MCP: JD Analyzer", color: "from-rose-500 to-orange-500", desc: "Skill evidence matching" },

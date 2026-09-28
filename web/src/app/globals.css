@@ -156,6 +156,10 @@ body {
 /* Master FAANG Card Base */
 .faang-card {
   position: relative;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
   background: rgba(9, 14, 26, 0.75);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
