@@ -444,15 +444,19 @@ export default function ResultsPanel({
 </body>
 </html>`;
 
-    const iframe = document.createElement("iframe");
-    iframe.style.position = "fixed";
-    iframe.style.right = "0";
-    iframe.style.bottom = "0";
-    iframe.style.width = "0";
-    iframe.style.height = "0";
-    iframe.style.border = "none";
-    iframe.style.visibility = "hidden";
-    document.body.appendChild(iframe);
+    // Robust persistent print iframe (prevents premature detachment while user is interacting with print dialog)
+    let iframe = document.getElementById("covercraft-print-iframe");
+    if (!iframe) {
+      iframe = document.createElement("iframe");
+      iframe.id = "covercraft-print-iframe";
+      iframe.style.position = "fixed";
+      iframe.style.top = "-10000px";
+      iframe.style.left = "-10000px";
+      iframe.style.width = "1024px";
+      iframe.style.height = "1024px";
+      iframe.style.border = "none";
+      document.body.appendChild(iframe);
+    }
 
     const doc = iframe.contentWindow?.document || iframe.contentDocument;
     if (!doc) return;
@@ -460,15 +464,11 @@ export default function ResultsPanel({
     doc.write(printHtml);
     doc.close();
 
+    // Trigger print after styles and layout are ready, keeping iframe intact in DOM
     setTimeout(() => {
       iframe.contentWindow?.focus();
       iframe.contentWindow?.print();
-      setTimeout(() => {
-        try {
-          document.body.removeChild(iframe);
-        } catch (e) {}
-      }, 1500);
-    }, 250);
+    }, 350);
   };
 
   const handleDownloadMarkdown = () => {
