@@ -256,6 +256,18 @@ export default function ResultsPanel({
     formData?.name,
   ].join("\n");
 
+  // Robust sanitization function that cleans all internal citation tags and fixes punctuation spacing
+  const sanitizeLetterParagraph = (p) => {
+    if (!p) return "";
+    let clean = p
+      .replace(/\[(?:Resume|Source|Anchor|Cited|Proof|Approved|Company|\d+)[^\]]*\]/gi, "")
+      .replace(/\[[^\]]*(?:Resume|Source|Intelligence|Search|Evidence|Quote|Anchor)[^\]]*\]/gi, "")
+      .replace(/\s{2,}/g, " ")
+      .trim();
+    clean = clean.replace(/\s+([.,;:!?])/g, "$1");
+    return clean;
+  };
+
   // Clean letter text stripped of internal citation tags for HR submission
   const cleanFullLetterText = [
     formData?.name,
@@ -267,7 +279,7 @@ export default function ResultsPanel({
     "",
     letterData?.greeting || "Dear Hiring Manager,",
     "",
-    ...paragraphs.map((p) => p.replace(/\[(?:Resume|Source|\d+)[^\]]*\]/gi, "").replace(/\s{2,}/g, " ").trim()),
+    ...paragraphs.map(sanitizeLetterParagraph),
     "",
     "Best regards,",
     formData?.name,
@@ -282,14 +294,7 @@ export default function ResultsPanel({
 
   const handlePrintPdf = () => {
     // Deterministically clean paragraphs of ALL internal citation markers
-    const cleanParagraphs = paragraphs.map((p) => {
-      let clean = p
-        .replace(/\[(?:Resume|Source|Anchor|Cited|Proof|\d+)[^\]]*\]/gi, "")
-        .replace(/\s{2,}/g, " ")
-        .trim();
-      clean = clean.replace(/\s+([.,;:!?])/g, "$1");
-      return clean;
-    }).filter(Boolean);
+    const cleanParagraphs = paragraphs.map(sanitizeLetterParagraph).filter(Boolean);
 
     const candidateName = formData?.name || "Candidate";
     const contactParts = [formData?.email, formData?.phone, formData?.linkedin].filter(Boolean);
@@ -628,11 +633,11 @@ export default function ResultsPanel({
   const renderTextWithCitations = (text) => {
     if (!text) return null;
     if (!showEvidenceMarkers) {
-      return text.replace(/\[(?:Resume|Source|\d+)[^\]]*\]/gi, "").replace(/\s{2,}/g, " ").trim();
+      return sanitizeLetterParagraph(text);
     }
 
     // Comprehensive regex matching all bracket citation styles
-    const bracketRegex = /(\[(?:Resume(?:\s*(?:Anchor|Quote|Evidence|Proof))?[:\-\s]*[^\]]*|Source(?:\s*#?\d+)?[:\-\s]*[^\]]*|\d+)\])/gi;
+    const bracketRegex = /(\[(?:Resume(?:\s*(?:Anchor|Quote|Evidence|Proof))?[:\-\s]*[^\]]*|Source(?:\s*#?\d+)?[:\-\s]*[^\]]*|Approved[^\]]*|\d+)\])/gi;
     const hasExplicitBrackets = bracketRegex.test(text);
 
     // 1. If explicit brackets exist, parse them

@@ -175,6 +175,9 @@ You MUST embed exact in-line citation markers throughout the paragraphs:
    Example: "Google DeepMind's focus on advancing scientific discovery, safety, and complex machine learning systems aligns directly with my engineering background [1]."
 
 DO NOT omit these bracket markers. The frontend parser converts them into interactive Perplexity-style proof badges for hiring manager verification.
+CRITICAL CITATION SYNTAX RULES:
+- For company research citations, use ONLY numeric pills like [1] or [2].
+- NEVER embed full prompt headers or metadata tags in brackets like [Approved Company Intelligence...] or [Real-time Web Search...]. These are internal prompt headers, NOT citation badges.
 
 ==================================================
 OUTPUT CONTRACT
