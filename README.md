@@ -101,16 +101,34 @@ When LLM JSON structures are delayed or partially populated, a deterministic reg
 - **Live Step Progress Tracker & Dynamic Elapsed Timer:** An event-driven 4-phase execution tracker (`01. Competency Match` → `02. MCP Company Research` → `03. Human Approval` → `04. Evidence Synthesis`) with a live counting timer (`00:04s`) and active tool indicator so candidates clearly follow live execution without confusion or perceived stalls.
 - **Human-in-the-Loop (HITL) Gate:** Users explicitly inspect, evaluate credibility scores, and toggle on/off scraped web sources before any external intelligence enters the LLM generation prompt.
 
-### 4. Native Model Context Protocol (MCP) Integration
+### 4. Native Model Context Protocol (MCP) Integration (7 Production Tools)
 - Contains a standalone **Anthropic Model Context Protocol (MCP)** server written in Python 3.11 (`mcp-server/`).
-- Exposes **6 Registered Tools** via standard Model Context Protocol **stdio transport** and **Streamable HTTP SSE transport**:
+- Exposes **7 Registered Tools** via standard Model Context Protocol **stdio transport** and **Streamable HTTP SSE transport**:
   1. `company_research`: Real-time web search via Tavily with traceable source citations.
   2. `evidence_validator`: Claim Ledger validation against source data returning `VERIFIED` / `PARTIAL` / `UNSUPPORTED`.
   3. `jd_analyzer`: Evidence-backed JD matching against resume with actual proof anchors.
   4. `ats_readiness`: Deterministic heuristic audit on keyword coverage, format integrity, and length.
   5. `source_filter`: Algorithmic domain authority tiering, noise suppression, and Outdated News & Stale Tech Filter (<9m company initiatives, <18m engineering stack, [Historical Context] tag).
   6. `cover_letter_generator`: Evidence-grounded synthesis with structured in-line citation markers and zero-overclaim enforcement.
+  7. `github_proofer`: Real-time candidate GitHub portfolio & commit history verification engine ($0 free tier PAT, 5,000 req/hr). Inspects public repositories, extracts commit SHAs and messages, and anchors resume technical claims directly into verifiable code evidence with zero overclaiming.
 - Dual-transport support: run locally with Claude Desktop/Cursor via `stdio_server` or deploy as an independent streaming microservice using `--transport=sse`.
+
+### 5. Live GitHub Code Proof & Commit Auditor (MCP Tool #7)
+- **Verifiable Public Code Evidence:** Connects to candidate GitHub profile via official GitHub MCP tool (`mcp-server/tools/github_proofer.py`) and Next.js route `/api/github-verify`.
+- **Commit-Level Hashing:** Extracts real-time commit SHAs (e.g. `sha: 7f2a1b9`), commit messages, repository descriptions, and architecture files to ground technical claims in verifiable code history.
+- **Zero-Cost Free Tier:** Powered by a GitHub Personal Access Token (PAT) with read-only public scope, unlocking 5,000 req/hr at **$0 cost** with 100% reliable rate limit isolation.
+- **Adversarial Overclaim Sentinel:** If a candidate claims a framework without public repository or commit proof, CoverCraft flags the gap and prompts the applicant for clarification rather than hallucinating fictitious enterprise experience.
+
+### 6. Candidate Privacy-First Architecture & Dual Auto-Extraction Engine
+- **PII Hardening & Phone Number Removal:** Mobile phone numbers have been completely removed from the UI and backend schemas to preserve applicant privacy.
+- **Dual Intelligent Auto-Extraction:**
+  - **Resume Ingestion Auto-Fill (`/api/parse-resume`):** Auto-extracts candidate Name, Email, LinkedIn URL, and GitHub Profile URL from uploaded PDF resumes via regex + LLM extraction, pre-filling the generator form.
+  - **Job Description Auto-Detection (`InputForm.jsx`):** Automatically detects target Role and Company Name as soon as a user pastes a Job Description, eliminating redundant manual typing.
+
+### 7. Production Observability: Langfuse LLM Tracing & MongoDB Atlas
+- **Langfuse LLM Observability & Tracing:** Full-trace telemetry capturing end-to-end generation latency, prompt/completion token consumption, Gemini model parameters, and span-level child traces across all 7 MCP tool operations.
+- **Resilient Non-Blocking Execution:** Observability spans execute in protected async try/catch blocks; if network limits occur, generation continues seamlessly with zero user latency impact.
+- **MongoDB Atlas Telemetry:** Logs anonymized generation latency, token volume, tone selections, and error distributions.
 
 ### 5. Production Observability & Multi-Stage Containerization
 - **MongoDB Atlas Telemetry:** Logs anonymized generation latency, token volume, tone selections, and error distributions.
@@ -146,15 +164,21 @@ sequenceDiagram
     participant API as Route Handlers (/api/*)
     participant Tavily as Tavily Search Engine
     participant Jina as Jina AI Reader
+    participant GitHub as GitHub MCP Proofer
+    participant Langfuse as Langfuse Observability
     participant LLM as Google Gemini 2.5 Flash Lite
     participant DB as MongoDB Atlas
 
     Candidate->>Web: Upload Resume (PDF) & Paste Job Description
-    Web->>API: POST /api/analyze (FormData)
-    API->>API: PDF Parsing & Deterministic Regex Extraction
-    API->>LLM: Schema-Enforced Extraction (Skills & Match)
+    Web->>API: POST /api/parse-resume & /api/analyze
+    API->>API: Auto-Extract Candidate Name, Email, LinkedIn & GitHub Handle
+    API->>API: Auto-Detect Target Role & Company from JD
+    API->>GitHub: GET /api/github-verify (MCP Tool #7 Commit Auditor)
+    GitHub-->>API: Verified Public Repositories, Commit SHAs & Timestamps
+    API->>LLM: Schema-Enforced Extraction (Skills & Match Matrix)
     LLM-->>API: Structured Match Matrix & Vendor Indicators
-    API-->>Web: Render Evidence Match & 4-Tier Job Context Tabs
+    API->>Langfuse: Log Trace & Child Spans (Latency, Tokens, Model)
+    API-->>Web: Render Evidence Match, GitHub Code Proof & 4-Tier Job Context Tabs
 
     Candidate->>Web: Trigger Real-Time Research
     Web->>API: POST /api/research { company, role }
