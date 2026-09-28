@@ -462,7 +462,7 @@ export default function DocsPage() {
                   <tr>
                     <td className="p-3.5 font-bold text-white">Tool Transparency</td>
                     <td className="p-3.5 text-red-300/80">Black box opaque spinner. No visibility into system prompts, tool calls, or failure fallbacks.</td>
-                    <td className="p-3.5 text-emerald-300/90 font-medium">Model Context Protocol (MCP) stream terminal. 6 registered tools logging execution events with expandable JSON schema payloads.</td>
+                    <td className="p-3.5 text-emerald-300/90 font-medium">Model Context Protocol (MCP) stream terminal. 7 registered tools logging execution events with expandable JSON schema payloads.</td>
                   </tr>
                 </tbody>
               </table>

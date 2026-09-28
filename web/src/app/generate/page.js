@@ -471,7 +471,7 @@ export default function GeneratePage() {
               <div className="p-6 font-mono text-xs bg-[#030712]/95 space-y-3 min-h-[280px] max-h-[420px] overflow-y-auto">
                 <div className="text-gray-500 text-[11px] pb-2 border-b border-white/5 flex items-center justify-between">
                   <span>Transport: Standard I/O (stdio)</span>
-                  <span>4 Registered Tools Active</span>
+                  <span>7 Registered Tools Active</span>
                 </div>
 
                 {mcpLogs.map((log, idx) => (
