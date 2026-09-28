@@ -1,10 +1,9 @@
 import { checkRateLimit, getClientIp } from "@/lib/rateLimit";
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { generateWithFallback } from "@/lib/gemini";
 import { NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
 const TAVILY_API_KEY = process.env.TAVILY_API_KEY || "";
 
 // Jina AI Reader: High-Fidelity Markdown Web Extractor (Free, zero-bloat)
@@ -236,10 +235,7 @@ export async function POST(req) {
       )
       .join("\n\n");
 
-    const synthesisModel = genAI.getGenerativeModel({
-      model: "gemini-3.5-flash-lite",
-      generationConfig: { temperature: 0.2, responseMimeType: "application/json" },
-      systemInstruction: `You are CoverCraft's Company Intelligence Synthesis Engine.
+    const researchSystemInstruction = `You are CoverCraft's Company Intelligence Synthesis Engine.
 Given verified web search sources about a target company, synthesize a structured research dossier with citations.
 
 Rules:
@@ -287,8 +283,7 @@ Return JSON matching this schema:
       "category": "Official" | "Research" | "News"
     }
   ]
-}`,
-    });
+}`;
 
     const synthPrompt = `Synthesize company intelligence for "${company_name}" applying for role "${role || "Software/AI Engineer"}".
 
@@ -296,8 +291,12 @@ Return JSON matching this schema:
 ${sourcesText || "No external web sources retrieved."}
 </VERIFIED_WEB_SOURCES>`;
 
-    const synthResult = await synthesisModel.generateContent(synthPrompt);
-    const synthData = JSON.parse(synthResult.response.text());
+    const { text: synthText } = await generateWithFallback(
+      { temperature: 0.2, responseMimeType: "application/json" },
+      synthPrompt,
+      researchSystemInstruction
+    );
+    const synthData = JSON.parse(synthText);
 
     // Fallback description for cover letter generator
     const description =
