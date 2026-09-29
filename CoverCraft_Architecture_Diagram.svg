@@ -7,95 +7,111 @@
       <stop offset="100%" stop-color="#030712" stop-opacity="1"/>
     </radialGradient>
 
+    <!-- Subdued Grid Pattern for Professional Technical Depth -->
+    <pattern id="dotGrid" width="30" height="30" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1" fill="#1e293b" fill-opacity="0.6"/>
+    </pattern>
+
     <linearGradient id="cardGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#10b981" stop-opacity="0.18"/>
-      <stop offset="100%" stop-color="#064e3b" stop-opacity="0.05"/>
+      <stop offset="0%" stop-color="#10b981" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#064e3b" stop-opacity="0.06"/>
     </linearGradient>
     <linearGradient id="cardGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#06b6d4" stop-opacity="0.18"/>
-      <stop offset="100%" stop-color="#0e7490" stop-opacity="0.05"/>
+      <stop offset="0%" stop-color="#06b6d4" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#0e7490" stop-opacity="0.06"/>
     </linearGradient>
     <linearGradient id="cardGrad3" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.18"/>
-      <stop offset="100%" stop-color="#78350f" stop-opacity="0.05"/>
+      <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#78350f" stop-opacity="0.06"/>
     </linearGradient>
     <linearGradient id="cardGrad4" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#f43f5e" stop-opacity="0.18"/>
-      <stop offset="100%" stop-color="#881337" stop-opacity="0.05"/>
+      <stop offset="0%" stop-color="#f43f5e" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#881337" stop-opacity="0.06"/>
     </linearGradient>
 
     <filter id="glowShadow" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.7"/>
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.75"/>
     </filter>
   </defs>
 
+  <!-- Background Base -->
   <rect width="1600" height="1020" fill="url(#bgGlow)"/>
+  <rect width="1600" height="1020" fill="url(#dotGrid)"/>
 
-  <!-- HEADER -->
-  <g transform="translate(80, 45)">
-    <rect x="0" y="0" width="310" height="28" rx="14" fill="#10b981" fill-opacity="0.15" stroke="#10b981" stroke-width="1" stroke-opacity="0.4"/>
+  <!-- ==================== HEADER SECTION ==================== -->
+  <g transform="translate(80, 42)">
+    <!-- Small Category Pill -->
+    <rect x="0" y="0" width="310" height="28" rx="14" fill="#10b981" fill-opacity="0.15" stroke="#10b981" stroke-width="1.2" stroke-opacity="0.5"/>
     <text x="16" y="18" fill="#34d399" font-size="11" font-weight="800" letter-spacing="1.5">EVIDENCE ENGINE SYSTEM TOPOLOGY</text>
 
-    <text x="0" y="68" fill="#ffffff" font-size="32" font-weight="800" letter-spacing="-0.5">CoverCraft: Multi-Agent Evidence-Grounded Architecture</text>
-    <text x="0" y="96" fill="#94a3b8" font-size="14">Zero-Hallucination Pipeline • Python MCP Server • Adversarial Red-Teamer • Verbatim Proof Citations</text>
+    <!-- Main Title -->
+    <text x="0" y="68" fill="#ffffff" font-size="31" font-weight="800" letter-spacing="-0.5">CoverCraft: Multi-Agent Evidence-Grounded Architecture</text>
+    
+    <!-- Subtitle -->
+    <text x="0" y="96" fill="#94a3b8" font-size="14.5" font-weight="500">Deterministic Verification Pipeline • Python MCP Server (7 Tools) • Live GitHub Proofer • Langfuse Tracing • Adversarial Defense</text>
 
-    <!-- Unremovable Architect Watermark Badge -->
-    <g transform="translate(980, 5)">
-      <rect x="0" y="0" width="460" height="80" rx="16" fill="#0f172a" stroke="#38bdf8" stroke-width="1.8" stroke-opacity="0.5" filter="url(#glowShadow)"/>
-      <circle cx="45" cy="40" r="22" fill="#38bdf8" fill-opacity="0.15" stroke="#38bdf8" stroke-width="1.8"/>
-      <text x="34" y="46" fill="#38bdf8" font-size="16" font-weight="bold">AT</text>
-      <text x="80" y="34" fill="#f8fafc" font-size="14" font-weight="700">Architected &amp; Built By:</text>
-      <text x="80" y="58" fill="#38bdf8" font-size="19" font-weight="800" letter-spacing="0.5">Ambuj Kumar Tripathi</text>
+    <!-- Top Right: Clean System Protocol Badge (Replaced author watermark) -->
+    <g transform="translate(1000, 16)">
+      <rect x="0" y="0" width="440" height="66" rx="12" fill="#0c1322" stroke="#10b981" stroke-width="1.4" stroke-opacity="0.55" filter="url(#glowShadow)"/>
+      <circle cx="28" cy="33" r="6" fill="#10b981"/>
+      <circle cx="28" cy="33" r="14" fill="#10b981" fill-opacity="0.18"/>
+      <text x="48" y="27" fill="#34d399" font-size="11" font-weight="800" letter-spacing="1.2">STRICT VERIFICATION PROTOCOL</text>
+      <text x="48" y="49" fill="#e2e8f0" font-size="12.5" font-weight="500">100% Traceable Evidence • Zero Orphan Claims</text>
     </g>
   </g>
 
-  <!-- 4 PIPELINE COLUMNS -->
-  <g transform="translate(80, 180)">
+  <!-- ==================== 4 PIPELINE COLUMNS ==================== -->
+  <g transform="translate(80, 175)">
     
-    <!-- PHASE 1 -->
+    <!-- ==================== PHASE 1: INGESTION & PROOF MATCH ==================== -->
     <g transform="translate(0, 0)">
-      <rect width="330" height="710" rx="18" fill="#0c1322" stroke="#10b981" stroke-width="1.5" stroke-opacity="0.35" filter="url(#glowShadow)"/>
+      <rect width="330" height="720" rx="18" fill="#0b111e" stroke="#10b981" stroke-width="1.5" stroke-opacity="0.45" filter="url(#glowShadow)"/>
       <rect width="330" height="75" rx="18" fill="url(#cardGrad1)"/>
-      <circle cx="35" cy="38" r="16" fill="#10b981" fill-opacity="0.2" stroke="#10b981" stroke-width="1.5"/>
+      <circle cx="35" cy="38" r="16" fill="#10b981" fill-opacity="0.25" stroke="#10b981" stroke-width="1.5"/>
       <text x="27" y="43" fill="#10b981" font-size="14" font-weight="900">01</text>
-      <text x="65" y="33" fill="#ffffff" font-size="16" font-weight="700">Ingestion &amp; Proof Match</text>
-      <text x="65" y="52" fill="#34d399" font-size="11" font-weight="600">Deterministic Boundary</text>
+      <text x="65" y="33" fill="#ffffff" font-size="16.5" font-weight="800">Ingestion &amp; Proof Match</text>
+      <text x="65" y="52" fill="#34d399" font-size="11.5" font-weight="600">Deterministic Boundary</text>
 
+      <!-- Subcard 1 -->
       <g transform="translate(20, 95)">
-        <rect width="290" height="105" rx="12" fill="#111827" stroke="#374151" stroke-width="1"/>
-        <text x="16" y="26" fill="#e2e8f0" font-size="13" font-weight="700">1. Ingestion Scanner</text>
-        <text x="16" y="48" fill="#94a3b8" font-size="11">• Dual unpdf + Vision OCR fallback</text>
-        <text x="16" y="68" fill="#94a3b8" font-size="11">• Deterministic PII Redaction (Regex)</text>
-        <text x="16" y="88" fill="#94a3b8" font-size="11">• Adversarial Injection Defense</text>
+        <rect width="290" height="108" rx="12" fill="#111827" stroke="#1f2937" stroke-width="1.2"/>
+        <text x="16" y="25" fill="#ffffff" font-size="13.5" font-weight="700">1. Privacy &amp; Auto-Extraction</text>
+        <text x="16" y="46" fill="#cbd5e1" font-size="11">• Dual unpdf + Vision OCR fallback</text>
+        <text x="16" y="65" fill="#34d399" font-size="11">• Zero Phone PII (Strict Privacy)</text>
+        <text x="16" y="84" fill="#cbd5e1" font-size="11">• Auto-extract: Name, Email, GitHub</text>
+        <text x="16" y="103" fill="#cbd5e1" font-size="11">• Auto-detect: Role &amp; Company from JD</text>
       </g>
 
-      <g transform="translate(20, 215)">
-        <rect width="290" height="130" rx="12" fill="#111827" stroke="#374151" stroke-width="1"/>
-        <text x="16" y="26" fill="#e2e8f0" font-size="13" font-weight="700">2. Mathematical Fit Formula</text>
-        <rect x="16" y="38" width="258" height="30" rx="6" fill="#064e3b" fill-opacity="0.4" stroke="#059669" stroke-width="1"/>
-        <text x="24" y="57" fill="#34d399" font-family="monospace" font-size="10" font-weight="bold">Score = (S*1.0 + P*0.6 + T*0.4) / N</text>
-        <text x="16" y="90" fill="#94a3b8" font-size="11">• Strong Match: 1.0x (Verbatim Quote)</text>
-        <text x="16" y="110" fill="#94a3b8" font-size="11">• Partial: 0.6x | Transferable: 0.4x</text>
+      <!-- Subcard 2 -->
+      <g transform="translate(20, 218)">
+        <rect width="290" height="132" rx="12" fill="#111827" stroke="#1f2937" stroke-width="1.2"/>
+        <text x="16" y="27" fill="#ffffff" font-size="13.5" font-weight="700">2. Mathematical Fit Formula</text>
+        <rect x="14" y="38" width="262" height="32" rx="6" fill="#064e3b" fill-opacity="0.5" stroke="#059669" stroke-width="1"/>
+        <text x="22" y="59" fill="#34d399" font-family="Consolas, monospace" font-size="10.5" font-weight="bold">Score = (S*1.0 + P*0.6 + T*0.4) / N</text>
+        <text x="16" y="92" fill="#cbd5e1" font-size="11.5">• Strong Match: 1.0x (Verbatim Quote)</text>
+        <text x="16" y="113" fill="#cbd5e1" font-size="11.5">• Partial: 0.6x | Transferable: 0.4x</text>
       </g>
 
-      <g transform="translate(20, 360)">
-        <rect width="290" height="105" rx="12" fill="#111827" stroke="#374151" stroke-width="1"/>
-        <text x="16" y="26" fill="#e2e8f0" font-size="13" font-weight="700">3. Generative UI Radar</text>
-        <text x="16" y="48" fill="#94a3b8" font-size="11">• 5-Axis Competency Fit Chart</text>
-        <text x="16" y="68" fill="#94a3b8" font-size="11">• Scoped: 100% Evidence Coverage</text>
-        <text x="16" y="88" fill="#94a3b8" font-size="11">• Zero unsupported claims in scope</text>
+      <!-- Subcard 3 -->
+      <g transform="translate(20, 365)">
+        <rect width="290" height="108" rx="12" fill="#111827" stroke="#1f2937" stroke-width="1.2"/>
+        <text x="16" y="27" fill="#ffffff" font-size="13.5" font-weight="700">3. Generative UI Radar</text>
+        <text x="16" y="50" fill="#cbd5e1" font-size="11.5">• 5-Axis Competency Fit Chart</text>
+        <text x="16" y="71" fill="#cbd5e1" font-size="11.5">• Scoped: 100% Evidence Coverage</text>
+        <text x="16" y="92" fill="#cbd5e1" font-size="11.5">• Zero unsupported claims in scope</text>
       </g>
 
-      <g transform="translate(20, 480)">
-        <rect width="290" height="210" rx="12" fill="#022c22" fill-opacity="0.4" stroke="#059669" stroke-width="1"/>
+      <!-- Bottom Artifact Box -->
+      <g transform="translate(20, 488)">
+        <rect width="290" height="215" rx="12" fill="#022c22" fill-opacity="0.5" stroke="#059669" stroke-width="1.2"/>
         <text x="16" y="28" fill="#34d399" font-size="12" font-weight="800">OUTPUT ARTIFACTS:</text>
-        <text x="16" y="54" fill="#cbd5e1" font-size="11">• Sanitized Candidate Profile</text>
-        <text x="16" y="74" fill="#cbd5e1" font-size="11">• Exact Verbatim Quote Anchors</text>
-        <text x="16" y="94" fill="#cbd5e1" font-size="11">• Missing Skill Gap Ledger</text>
-        <rect x="16" y="114" width="258" height="80" rx="8" fill="#0f172a" stroke="#334155" stroke-width="1"/>
-        <text x="24" y="136" fill="#38bdf8" font-size="10.5" font-weight="bold">Trust Boundary Guardrail:</text>
-        <text x="24" y="156" fill="#94a3b8" font-size="10">Untrusted inputs quarantined</text>
-        <text x="24" y="174" fill="#94a3b8" font-size="10">inside &lt;candidate_resume&gt; XML tags</text>
+        <text x="16" y="53" fill="#e2e8f0" font-size="11.5">• Sanitized Candidate Profile</text>
+        <text x="16" y="73" fill="#e2e8f0" font-size="11.5">• Exact Verbatim Quote Anchors</text>
+        <text x="16" y="93" fill="#e2e8f0" font-size="11.5">• Missing Skill Gap Ledger</text>
+        <rect x="14" y="112" width="262" height="88" rx="8" fill="#09141d" stroke="#1e293b" stroke-width="1"/>
+        <text x="22" y="134" fill="#38bdf8" font-size="11" font-weight="bold">Trust Boundary Guardrail:</text>
+        <text x="22" y="154" fill="#cbd5e1" font-size="10.5">Untrusted inputs quarantined</text>
+        <text x="22" y="172" fill="#cbd5e1" font-size="10.5">inside &lt;candidate_resume&gt; XML tags</text>
       </g>
     </g>
 
@@ -103,49 +119,54 @@
     <path d="M 335 340 L 365 340" stroke="#38bdf8" stroke-width="3" stroke-dasharray="6 4" fill="none"/>
     <polygon points="365,335 375,340 365,345" fill="#38bdf8"/>
 
-    <!-- PHASE 2 -->
+    <!-- ==================== PHASE 2: PYTHON MCP RECON ==================== -->
     <g transform="translate(370, 0)">
-      <rect width="330" height="710" rx="18" fill="#0c1322" stroke="#06b6d4" stroke-width="1.5" stroke-opacity="0.35" filter="url(#glowShadow)"/>
+      <rect width="330" height="720" rx="18" fill="#0b111e" stroke="#06b6d4" stroke-width="1.5" stroke-opacity="0.45" filter="url(#glowShadow)"/>
       <rect width="330" height="75" rx="18" fill="url(#cardGrad2)"/>
-      <circle cx="35" cy="38" r="16" fill="#06b6d4" fill-opacity="0.2" stroke="#06b6d4" stroke-width="1.5"/>
+      <circle cx="35" cy="38" r="16" fill="#06b6d4" fill-opacity="0.25" stroke="#06b6d4" stroke-width="1.5"/>
       <text x="26" y="43" fill="#06b6d4" font-size="14" font-weight="900">02</text>
-      <text x="65" y="33" fill="#ffffff" font-size="16" font-weight="700">Python MCP Recon</text>
-      <text x="65" y="52" fill="#22d3ee" font-size="11" font-weight="600">Model Context Protocol Server</text>
+      <text x="65" y="33" fill="#ffffff" font-size="16.5" font-weight="800">Python MCP Server (7 Tools)</text>
+      <text x="65" y="52" fill="#22d3ee" font-size="11.5" font-weight="600">Dual Stdio / SSE Transport</text>
 
+      <!-- Subcard 1 -->
       <g transform="translate(20, 95)">
-        <rect width="290" height="110" rx="12" fill="#111827" stroke="#374151" stroke-width="1"/>
-        <text x="16" y="26" fill="#e2e8f0" font-size="13" font-weight="700">1. Real-Time Deep Crawl</text>
-        <text x="16" y="48" fill="#94a3b8" font-size="11">• Tavily Enterprise Search API</text>
-        <text x="16" y="68" fill="#94a3b8" font-size="11">• Jina Reader markdown extraction</text>
-        <text x="16" y="88" fill="#94a3b8" font-size="11">• Domain tier validation (SEC/Blog)</text>
+        <rect width="290" height="112" rx="12" fill="#111827" stroke="#1f2937" stroke-width="1.2"/>
+        <text x="16" y="27" fill="#ffffff" font-size="13.5" font-weight="700">1. Real-Time Deep Crawl</text>
+        <text x="16" y="50" fill="#cbd5e1" font-size="11.5">• Tavily Enterprise Search API</text>
+        <text x="16" y="71" fill="#cbd5e1" font-size="11.5">• Jina Reader markdown extraction</text>
+        <text x="16" y="92" fill="#cbd5e1" font-size="11.5">• Domain tier validation (SEC/Blog)</text>
       </g>
 
-      <g transform="translate(20, 220)">
-        <rect width="290" height="110" rx="12" fill="#111827" stroke="#374151" stroke-width="1"/>
-        <text x="16" y="26" fill="#e2e8f0" font-size="13" font-weight="700">2. Recency &amp; Stale Filter</text>
-        <text x="16" y="48" fill="#22d3ee" font-size="11">• &lt;9 Months: Strategic Priorities</text>
-        <text x="16" y="68" fill="#22d3ee" font-size="11">• &lt;18 Months: Engineering Tech Stack</text>
-        <text x="16" y="88" fill="#f43f5e" font-size="11">• &gt;18 Months: -15 Score Penalty</text>
+      <!-- Subcard 2 -->
+      <g transform="translate(20, 222)">
+        <rect width="290" height="112" rx="12" fill="#111827" stroke="#1f2937" stroke-width="1.2"/>
+        <text x="16" y="27" fill="#ffffff" font-size="13.5" font-weight="700">2. Recency &amp; Stale Filter</text>
+        <text x="16" y="50" fill="#22d3ee" font-size="11.5">• &lt;9 Months: Strategic Priorities</text>
+        <text x="16" y="71" fill="#22d3ee" font-size="11.5">• &lt;18 Months: Engineering Tech Stack</text>
+        <text x="16" y="92" fill="#f43f5e" font-size="11.5">• &gt;18 Months: -15 Score Penalty</text>
       </g>
 
-      <g transform="translate(20, 345)">
-        <rect width="290" height="115" rx="12" fill="#111827" stroke="#374151" stroke-width="1"/>
-        <text x="16" y="26" fill="#e2e8f0" font-size="13" font-weight="700">3. Claim Ledger Validator</text>
-        <text x="16" y="48" fill="#94a3b8" font-size="11">• Multi-hop claim validation</text>
-        <text x="16" y="68" fill="#94a3b8" font-size="11">• Maps claims to exact source URLs</text>
-        <text x="16" y="88" fill="#94a3b8" font-size="11">• Flags unsupported claims as High Risk</text>
+      <!-- Subcard 3 -->
+      <g transform="translate(20, 349)">
+        <rect width="290" height="118" rx="12" fill="#111827" stroke="#1f2937" stroke-width="1.2"/>
+        <text x="16" y="25" fill="#ffffff" font-size="13.5" font-weight="700">3. GitHub Proofer (Tool #7)</text>
+        <text x="16" y="46" fill="#22d3ee" font-size="11">• Live commit hashing (sha: 7f2a1b9)</text>
+        <text x="16" y="65" fill="#cbd5e1" font-size="11">• Public repo tree &amp; README audit</text>
+        <text x="16" y="84" fill="#34d399" font-size="11">• $0 Free PAT: 5,000 req/hr rate limit</text>
+        <text x="16" y="103" fill="#cbd5e1" font-size="11">• Overclaim Sentinel flags unbacked tech</text>
       </g>
 
-      <g transform="translate(20, 480)">
-        <rect width="290" height="210" rx="12" fill="#083344" fill-opacity="0.4" stroke="#0891b2" stroke-width="1"/>
+      <!-- Bottom Artifact Box -->
+      <g transform="translate(20, 488)">
+        <rect width="290" height="215" rx="12" fill="#083344" fill-opacity="0.5" stroke="#0891b2" stroke-width="1.2"/>
         <text x="16" y="28" fill="#22d3ee" font-size="12" font-weight="800">4-CARD INTEL OUTPUT:</text>
-        <text x="16" y="54" fill="#cbd5e1" font-size="11">1. Engineering Architecture</text>
-        <text x="16" y="74" fill="#cbd5e1" font-size="11">2. Strategic Company Initiatives</text>
-        <text x="16" y="94" fill="#cbd5e1" font-size="11">3. Key Challenges &amp; Risks</text>
-        <text x="16" y="114" fill="#cbd5e1" font-size="11">4. Engineering Culture &amp; Values</text>
-        <rect x="16" y="130" width="258" height="65" rx="8" fill="#0f172a" stroke="#334155" stroke-width="1"/>
-        <text x="24" y="152" fill="#38bdf8" font-size="10.5" font-weight="bold">JSON Tool Schema Output:</text>
-        <text x="24" y="170" fill="#94a3b8" font-size="10">Structured cards + clickable sources</text>
+        <text x="16" y="53" fill="#e2e8f0" font-size="11.5">1. Engineering Architecture</text>
+        <text x="16" y="73" fill="#e2e8f0" font-size="11.5">2. Strategic Company Initiatives</text>
+        <text x="16" y="93" fill="#e2e8f0" font-size="11.5">3. Key Challenges &amp; Risks</text>
+        <text x="16" y="113" fill="#e2e8f0" font-size="11.5">4. Engineering Culture &amp; Values</text>
+        <rect x="14" y="128" width="262" height="72" rx="8" fill="#09141d" stroke="#1e293b" stroke-width="1"/>
+        <text x="22" y="150" fill="#38bdf8" font-size="11" font-weight="bold">JSON Tool Schema Output:</text>
+        <text x="22" y="170" fill="#cbd5e1" font-size="10.5">Structured cards + clickable sources</text>
       </g>
     </g>
 
@@ -153,50 +174,54 @@
     <path d="M 705 340 L 735 340" stroke="#f59e0b" stroke-width="3" stroke-dasharray="6 4" fill="none"/>
     <polygon points="735,335 745,340 735,345" fill="#f59e0b"/>
 
-    <!-- PHASE 3 -->
+    <!-- ==================== PHASE 3: HUMAN-IN-THE-LOOP ==================== -->
     <g transform="translate(740, 0)">
-      <rect width="330" height="710" rx="18" fill="#0c1322" stroke="#f59e0b" stroke-width="1.5" stroke-opacity="0.35" filter="url(#glowShadow)"/>
+      <rect width="330" height="720" rx="18" fill="#0b111e" stroke="#f59e0b" stroke-width="1.5" stroke-opacity="0.45" filter="url(#glowShadow)"/>
       <rect width="330" height="75" rx="18" fill="url(#cardGrad3)"/>
-      <circle cx="35" cy="38" r="16" fill="#f59e0b" fill-opacity="0.2" stroke="#f59e0b" stroke-width="1.5"/>
+      <circle cx="35" cy="38" r="16" fill="#f59e0b" fill-opacity="0.25" stroke="#f59e0b" stroke-width="1.5"/>
       <text x="26" y="43" fill="#f59e0b" font-size="14" font-weight="900">03</text>
-      <text x="65" y="33" fill="#ffffff" font-size="16" font-weight="700">Human-in-the-Loop</text>
-      <text x="65" y="52" fill="#fbbf24" font-size="11" font-weight="600">Mandatory Audit Gate</text>
+      <text x="65" y="33" fill="#ffffff" font-size="16.5" font-weight="800">Human-in-the-Loop</text>
+      <text x="65" y="52" fill="#fbbf24" font-size="11.5" font-weight="600">Mandatory Audit Gate</text>
 
+      <!-- Subcard 1 -->
       <g transform="translate(20, 95)">
-        <rect width="290" height="125" rx="12" fill="#111827" stroke="#374151" stroke-width="1"/>
-        <text x="16" y="26" fill="#e2e8f0" font-size="13" font-weight="700">1. Pipeline Escrow State</text>
-        <text x="16" y="48" fill="#94a3b8" font-size="11">• Multi-agent execution pauses</text>
-        <text x="16" y="68" fill="#94a3b8" font-size="11">• AI forbidden from auto-injecting</text>
-        <text x="16" y="88" fill="#94a3b8" font-size="11">• High-visibility guidance alert</text>
-        <text x="16" y="108" fill="#94a3b8" font-size="11">• Breadcrumb state protection</text>
+        <rect width="290" height="128" rx="12" fill="#111827" stroke="#1f2937" stroke-width="1.2"/>
+        <text x="16" y="27" fill="#ffffff" font-size="13.5" font-weight="700">1. Pipeline Escrow State</text>
+        <text x="16" y="50" fill="#cbd5e1" font-size="11.5">• Multi-agent execution pauses</text>
+        <text x="16" y="71" fill="#cbd5e1" font-size="11.5">• AI forbidden from auto-injecting</text>
+        <text x="16" y="92" fill="#cbd5e1" font-size="11.5">• High-visibility guidance alert</text>
+        <text x="16" y="113" fill="#cbd5e1" font-size="11.5">• Breadcrumb state protection</text>
       </g>
 
-      <g transform="translate(20, 235)">
-        <rect width="290" height="125" rx="12" fill="#111827" stroke="#374151" stroke-width="1"/>
-        <text x="16" y="26" fill="#e2e8f0" font-size="13" font-weight="700">2. Interactive Claim Toggles</text>
-        <text x="16" y="48" fill="#94a3b8" font-size="11">• Candidate reviews all 4 intel cards</text>
-        <text x="16" y="68" fill="#94a3b8" font-size="11">• Checkbox to Approve / Exclude</text>
-        <text x="16" y="88" fill="#94a3b8" font-size="11">• Inspect original URLs &amp; confidence</text>
-        <text x="16" y="108" fill="#94a3b8" font-size="11">• Zero unverified claims proceed</text>
+      <!-- Subcard 2 -->
+      <g transform="translate(20, 238)">
+        <rect width="290" height="128" rx="12" fill="#111827" stroke="#1f2937" stroke-width="1.2"/>
+        <text x="16" y="27" fill="#ffffff" font-size="13.5" font-weight="700">2. Interactive Claim Toggles</text>
+        <text x="16" y="50" fill="#cbd5e1" font-size="11.5">• Candidate reviews all 4 intel cards</text>
+        <text x="16" y="71" fill="#cbd5e1" font-size="11.5">• Checkbox to Approve / Exclude</text>
+        <text x="16" y="92" fill="#cbd5e1" font-size="11.5">• Inspect original URLs &amp; confidence</text>
+        <text x="16" y="113" fill="#cbd5e1" font-size="11.5">• Zero unverified claims proceed</text>
       </g>
 
-      <g transform="translate(20, 375)">
-        <rect width="290" height="80" rx="12" fill="#111827" stroke="#374151" stroke-width="1"/>
-        <text x="16" y="26" fill="#e2e8f0" font-size="13" font-weight="700">3. Sticky Floating Control</text>
-        <text x="16" y="48" fill="#94a3b8" font-size="11">• Fixed bottom action toolbar</text>
-        <text x="16" y="68" fill="#94a3b8" font-size="11">• Approve Selected &amp; Synthesize</text>
+      <!-- Subcard 3 -->
+      <g transform="translate(20, 381)">
+        <rect width="290" height="85" rx="12" fill="#111827" stroke="#1f2937" stroke-width="1.2"/>
+        <text x="16" y="27" fill="#ffffff" font-size="13.5" font-weight="700">3. Sticky Floating Control</text>
+        <text x="16" y="50" fill="#cbd5e1" font-size="11.5">• Fixed bottom action toolbar</text>
+        <text x="16" y="71" fill="#cbd5e1" font-size="11.5">• Approve Selected &amp; Synthesize</text>
       </g>
 
-      <g transform="translate(20, 480)">
-        <rect width="290" height="210" rx="12" fill="#451a03" fill-opacity="0.4" stroke="#d97706" stroke-width="1"/>
+      <!-- Bottom Artifact Box -->
+      <g transform="translate(20, 488)">
+        <rect width="290" height="215" rx="12" fill="#451a03" fill-opacity="0.5" stroke="#d97706" stroke-width="1.2"/>
         <text x="16" y="28" fill="#fbbf24" font-size="12" font-weight="800">AUDITED PROMPT CONTEXT:</text>
-        <text x="16" y="54" fill="#cbd5e1" font-size="11">Only human-approved company</text>
-        <text x="16" y="74" fill="#cbd5e1" font-size="11">evidence passes to synthesis.</text>
-        <rect x="16" y="94" width="258" height="100" rx="8" fill="#0f172a" stroke="#334155" stroke-width="1"/>
-        <text x="24" y="116" fill="#fbbf24" font-size="10.5" font-weight="bold">Security Guarantee:</text>
-        <text x="24" y="136" fill="#94a3b8" font-size="10">Prevents model from praising</text>
-        <text x="24" y="154" fill="#94a3b8" font-size="10">hallucinated or obsolete initiatives</text>
-        <text x="24" y="172" fill="#38bdf8" font-size="10">Guaranteed human alignment</text>
+        <text x="16" y="53" fill="#e2e8f0" font-size="11.5">Only human-approved company</text>
+        <text x="16" y="73" fill="#e2e8f0" font-size="11.5">evidence passes to synthesis.</text>
+        <rect x="14" y="95" width="262" height="105" rx="8" fill="#09141d" stroke="#1e293b" stroke-width="1"/>
+        <text x="22" y="118" fill="#fbbf24" font-size="11" font-weight="bold">Security Guarantee:</text>
+        <text x="22" y="138" fill="#cbd5e1" font-size="10.5">Prevents model from praising</text>
+        <text x="22" y="156" fill="#cbd5e1" font-size="10.5">unverified or obsolete initiatives</text>
+        <text x="22" y="176" fill="#38bdf8" font-size="10.5">Guaranteed human alignment</text>
       </g>
     </g>
 
@@ -204,59 +229,64 @@
     <path d="M 1075 340 L 1105 340" stroke="#f43f5e" stroke-width="3" stroke-dasharray="6 4" fill="none"/>
     <polygon points="1105,335 1115,340 1105,345" fill="#f43f5e"/>
 
-    <!-- PHASE 4 -->
+    <!-- ==================== PHASE 4: ADVERSARIAL SYNTHESIS ==================== -->
     <g transform="translate(1110, 0)">
-      <rect width="330" height="710" rx="18" fill="#0c1322" stroke="#f43f5e" stroke-width="1.5" stroke-opacity="0.35" filter="url(#glowShadow)"/>
+      <rect width="330" height="720" rx="18" fill="#0b111e" stroke="#f43f5e" stroke-width="1.5" stroke-opacity="0.45" filter="url(#glowShadow)"/>
       <rect width="330" height="75" rx="18" fill="url(#cardGrad4)"/>
-      <circle cx="35" cy="38" r="16" fill="#f43f5e" fill-opacity="0.2" stroke="#f43f5e" stroke-width="1.5"/>
+      <circle cx="35" cy="38" r="16" fill="#f43f5e" fill-opacity="0.25" stroke="#f43f5e" stroke-width="1.5"/>
       <text x="26" y="43" fill="#f43f5e" font-size="14" font-weight="900">04</text>
-      <text x="65" y="33" fill="#ffffff" font-size="16" font-weight="700">Adversarial Synthesis</text>
-      <text x="65" y="52" fill="#fb7185" font-size="11" font-weight="600">Red-Teamer + Dual Export</text>
+      <text x="65" y="33" fill="#ffffff" font-size="16.5" font-weight="800">Adversarial Synthesis</text>
+      <text x="65" y="52" fill="#fb7185" font-size="11.5" font-weight="600">Red-Teamer + Dual Export</text>
 
+      <!-- Subcard 1 -->
       <g transform="translate(20, 95)">
-        <rect width="290" height="115" rx="12" fill="#111827" stroke="#374151" stroke-width="1"/>
-        <text x="16" y="26" fill="#e2e8f0" font-size="13" font-weight="700">1. Adversarial Red-Teamer</text>
-        <text x="16" y="48" fill="#fb7185" font-size="11">• Checks Seniority Overclaims</text>
-        <text x="16" y="68" fill="#94a3b8" font-size="11">• Flags inflated metrics ("Led 40 devs")</text>
-        <text x="16" y="88" fill="#94a3b8" font-size="11">• Enforces verbatim quote proof</text>
-        <text x="16" y="108" fill="#94a3b8" font-size="11">• Flags unsupported claims as High Risk</text>
+        <rect width="290" height="120" rx="12" fill="#111827" stroke="#1f2937" stroke-width="1.2"/>
+        <text x="16" y="27" fill="#ffffff" font-size="13.5" font-weight="700">1. Adversarial Red-Teamer</text>
+        <text x="16" y="50" fill="#fb7185" font-size="11.5">• Checks Seniority Overclaims</text>
+        <text x="16" y="71" fill="#cbd5e1" font-size="11.5">• Flags inflated metrics ("Led 40 devs")</text>
+        <text x="16" y="92" fill="#cbd5e1" font-size="11.5">• Enforces verbatim quote proof</text>
+        <text x="16" y="113" fill="#cbd5e1" font-size="11.5">• Replaces ungrounded verbs</text>
       </g>
 
-      <g transform="translate(20, 225)">
-        <rect width="290" height="105" rx="12" fill="#111827" stroke="#374151" stroke-width="1"/>
-        <text x="16" y="26" fill="#e2e8f0" font-size="13" font-weight="700">2. Interactive Resume Modal</text>
-        <text x="16" y="48" fill="#94a3b8" font-size="11">• Clickable [Resume Anchor] pills</text>
-        <text x="16" y="68" fill="#94a3b8" font-size="11">• Opens full raw resume modal</text>
-        <text x="16" y="88" fill="#94a3b8" font-size="11">• Line-exact auto-scroll + amber glow</text>
+      <!-- Subcard 2 -->
+      <g transform="translate(20, 230)">
+        <rect width="290" height="110" rx="12" fill="#111827" stroke="#1f2937" stroke-width="1.2"/>
+        <text x="16" y="27" fill="#ffffff" font-size="13.5" font-weight="700">2. Interactive Resume Modal</text>
+        <text x="16" y="50" fill="#cbd5e1" font-size="11.5">• Clickable [Resume Anchor] pills</text>
+        <text x="16" y="71" fill="#cbd5e1" font-size="11.5">• Opens full raw resume modal</text>
+        <text x="16" y="92" fill="#cbd5e1" font-size="11.5">• Line-exact auto-scroll + amber glow</text>
       </g>
 
-      <g transform="translate(20, 345)">
-        <rect width="290" height="110" rx="12" fill="#111827" stroke="#374151" stroke-width="1"/>
-        <text x="16" y="26" fill="#e2e8f0" font-size="13" font-weight="700">3. Clean Recruiter Export</text>
-        <text x="16" y="48" fill="#94a3b8" font-size="11">• Deterministic RegEx Clean Engine</text>
-        <text x="16" y="68" fill="#94a3b8" font-size="11">• Strips internal bracket citations</text>
-        <text x="16" y="88" fill="#94a3b8" font-size="11">• 100% natural, polished PDF/MD</text>
+      <!-- Subcard 3 -->
+      <g transform="translate(20, 355)">
+        <rect width="290" height="115" rx="12" fill="#111827" stroke="#1f2937" stroke-width="1.2"/>
+        <text x="16" y="25" fill="#ffffff" font-size="13.5" font-weight="700">3. Export &amp; Langfuse Tracing</text>
+        <text x="16" y="46" fill="#cbd5e1" font-size="11">• Clean export (bracket citations hidden)</text>
+        <text x="16" y="65" fill="#fb7185" font-size="11">• Langfuse full-trace observability</text>
+        <text x="16" y="84" fill="#cbd5e1" font-size="11">• Token volume, latency &amp; tool spans</text>
+        <text x="16" y="103" fill="#34d399" font-size="11">• 100% natural, polished PDF/MD</text>
       </g>
 
-      <g transform="translate(20, 480)">
-        <rect width="290" height="210" rx="12" fill="#4c0519" fill-opacity="0.4" stroke="#be123c" stroke-width="1"/>
+      <!-- Bottom Artifact Box -->
+      <g transform="translate(20, 488)">
+        <rect width="290" height="215" rx="12" fill="#4c0519" fill-opacity="0.5" stroke="#be123c" stroke-width="1.2"/>
         <text x="16" y="28" fill="#fb7185" font-size="12" font-weight="800">FINAL VERIFIED OUTPUTS:</text>
-        <text x="16" y="54" fill="#cbd5e1" font-size="11">• Defensible Cover Letter</text>
-        <text x="16" y="74" fill="#cbd5e1" font-size="11">• 4-Phase Interview Defense Matrix</text>
-        <text x="16" y="94" fill="#cbd5e1" font-size="11">• Real-Time Cited Source Ledger</text>
-        <rect x="16" y="114" width="258" height="80" rx="8" fill="#0f172a" stroke="#334155" stroke-width="1"/>
-        <text x="24" y="136" fill="#34d399" font-size="11" font-weight="bold">Zero Generative Waste</text>
-        <text x="24" y="154" fill="#94a3b8" font-size="10">Every word backed by candidate resume</text>
-        <text x="24" y="172" fill="#94a3b8" font-size="10">or verified enterprise intelligence</text>
+        <text x="16" y="53" fill="#e2e8f0" font-size="11.5">• Defensible Cover Letter</text>
+        <text x="16" y="73" fill="#e2e8f0" font-size="11.5">• 4-Phase Interview Defense Matrix</text>
+        <text x="16" y="93" fill="#e2e8f0" font-size="11.5">• Real-Time Cited Source Ledger</text>
+        <rect x="14" y="112" width="262" height="88" rx="8" fill="#09141d" stroke="#1e293b" stroke-width="1"/>
+        <text x="22" y="134" fill="#34d399" font-size="11" font-weight="bold">100% Grounded Content</text>
+        <text x="22" y="154" fill="#cbd5e1" font-size="10.5">Every word backed by candidate resume</text>
+        <text x="22" y="172" fill="#cbd5e1" font-size="10.5">or verified enterprise intelligence</text>
       </g>
     </g>
 
   </g>
 
-  <!-- FOOTER BAR -->
-  <g transform="translate(80, 950)">
-    <line x1="0" y1="0" x2="1440" y2="0" stroke="#ffffff" stroke-opacity="0.1" stroke-width="1"/>
-    <text x="0" y="32" fill="#64748b" font-size="12">Open-Source Architecture Repository: <tspan fill="#38bdf8" font-weight="bold">github.com/Ambuj123-lab/career-workspace-ambujsystems</tspan></text>
-    <text x="1440" y="32" fill="#94a3b8" font-size="12" text-anchor="end" font-weight="600">© 2026 Ambuj Kumar Tripathi • CoverCraft Enterprise Evidence Engine</text>
+  <!-- ==================== FOOTER BAR ==================== -->
+  <g transform="translate(80, 955)">
+    <line x1="0" y1="0" x2="1440" y2="0" stroke="#ffffff" stroke-opacity="0.12" stroke-width="1"/>
+    <text x="0" y="32" fill="#94a3b8" font-size="13">Open-Source Architecture: <tspan fill="#38bdf8" font-weight="bold">github.com/Ambuj123-lab/career-workspace-ambujsystems</tspan></text>
+    <text x="1440" y="32" fill="#94a3b8" font-size="13" text-anchor="end" font-weight="600">© 2026 Ambuj Kumar Tripathi • CoverCraft Enterprise Evidence Engine</text>
   </g>
 </svg>
