@@ -2646,11 +2646,11 @@ export default function ResultsPanel({
             </div>
             <div className="p-3 rounded-lg bg-black/40 border border-white/5">
               <div className="text-[10px] uppercase font-bold text-gray-500">Transport</div>
-              <div className="text-xs font-mono font-semibold text-emerald-400 mt-0.5">Standard I/O (stdio)</div>
+              <div className="text-xs font-mono font-semibold text-emerald-400 mt-0.5">Dual (stdio / SSE)</div>
             </div>
             <div className="p-3 rounded-lg bg-black/40 border border-white/5">
               <div className="text-[10px] uppercase font-bold text-gray-500">Registered Tools</div>
-              <div className="text-xs font-mono font-semibold text-purple-400 mt-0.5" title="7 Tools: jd_analyzer, company_research, source_filter, evidence_validator, ats_readiness, cover_letter_generator, github_proofer">7 Tools Registered</div>
+              <div className="text-xs font-mono font-semibold text-purple-400 mt-0.5" title="8 Tools: jd_analyzer, company_research, source_filter, evidence_validator, ats_readiness, cover_letter_generator, github_proofer, huggingface_proofer">8 Tools Registered</div>
             </div>
             <div className="p-3 rounded-lg bg-black/40 border border-white/5">
               <div className="text-[10px] uppercase font-bold text-gray-500">Execution Events</div>
