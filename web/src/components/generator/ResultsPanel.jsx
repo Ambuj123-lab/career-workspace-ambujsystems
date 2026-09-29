@@ -2365,22 +2365,22 @@ export default function ResultsPanel({
               <div className="relative z-10 grid grid-cols-2 sm:grid-cols-4 gap-3 mt-5">
                 <div className="p-3.5 rounded-xl bg-black/40 border border-white/5">
                   <div className="text-[10px] font-mono uppercase text-gray-400">Models Published</div>
-                  <div className="text-lg font-bold text-white mt-0.5">{hfData?.total_models_published || 6} Models</div>
+                  <div className="text-lg font-bold text-white mt-0.5">{hfData?.total_models_published ?? 6} Models</div>
                   <div className="text-[10px] text-amber-400">via Hugging Face API</div>
                 </div>
                 <div className="p-3.5 rounded-xl bg-black/40 border border-white/5">
                   <div className="text-[10px] font-mono uppercase text-gray-400">Verified Downloads</div>
-                  <div className="text-lg font-bold text-amber-400 mt-0.5">{hfData?.aggregate_model_downloads || 726} Downloads</div>
+                  <div className="text-lg font-bold text-amber-400 mt-0.5">{(hfData?.aggregate_model_downloads ?? 726).toLocaleString()} Downloads</div>
                   <div className="text-[10px] text-emerald-400">Real Community Usage</div>
                 </div>
                 <div className="p-3.5 rounded-xl bg-black/40 border border-white/5">
                   <div className="text-[10px] font-mono uppercase text-gray-400">Community Likes</div>
-                  <div className="text-lg font-bold text-yellow-400 mt-0.5">{hfData?.aggregate_model_likes || 39} Likes</div>
+                  <div className="text-lg font-bold text-yellow-400 mt-0.5">{(hfData?.aggregate_model_likes ?? 39).toLocaleString()} Likes</div>
                   <div className="text-[10px] text-yellow-400/80">Starred by Engineers</div>
                 </div>
                 <div className="p-3.5 rounded-xl bg-black/40 border border-white/5">
                   <div className="text-[10px] font-mono uppercase text-gray-400">Proof Confidence</div>
-                  <div className="text-lg font-bold text-emerald-400 mt-0.5">{hfData?.proof_confidence || 99}%</div>
+                  <div className="text-lg font-bold text-emerald-400 mt-0.5">{(hfData?.proof_confidence ?? 99)}%</div>
                   <div className="text-[10px] text-emerald-400/80">{hfData?.audit_verdict || "VERIFIED_PRODUCTION_WEIGHTS"}</div>
                 </div>
               </div>
