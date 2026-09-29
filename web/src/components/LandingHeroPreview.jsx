@@ -149,6 +149,17 @@ export default function LandingHeroPreview() {
                 <span>🐙</span>
                 <span>GitHub Code Proof</span>
               </button>
+            <button
+              onClick={() => setActiveTab("huggingface")}
+              className={`px-3 py-1.5 rounded-lg font-semibold transition-all flex items-center gap-1.5 cursor-pointer ${
+                activeTab === "huggingface"
+                  ? "bg-amber-500/20 text-amber-300 border border-amber-500/30 shadow-sm"
+                  : "text-gray-400 hover:text-white"
+              }`}
+            >
+              <span>🤗</span>
+              <span>Hugging Face Proof</span>
+            </button>
 
               <button
                 onClick={() => setActiveTab("company")}
@@ -519,6 +530,86 @@ export default function LandingHeroPreview() {
               </div>
             </div>
           )}
+        {/* TAB 5: HUGGING FACE WEIGHTS PROOFER (MCP TOOL #8) */}
+        {activeTab === "huggingface" && (
+          <div className="p-6 sm:p-8 space-y-6">
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/30">
+                    MCP TOOL #8 · HUGGING FACE WEIGHTS PROOFER
+                  </span>
+                  <span className="text-xs text-gray-400">Live Model Weights &amp; Quantization Verification</span>
+                </div>
+                <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+                  Verifiable Hugging Face Model Grounding
+                </h3>
+              </div>
+
+              <div className="flex items-center gap-3 px-4 py-2 rounded-2xl bg-amber-500/10 border border-amber-500/20">
+                <div className="w-8 h-8 rounded-full border-2 border-amber-400 flex items-center justify-center text-amber-400 font-black text-xs shrink-0">
+                  ✓
+                </div>
+                <div>
+                  <div className="text-xs font-bold text-white">726+ Verified Community Downloads</div>
+                  <div className="text-[10px] text-amber-300 font-medium">6 Open-Source Models, 39 Stars &amp; 2 Live Gradio Spaces</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Candidate Verified Models Display */}
+            <div className="grid lg:grid-cols-2 gap-4">
+              {/* Model 1 */}
+              <div className="p-4 sm:p-5 rounded-2xl bg-white/[0.02] border border-white/10 space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-bold text-amber-300">
+                      Ambuj-Tripathi-Indian-Legal-Llama-GGUF
+                    </span>
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                      GGUF Quant
+                    </span>
+                  </div>
+                  <span className="text-[10px] font-mono font-bold text-emerald-400 px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/20">
+                    WEIGHTS VERIFIED
+                  </span>
+                </div>
+                <p className="text-xs text-gray-400 leading-relaxed">
+                  Quantized domain-specific LLM for Indian legal case law, statutory analysis, and low-latency edge inference.
+                </p>
+                <div className="p-2.5 rounded-xl bg-black/40 border border-white/5 flex items-center justify-between text-[11px] font-mono">
+                  <span className="text-emerald-400">📥 613 Community Downloads</span>
+                  <span className="text-yellow-400">⭐ 38 Likes</span>
+                </div>
+              </div>
+
+              {/* Model 2 */}
+              <div className="p-4 sm:p-5 rounded-2xl bg-white/[0.02] border border-white/10 space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-bold text-amber-300">
+                      Ambuj-Tripathi-Llama-3.1-8B-IndianLegal-GGUF
+                    </span>
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                      Llama 3.1
+                    </span>
+                  </div>
+                  <span className="text-[10px] font-mono font-bold text-emerald-400 px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/20">
+                    WEIGHTS VERIFIED
+                  </span>
+                </div>
+                <p className="text-xs text-gray-400 leading-relaxed">
+                  Llama 3.1 8B instruction-tuned model fine-tuned on bilingual legal corpora with GGUF 4-bit and 8-bit quantization.
+                </p>
+                <div className="p-2.5 rounded-xl bg-black/40 border border-white/5 flex items-center justify-between text-[11px] font-mono">
+                  <span className="text-emerald-400">📥 72 Community Downloads</span>
+                  <span className="text-cyan-400">2 Live Spaces (Gradio)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
 
 
         </div>

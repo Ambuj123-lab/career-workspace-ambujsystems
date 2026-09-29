@@ -45,27 +45,9 @@ export default function Home() {
               <span className="text-base sm:text-lg font-bold tracking-tight leading-tight">
                 Cover<span className="gradient-text-warm">Craft</span> <span className="text-[10px] sm:text-xs font-mono font-medium text-rose-400/90 ml-0.5">AI</span>
               </span>
-              <span className="text-[10px] sm:text-[11px] font-mono text-gray-400 leading-tight">
-                built by <a href="https://ambuj-ai-portfolio.vercel.app" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white transition-colors underline decoration-dotted underline-offset-2 font-medium">Ambuj Kumar Tripathi</a>
-                <a
-                  href="https://huggingface.co/invincibleambuj"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block p-4 rounded-xl enterprise-card glow-card-amber hover-jiggle group transition-all"
-                >
-                  <div className="flex items-center justify-between text-xs font-bold text-white group-hover:text-amber-300">
-                    <span className="flex items-center gap-1.5">
-                      <span>🤗</span>
-                      <span>Hugging Face Model Weights (@invincibleambuj)</span>
-                    </span>
-                    <span>↗</span>
-                  </div>
-                  <p className="text-[11px] text-gray-400 mt-1 leading-relaxed">
-                    6 published GenAI models, GGUF quants, and live interactive Gradio spaces with 726+ verified community downloads.
-                  </p>
-                </a>
-
-              </span>
+                          <span className="text-[10px] sm:text-[11px] font-mono text-gray-400 leading-tight">
+              built by <a href="https://ambuj-ai-portfolio.vercel.app" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white transition-colors underline decoration-dotted underline-offset-2 font-medium">Ambuj Kumar Tripathi</a>
+            </span>
             </div>
           </div>
 
