@@ -63,6 +63,12 @@ async def list_tools() -> list[Tool]:
                 },
                 "required": ["company_name"],
             },
+            annotations=ToolAnnotations(
+                readOnlyHint=True,
+                destructiveHint=False,
+                idempotentHint=True,
+                openWorldHint=True,
+            ),
         ),
         Tool(
             name="evidence_validator",
@@ -94,6 +100,12 @@ async def list_tools() -> list[Tool]:
                 },
                 "required": ["claims", "sources"],
             },
+            annotations=ToolAnnotations(
+                readOnlyHint=True,
+                destructiveHint=False,
+                idempotentHint=True,
+                openWorldHint=False,
+            ),
         ),
         Tool(
             name="jd_analyzer",
@@ -116,6 +128,12 @@ async def list_tools() -> list[Tool]:
                 },
                 "required": ["jd_text", "resume_text"],
             },
+            annotations=ToolAnnotations(
+                readOnlyHint=True,
+                destructiveHint=False,
+                idempotentHint=True,
+                openWorldHint=False,
+            ),
         ),
         Tool(
             name="ats_readiness",
@@ -138,6 +156,12 @@ async def list_tools() -> list[Tool]:
                 },
                 "required": ["letter_text", "jd_text"],
             },
+            annotations=ToolAnnotations(
+                readOnlyHint=True,
+                destructiveHint=False,
+                idempotentHint=True,
+                openWorldHint=False,
+            ),
         ),
         Tool(
             name="source_filter",
@@ -161,6 +185,12 @@ async def list_tools() -> list[Tool]:
                 },
                 "required": ["sources"],
             },
+            annotations=ToolAnnotations(
+                readOnlyHint=True,
+                destructiveHint=False,
+                idempotentHint=True,
+                openWorldHint=False,
+            ),
         ),
         Tool(
             name="cover_letter_generator",
