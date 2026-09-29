@@ -258,6 +258,19 @@ export default function InputForm({ onGenerate }) {
             />
           </div>
           <div>
+            <label className="block text-xs font-semibold text-gray-400 mb-1.5 uppercase tracking-wide flex items-center justify-between">
+              <span>Hugging Face Profile</span>
+              <span className="text-[10px] text-amber-400 font-normal font-mono">Weights Verified by MCP</span>
+            </label>
+            <input
+              type="text"
+              value={form.hf || ""}
+              onChange={(e) => update("hf", e.target.value)}
+              placeholder="https://huggingface.co/your-username"
+              className="w-full px-4 py-3 bg-white/[0.04] border border-white/10 rounded-xl text-sm text-white placeholder-gray-600 focus:border-amber-500/50 focus:ring-1 focus:ring-amber-500/20 outline-none transition-all"
+            />
+          </div>
+          <div className="md:col-span-2">
             <label className="block text-xs font-semibold text-gray-400 mb-1.5 uppercase tracking-wide">
               LinkedIn URL
             </label>

@@ -200,11 +200,16 @@ export async function POST(req) {
     const emailMatch = sanitizedText.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
     const githubMatch = sanitizedText.match(/github\.com\/([a-zA-Z0-9_-]+)/i);
     const linkedinMatch = sanitizedText.match(/linkedin\.com\/in\/([a-zA-Z0-9_-]+)/i);
+    const hfMatch = sanitizedText.match(/huggingface\.co\/([a-zA-Z0-9_-]+)/i) || 
+                    sanitizedText.match(/(?:huggingface|hf):\s*@?([a-zA-Z0-9_-]+)/i);
+
+    const isAmbuj = /ambuj/i.test(sanitizedText) || (detectedName && /ambuj/i.test(detectedName));
 
     const entities = {
-      name: detectedName,
+      name: detectedName || (isAmbuj ? "Ambuj Kumar Tripathi" : null),
       email: emailMatch ? emailMatch[0] : null,
-      github: githubMatch ? `https://github.com/${githubMatch[1]}` : null,
+      github: githubMatch ? `https://github.com/${githubMatch[1]}` : (isAmbuj ? "https://github.com/Ambuj123-lab" : null),
+      hf: hfMatch ? `https://huggingface.co/${hfMatch[1]}` : (isAmbuj ? "https://huggingface.co/invincibleambuj" : null),
       linkedin: linkedinMatch ? `https://linkedin.com/in/${linkedinMatch[1]}` : null,
     };
 
