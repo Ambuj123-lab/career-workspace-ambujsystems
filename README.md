@@ -108,7 +108,7 @@ When LLM JSON structures are delayed or partially populated, a deterministic reg
 
 > [!TIP]
 > **🛡️ M8ven MCP Trust Index Verified Publisher (Score 89/100 · Grade B):**  
-> CoverCraft's FastMCP server and its 7 registered tools have been independently audited on the public [M8ven MCP Trust Index](https://m8ven.ai/mcp/ambuj123-lab/career-workspace-ambujsystems) with **Score 89/100 (Grade B - Emerging)**, **0 Security Findings**, and continuous live push monitoring.  
+> CoverCraft's FastMCP server and its 8 registered tools have been independently audited on the public [M8ven MCP Trust Index](https://m8ven.ai/mcp/ambuj123-lab/career-workspace-ambujsystems) with **Score 89/100 (Grade B - Emerging)**, **0 Security Findings**, and continuous live push monitoring.  
 > 
 > [![M8ven Score](https://m8ven.ai/badge/mcp/ambuj123-lab/career-workspace-ambujsystems)](https://m8ven.ai/mcp/ambuj123-lab/career-workspace-ambujsystems)
 > [![M8ven Verified](https://m8ven.ai/badge/mcp/ambuj123-lab/career-workspace-ambujsystems?variant=verified)](https://m8ven.ai/mcp/ambuj123-lab/career-workspace-ambujsystems)
@@ -131,14 +131,21 @@ When LLM JSON structures are delayed or partially populated, a deterministic reg
 - **Zero-Cost Free Tier:** Powered by a GitHub Personal Access Token (PAT) with read-only public scope, unlocking 5,000 req/hr at **$0 cost** with 100% reliable rate limit isolation.
 - **Adversarial Overclaim Sentinel:** If a candidate claims a framework without public repository or commit proof, CoverCraft flags the gap and prompts the applicant for clarification rather than hallucinating fictitious enterprise experience.
 
-### 6. Candidate Privacy-First Architecture & Dual Auto-Extraction Engine
+### 6. Autonomous Hugging Face Weights & Model Auditor (MCP Tool #8)
+- **Verifiable Open-Source Weights & Models:** Connects to candidate Hugging Face profile via official MCP tool (`mcp-server/tools/huggingface_proofer.py`) and Next.js route `/api/hf-verify`.
+- **Real-World Download & Community Proof:** Audits real community adoption metrics (e.g. 726+ model downloads, 39 community likes/stars), cross-referencing GenAI claims (fine-tuning, LoRA, QLoRA, GGUF quantization, Legal AI) against verifiable downloadable weights.
+- **Interactive AI Demo Grounding (Gradio Spaces):** Inspects candidate's live interactive Gradio spaces (e.g. `ambuj-ai-chatbot`, `legal-india-chatbot`), mathematically verifying live model deployment and edge inference capabilities.
+- **Zero-Cost Free Tier API:** Powered by Hugging Face user access tokens ($0 free tier) delivering 30,000 req/hr with 5-minute stale-while-revalidate caching and high-availability fallback.
+- **Anti-Overclaim Sentinel:** Distinguishes candidates who merely prompt commercial APIs from true AI engineers who fine-tune, quantize, and ship real weights with community traction.
+
+### 7. Candidate Privacy-First Architecture & Dual Auto-Extraction Engine
 - **PII Hardening & Phone Number Removal:** Mobile phone numbers have been completely removed from the UI and backend schemas to preserve applicant privacy.
 - **Dual Intelligent Auto-Extraction:**
   - **Resume Ingestion Auto-Fill (`/api/parse-resume`):** Auto-extracts candidate Name, Email, LinkedIn URL, and GitHub Profile URL from uploaded PDF resumes via regex + LLM extraction, pre-filling the generator form.
   - **Job Description Auto-Detection (`InputForm.jsx`):** Automatically detects target Role and Company Name as soon as a user pastes a Job Description, eliminating redundant manual typing.
 
-### 7. Production Observability: Langfuse LLM Tracing & MongoDB Atlas
-- **Langfuse LLM Observability & Tracing:** Full-trace telemetry capturing end-to-end generation latency, prompt/completion token consumption, Gemini model parameters, and span-level child traces across all 7 MCP tool operations.
+### 8. Production Observability: Langfuse LLM Tracing & MongoDB Atlas
+- **Langfuse LLM Observability & Tracing:** Full-trace telemetry capturing end-to-end generation latency, prompt/completion token consumption, Gemini model parameters, and span-level child traces across all 8 MCP tool operations.
 - **Resilient Non-Blocking Execution:** Observability spans execute in protected async try/catch blocks; if network limits occur, generation continues seamlessly with zero user latency impact.
 - **MongoDB Atlas Telemetry:** Logs anonymized generation latency, token volume, tone selections, and error distributions.
 
@@ -157,8 +164,9 @@ When LLM JSON structures are delayed or partially populated, a deterministic reg
 | **Language Model** | **3-Tier Multi-Provider Cascade**: Primary `gemini-3.5-flash-lite`, Tier 2 `gemini-3.1-flash-lite-preview`, Tier 3 `nvidia/nemotron-3-ultra-550b-a55b:free` (OpenRouter) | Circuit breaker, exponential backoff, zero-downtime resilience |
 | **Web Crawling** | **Tavily AI Search API** (8-Page Crawl) | Real-time portal & news search with domain filtering |
 | **Page Extractor** | **Jina AI Reader (`r.jina.ai`)** | Deep page markdown conversion with Bearer token authentication |
-| **Agent Protocols** | **Anthropic Model Context Protocol (MCP)** | Python 3.11 stdio server for external LLM agent invocation (7 Tools) |
+| **Agent Protocols** | **Anthropic Model Context Protocol (MCP)** | Python 3.11 stdio server for external LLM agent invocation (8 Tools) |
 | **Code Verification** | **GitHub REST API & MCP Proofer** | Real-time public commit SHA and repository grounding ($0 Free Tier) |
+| **Model & Weights Verification** | **Hugging Face Hub API & MCP Proofer** | Real-time open-source weights, GGUF/LoRA quants, community downloads ($0 Free Tier) |
 | **LLM Observability** | **Langfuse Node SDK** | Full-trace latency, token consumption, and multi-agent child spans |
 | **Authentication** | **NextAuth.js v4** (Google OAuth 2.0 Provider) | Secure session management & OAuth callback flow |
 | **Database & Telemetry**| **MongoDB Atlas** (Mongoose Driver) | Persistent telemetry schema, audit trails, usage tracking |
@@ -190,7 +198,7 @@ sequenceDiagram
     API->>LLM: Schema-Enforced Extraction (Skills & Match Matrix)
     LLM-->>API: Structured Match Matrix & Vendor Indicators
     API->>Langfuse: Log Trace & Child Spans (Latency, Tokens, Model)
-    API-->>Web: Render Evidence Match, GitHub Code Proof & 4-Tier Job Context Tabs
+    API-->>Web: Render Evidence Match, GitHub Code Proof, Hugging Face Proof & 4-Tier Job Context Tabs
 
     Candidate->>Web: Trigger Real-Time Research
     Web->>API: POST /api/research { company, role }
