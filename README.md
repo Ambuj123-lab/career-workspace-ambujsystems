@@ -104,6 +104,12 @@ When LLM JSON structures are delayed or partially populated, a deterministic reg
 - **Human-in-the-Loop (HITL) Gate:** Users explicitly inspect, evaluate credibility scores, and toggle on/off scraped web sources before any external intelligence enters the LLM generation prompt.
 
 ### 4. Native Model Context Protocol (MCP) Integration (7 Production Tools)
+
+> [!TIP]
+> **🛡️ M8ven MCP Trust Index Verified Publisher:**  
+> CoverCraft's FastMCP server and its 7 registered tools have been independently audited on the public [M8ven MCP Trust Index](https://m8ven.ai/mcp/ambuj123-lab/career-workspace-ambujsystems) with **0 Security Findings** and verified tool schemas.  
+> [![M8ven Verified](https://m8ven.ai/badge/mcp/ambuj123-lab/career-workspace-ambujsystems?variant=verified)](https://m8ven.ai/mcp/ambuj123-lab/career-workspace-ambujsystems)
+
 - Contains a standalone **Anthropic Model Context Protocol (MCP)** server written in Python 3.11 (`mcp-server/`).
 - Exposes **7 Registered Tools** via standard Model Context Protocol **stdio transport** and **Streamable HTTP SSE transport**:
   1. `company_research`: Real-time web search via Tavily with traceable source citations.

@@ -53,6 +53,21 @@ export default function Home() {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-5">
+            {/* Official M8ven MCP Verified Badge */}
+            <a
+              href="https://m8ven.ai/mcp/ambuj123-lab/career-workspace-ambujsystems"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center hover:opacity-90 hover:scale-105 transition-all shadow-[0_0_14px_rgba(139,92,246,0.35)] rounded"
+              title="M8ven MCP Verified Publisher -- Audited Trust Index"
+            >
+              <img
+                src="https://m8ven.ai/badge/mcp/ambuj123-lab/career-workspace-ambujsystems?variant=verified"
+                alt="M8ven Verified MCP"
+                className="h-6 w-auto"
+              />
+            </a>
+
             {/* Live UptimeRobot Status Badge at TOP */}
             <a
               href="https://stats.uptimerobot.com/4tYmSQnuBE?utm_source=status_badge&utm_medium=referral"
@@ -195,11 +210,27 @@ export default function Home() {
 
           <div className="max-w-7xl mx-auto px-4 sm:px-6">
             <div className="max-w-4xl mx-auto text-center">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/10 bg-white/5 mb-8">
-              <span className="status-dot" />
-              <span className="text-xs font-medium text-gray-400 tracking-wide uppercase">
-                Evidence-First AI
-              </span>
+            <div className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3 mb-8">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-white/10 bg-white/5 shadow-inner">
+                <span className="status-dot" />
+                <span className="text-xs font-medium text-gray-400 tracking-wide uppercase">
+                  Evidence-First AI
+                </span>
+              </div>
+              <a
+                href="https://m8ven.ai/mcp/ambuj123-lab/career-workspace-ambujsystems"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-violet-500/40 bg-violet-500/10 hover:bg-violet-500/20 text-violet-300 text-xs font-semibold tracking-wide transition-all shadow-[0_0_20px_rgba(139,92,246,0.3)] hover:shadow-[0_0_30px_rgba(168,85,247,0.55)] group cursor-pointer"
+                title="Verified Publisher on M8ven MCP Trust Index"
+              >
+                <span className="w-2 h-2 rounded-full bg-violet-400 animate-pulse shadow-[0_0_8px_#a78bfa]" />
+                <span className="flex items-center gap-1.5">
+                  <span className="text-violet-200">M8ven Verified Publisher</span>
+                  <span className="text-violet-400/90 font-mono text-[10px] uppercase tracking-wider bg-violet-500/25 px-1.5 py-0.5 rounded border border-violet-500/40">MCP Trust Index</span>
+                </span>
+                <span className="text-violet-400 group-hover:translate-x-0.5 transition-transform">&rarr;</span>
+              </a>
             </div>
 
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight leading-[1.08] mb-6">
@@ -256,6 +287,7 @@ export default function Home() {
         <section className="border-y border-white/5 bg-white/[0.02]">
           <div className="max-w-7xl mx-auto px-6 py-6 flex flex-wrap items-center justify-center gap-x-8 sm:gap-x-12 gap-y-4 text-xs sm:text-sm text-gray-400">
             {[
+              "M8ven Verified MCP Publisher (Trust Index)",
               "7 Production MCP Tools (Live GitHub Grounding)",
               "Live GitHub Commit & Code Proof",
               "Langfuse LLM Telemetry",
@@ -449,6 +481,7 @@ export default function Home() {
               { icon: "⏳", title: "Outdated News & Stale Tech Filter", desc: "Strict recency filter: <9 months for company initiatives, <18 months for tech stack. Suppresses obsolete 2022-2023 articles or tags them as [Historical Context].", glow: "glow-card-amber" },
               { icon: "📑", title: "Dual-Mode Citations & Clean Export", desc: "Interactive [Resume Anchor] and [Source] badges for candidate verification, automatically stripped for clean recruiter export.", glow: "glow-card-cyan" },
               { icon: "⏱️", title: "Live State Machine Tracker", desc: "4-phase execution tracker with live millisecond elapsed timer and dynamic MCP execution status readout.", glow: "glow-card-violet" },
+              { icon: "🛡️", title: "M8ven MCP Trust Index Certified", desc: "Production FastMCP tools independently audited on the public M8ven Trust Index with 0 security findings. Full schema & stdio/SSE verification.", glow: "glow-card-violet" },
               { icon: "🛡️", title: "Deterministic PII Protection", desc: "Resume data stripped of emails, phone numbers, and addresses via regex before any external web search or research call.", glow: "glow-card-emerald" },
               { icon: "🔒", title: "Server-Side Zero-Leak Keys", desc: "All API keys stored strictly server-side in environment variables. Browser client never communicates with LLM APIs directly.", glow: "glow-card-cyan" },
               { icon: "🧪", title: "Claim Ledger Validation", desc: "Every extracted company claim checked against web search sources via evidence validator. Unsupported claims marked UNSUPPORTED.", glow: "glow-card-violet" },
@@ -532,6 +565,26 @@ export default function Home() {
                     Ecosystem &amp; Featured Projects
                   </div>
                   <div className="space-y-2.5">
+                    <a
+                      href="https://m8ven.ai/mcp/ambuj123-lab/career-workspace-ambujsystems"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block p-4 rounded-xl enterprise-card glow-card-violet hover-jiggle group transition-all relative overflow-hidden border border-violet-500/30 bg-violet-950/20"
+                    >
+                      <div className="flex items-center justify-between text-xs font-bold text-white group-hover:text-violet-300">
+                        <span className="flex items-center gap-2">
+                          <span className="w-2 h-2 rounded-full bg-violet-400 animate-pulse shadow-[0_0_8px_#a78bfa]" />
+                          M8ven Verified Publisher
+                        </span>
+                        <span className="text-violet-300 font-mono text-[10px] uppercase tracking-wider bg-violet-500/25 px-2 py-0.5 rounded border border-violet-500/40">
+                          MCP Trust Index ↗
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-gray-300 mt-2 leading-relaxed">
+                        Accredited on the public M8ven MCP Trust Index. Verified tool schemas, zero security vulnerabilities, and audited FastMCP architecture.
+                      </p>
+                    </a>
+
                     <a
                       href="https://github.com/Ambuj123-lab/agentic-rag-financial-parser"
                       target="_blank"

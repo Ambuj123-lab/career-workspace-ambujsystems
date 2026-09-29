@@ -767,6 +767,45 @@ export default function DocsPage() {
               CoverCraft implements the open <strong>Model Context Protocol (MCP)</strong> standard, exposing an extensible tool server in <code className="text-purple-400 bg-white/5 px-1.5 py-0.5 rounded">mcp-server/server.py</code> and a streamable execution trace terminal in the frontend.
             </p>
 
+            {/* M8ven MCP Verified Trust Index Accreditation Callout */}
+            <div className="p-4 sm:p-5 rounded-2xl border border-violet-500/30 bg-gradient-to-r from-violet-950/40 via-purple-950/20 to-black/40 backdrop-blur-xl relative overflow-hidden shadow-[0_0_30px_rgba(139,92,246,0.15)] my-6">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div className="flex items-center gap-3.5">
+                  <a
+                    href="https://m8ven.ai/mcp/ambuj123-lab/career-workspace-ambujsystems"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:scale-105 transition-transform shrink-0"
+                    title="View M8ven MCP Trust Index Audit"
+                  >
+                    <img
+                      src="https://m8ven.ai/badge/mcp/ambuj123-lab/career-workspace-ambujsystems?variant=verified"
+                      alt="M8ven Verified MCP"
+                      className="h-8 w-auto rounded shadow-[0_0_12px_rgba(139,92,246,0.5)]"
+                    />
+                  </a>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-bold text-white tracking-tight">M8ven MCP Trust Index Certified Publisher</span>
+                      <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">0 Findings</span>
+                    </div>
+                    <p className="text-xs text-gray-300 mt-0.5 leading-relaxed">
+                      All 7 registered FastMCP tools independently audited and verified against the official MCP specification with full schema compliance.
+                    </p>
+                  </div>
+                </div>
+                <a
+                  href="https://m8ven.ai/mcp/ambuj123-lab/career-workspace-ambujsystems"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-violet-600/30 hover:bg-violet-600/50 border border-violet-500/40 text-violet-200 text-xs font-semibold transition-all hover:scale-105"
+                >
+                  <span>Audit Report</span>
+                  <span>↗</span>
+                </a>
+              </div>
+            </div>
+
             {/* The 7 Registered Tools */}
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
               {[
