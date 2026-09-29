@@ -192,6 +192,9 @@ export async function POST(req) {
       });
     });
 
+    // Sort models descending by downloads (highest community adoption first)
+    verifiedModels.sort((a, b) => (b.downloads || 0) - (a.downloads || 0));
+
     const verifiedSpaces = (spaces || []).map((s) => {
       backedSkills.add("Interactive AI Spaces (Gradio)");
       const sId = s.id || "";

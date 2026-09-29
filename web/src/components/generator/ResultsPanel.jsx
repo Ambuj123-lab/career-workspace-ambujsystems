@@ -2400,7 +2400,7 @@ export default function ResultsPanel({
                   <span className="text-[11px] text-gray-400">Grounded against Hugging Face Registry</span>
                 </div>
 
-                {(hfData?.verified_models || [
+                {([...(hfData?.verified_models || [
                   {
                     model_id: "invincibleambuj/Ambuj-Tripathi-Indian-Legal-Llama-GGUF",
                     model_name: "Ambuj-Tripathi-Indian-Legal-Llama-GGUF",
@@ -2461,7 +2461,7 @@ export default function ResultsPanel({
                     matched_capabilities: ["LoRA / QLoRA Fine-Tuning", "Domain-Specific LLM (Legal AI)"],
                     proof_badge: "WEIGHTS_VERIFIED",
                   },
-                ]).map((model, idx) => (
+                ])]).sort((a, b) => (b.downloads || 0) - (a.downloads || 0)).map((model, idx) => (
                   <div
                     key={idx}
                     className="p-5 rounded-xl bg-[#0e0904] border border-white/10 hover:border-amber-500/40 transition-all shadow-lg space-y-3 group"
