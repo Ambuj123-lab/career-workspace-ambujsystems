@@ -123,10 +123,10 @@ body {
   box-shadow: 0 0 8px rgba(52, 211, 153, 0.6);
 }
 
-/* ===== FAANG-LEVEL TACTILE MOTION & GLOW SYSTEM ===== */
+/* ===== ENTERPRISE TACTILE MOTION & GLOW SYSTEM ===== */
 
 /* Noticeable, Playful Tactile Spring Jiggle */
-@keyframes faang-jiggle-pop {
+@keyframes tactile-jiggle-pop {
   0% {
     transform: translateY(0) scale(1) rotate(0deg);
   }
@@ -153,8 +153,8 @@ body {
   100% { background-position: 0% 50%; }
 }
 
-/* Master FAANG Card Base */
-.faang-card {
+/* Master Enterprise Card Base */
+.enterprise-card {
   position: relative;
   width: 100%;
   max-width: 100%;
@@ -168,13 +168,13 @@ body {
   will-change: transform, box-shadow;
 }
 
-.faang-card:active {
+.enterprise-card:active {
   transform: translateY(-2px) scale(0.985) !important;
 }
 
 /* Hover Jiggle Class: Applies noticeable tactile spring bounce */
 .hover-jiggle:hover {
-  animation: faang-jiggle-pop 0.44s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  animation: tactile-jiggle-pop 0.44s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
 .card-lift {
@@ -191,7 +191,7 @@ body {
 }
 
 /* =========================================================================
-   LUXURY FAANG GRADIENT GLOW VARIANTS (Emerald, Cyan, Violet, Amber, Rose, Aurora)
+   LUXURY GRADIENT GLOW VARIANTS (Emerald, Cyan, Violet, Amber, Rose, Aurora)
    ========================================================================= */
 
 /* 1. Emerald / Mint Quantum Glow */

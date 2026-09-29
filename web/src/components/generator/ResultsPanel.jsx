@@ -1031,7 +1031,7 @@ export default function ResultsPanel({
 
           <div className="space-y-4">
             {(defenseData?.questions || []).map((q, idx) => (
-              <div key={idx} className="p-5 rounded-2xl faang-card glow-card-violet hover-jiggle space-y-3 cursor-default">
+              <div key={idx} className="p-5 rounded-2xl enterprise-card glow-card-violet hover-jiggle space-y-3 cursor-default">
                 <div className="flex items-start justify-between gap-3">
                   <div className="space-y-1 flex-1">
                     <span className="text-[10px] font-bold uppercase tracking-wider text-rose-400">
@@ -1086,7 +1086,7 @@ export default function ResultsPanel({
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {(atsData?.checks || []).map((check, idx) => (
-              <div key={idx} className="p-4 rounded-xl faang-card glow-card-emerald hover-jiggle space-y-2 cursor-default">
+              <div key={idx} className="p-4 rounded-xl enterprise-card glow-card-emerald hover-jiggle space-y-2 cursor-default">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold text-white">{check.label}</span>
                   <span
@@ -1425,7 +1425,7 @@ export default function ResultsPanel({
           {/* Top Live Web Research Status Strip (Clickable to switch sub-tab) */}
           <div
             onClick={() => setCompanySubTab("sources_breakdown")}
-            className="p-4 rounded-2xl faang-card glow-card-cyan hover-jiggle cursor-pointer transition-all space-y-2 group shadow-lg shadow-cyan-950/20"
+            className="p-4 rounded-2xl enterprise-card glow-card-cyan hover-jiggle cursor-pointer transition-all space-y-2 group shadow-lg shadow-cyan-950/20"
           >
             <div className="flex flex-wrap items-center justify-between gap-2">
               <div className="flex items-center gap-2">
@@ -1512,7 +1512,7 @@ export default function ResultsPanel({
           {companySubTab === "job_context" && (
             <div className="space-y-6">
               {/* Job Title & Verified Route Hero */}
-              <div className="p-5 rounded-2xl faang-card glow-card-cyan space-y-4">
+              <div className="p-5 rounded-2xl enterprise-card glow-card-cyan space-y-4">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div>
                     <span className="text-[10px] font-bold uppercase tracking-wider text-cyan-400 flex items-center gap-1">
@@ -1571,7 +1571,7 @@ export default function ResultsPanel({
 
               {/* 🔥 Third-Party / Staffing Vendor Indicator Card */}
               {analysisData?.hiring_context?.is_third_party_vendor ? (
-                <div className="p-5 rounded-2xl faang-card glow-card-amber space-y-3">
+                <div className="p-5 rounded-2xl enterprise-card glow-card-amber space-y-3">
                   <div className="flex items-center gap-2 text-amber-400 font-bold text-sm">
                     <span>⚠️</span>
                     <span>THIRD-PARTY RECRUITER / CONTRACT STAFFING DETECTED</span>
@@ -1600,7 +1600,7 @@ export default function ResultsPanel({
                   </p>
                 </div>
               ) : (
-                <div className="p-5 rounded-2xl faang-card glow-card-emerald space-y-2">
+                <div className="p-5 rounded-2xl enterprise-card glow-card-emerald space-y-2">
                   <div className="flex items-center gap-2 text-emerald-400 font-bold text-sm">
                     <span>✅</span>
                     <span>DIRECT EMPLOYER POSTING VERIFIED</span>
@@ -1683,7 +1683,7 @@ export default function ResultsPanel({
               ========================================================================= */}
           {companySubTab === "company_identity" && (
             <div className="space-y-6">
-              <div className="p-5 rounded-2xl faang-card glow-card-cyan space-y-4">
+              <div className="p-5 rounded-2xl enterprise-card glow-card-cyan space-y-4">
                 <div className="flex items-center justify-between border-b border-white/5 pb-3">
                   <div>
                     <span className="text-[10px] font-bold uppercase tracking-wider text-cyan-400">
@@ -1777,7 +1777,7 @@ export default function ResultsPanel({
           {companySubTab === "hiring_signals" && (
             <div className="space-y-6">
               {/* Role Relevant Technical Signals */}
-              <div className="p-5 rounded-2xl faang-card glow-card-violet space-y-4">
+              <div className="p-5 rounded-2xl enterprise-card glow-card-violet space-y-4">
                 <div className="flex items-center justify-between border-b border-white/5 pb-3">
                   <div>
                     <span className="text-[10px] font-bold uppercase tracking-wider text-purple-400">
@@ -1860,7 +1860,7 @@ export default function ResultsPanel({
           {companySubTab === "sources_breakdown" && (
             <div className="space-y-6">
               {/* Coverage Metrics Bar */}
-              <div className="p-5 rounded-2xl faang-card glow-card-cyan space-y-3">
+              <div className="p-5 rounded-2xl enterprise-card glow-card-cyan space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="text-[10px] font-bold uppercase tracking-wider text-cyan-400">
                     3-WAY EVIDENCE DISTRIBUTION

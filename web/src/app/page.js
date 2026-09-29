@@ -286,7 +286,7 @@ export default function Home() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6 w-full max-w-full">
             {/* Feature 1: Evidence Job Fit */}
-            <div className="faang-card glow-card-rose hover-jiggle p-4 sm:p-8 group cursor-default w-full max-w-full overflow-hidden">
+            <div className="enterprise-card glow-card-rose hover-jiggle p-4 sm:p-8 group cursor-default w-full max-w-full overflow-hidden">
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-rose-500/20 to-orange-500/20 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
                 <svg className="w-6 h-6 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
               </div>
@@ -313,7 +313,7 @@ export default function Home() {
             </div>
 
             {/* Feature 2: Multi-Source Recon & Deep Reader */}
-            <div className="faang-card glow-card-cyan hover-jiggle p-4 sm:p-8 group cursor-default w-full max-w-full overflow-hidden">
+            <div className="enterprise-card glow-card-cyan hover-jiggle p-4 sm:p-8 group cursor-default w-full max-w-full overflow-hidden">
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-500/20 to-blue-500/20 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
                 <svg className="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
               </div>
@@ -349,7 +349,7 @@ export default function Home() {
             </div>
 
             {/* Feature 3: Interview Defense & Vendor Shield */}
-            <div className="faang-card glow-card-violet hover-jiggle p-4 sm:p-8 group cursor-default w-full max-w-full overflow-hidden">
+            <div className="enterprise-card glow-card-violet hover-jiggle p-4 sm:p-8 group cursor-default w-full max-w-full overflow-hidden">
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-500/20 to-purple-500/20 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
                 <svg className="w-6 h-6 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
               </div>
@@ -372,7 +372,7 @@ export default function Home() {
             </div>
 
             {/* Feature 4: Live GitHub Code Proof & Commit Auditor (MCP Tool #7) */}
-            <div className="faang-card glow-card-emerald hover-jiggle p-4 sm:p-8 group cursor-default w-full max-w-full overflow-hidden">
+            <div className="enterprise-card glow-card-emerald hover-jiggle p-4 sm:p-8 group cursor-default w-full max-w-full overflow-hidden">
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500/20 to-cyan-500/20 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
                 <svg className="w-6 h-6 text-emerald-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
               </div>
@@ -455,7 +455,7 @@ export default function Home() {
               { icon: "🚫", title: "Prompt Injection Defense", desc: "JD and resume treated as untrusted data. Adversarial prompt injection attacks detected and neutralized before model reasoning.", glow: "glow-card-rose" },
               { icon: "✋", title: "Human-in-the-Loop Gate", desc: "Company research findings require explicit human review and approval before inclusion in the final synthesis. AI never auto-injects.", glow: "glow-card-emerald" },
             ].map((item) => (
-              <div key={item.title} className={`faang-card ${item.glow} hover-jiggle p-5 cursor-default`}>
+              <div key={item.title} className={`enterprise-card ${item.glow} hover-jiggle p-5 cursor-default`}>
                 <div className="text-2xl mb-3">{item.icon}</div>
                 <div className="text-sm font-bold mb-1 text-white">{item.title}</div>
                 <div className="text-xs text-gray-400 leading-relaxed">{item.desc}</div>
@@ -536,7 +536,7 @@ export default function Home() {
                       href="https://github.com/Ambuj123-lab/agentic-rag-financial-parser"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="block p-4 rounded-xl faang-card glow-card-emerald hover-jiggle group transition-all"
+                      className="block p-4 rounded-xl enterprise-card glow-card-emerald hover-jiggle group transition-all"
                     >
                       <div className="flex items-center justify-between text-xs font-bold text-white group-hover:text-emerald-400">
                         <span>Agentic Financial Parser</span>
@@ -551,7 +551,7 @@ export default function Home() {
                       href="https://ambuj-ai-portfolio.vercel.app"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="block p-4 rounded-xl faang-card glow-card-cyan hover-jiggle group transition-all"
+                      className="block p-4 rounded-xl enterprise-card glow-card-cyan hover-jiggle group transition-all"
                     >
                       <div className="flex items-center justify-between text-xs font-bold text-white group-hover:text-cyan-400">
                         <span>Personal AI Portfolio</span>
@@ -572,7 +572,7 @@ export default function Home() {
 
         {/* ===== INTEGRITY & NO-HYPE DISCLAIMER ===== */}
         <section className="max-w-7xl mx-auto px-6 pb-20">
-          <div className="p-5 sm:p-10 rounded-3xl faang-card glow-card-amber backdrop-blur-xl relative overflow-hidden shadow-2xl">
+          <div className="p-5 sm:p-10 rounded-3xl enterprise-card glow-card-amber backdrop-blur-xl relative overflow-hidden shadow-2xl">
             <div className="absolute top-0 right-0 w-80 h-80 bg-amber-500/5 rounded-full blur-[90px] pointer-events-none" />
 
             <div className="relative z-10 space-y-6">
@@ -586,7 +586,7 @@ export default function Home() {
 
               <div className="grid md:grid-cols-3 gap-6">
                 {/* Column 1: Zero Service Charge */}
-                <div className="space-y-2 p-4 sm:p-5 rounded-2xl faang-card glow-card-emerald hover-jiggle cursor-default">
+                <div className="space-y-2 p-4 sm:p-5 rounded-2xl enterprise-card glow-card-emerald hover-jiggle cursor-default">
                   <div className="flex items-center gap-2 text-white font-bold text-sm">
                     <span className="text-emerald-400 font-mono">01.</span>
                     <span>100% Free &middot; Zero Service Fees</span>
@@ -597,7 +597,7 @@ export default function Home() {
                 </div>
 
                 {/* Column 2: Anti-Hype on ATS Ranking */}
-                <div className="space-y-2 p-4 sm:p-5 rounded-2xl faang-card glow-card-amber hover-jiggle cursor-default">
+                <div className="space-y-2 p-4 sm:p-5 rounded-2xl enterprise-card glow-card-amber hover-jiggle cursor-default">
                   <div className="flex items-center gap-2 text-white font-bold text-sm">
                     <span className="text-amber-400 font-mono">02.</span>
                     <span>No "ATS Ranking" Snake-Oil</span>
@@ -608,7 +608,7 @@ export default function Home() {
                 </div>
 
                 {/* Column 3: What It Actually Does */}
-                <div className="space-y-2 p-4 sm:p-5 rounded-2xl faang-card glow-card-cyan hover-jiggle cursor-default">
+                <div className="space-y-2 p-4 sm:p-5 rounded-2xl enterprise-card glow-card-cyan hover-jiggle cursor-default">
                   <div className="flex items-center gap-2 text-white font-bold text-sm">
                     <span className="text-cyan-400 font-mono">03.</span>
                     <span>What We Actually Deliver</span>

@@ -12,7 +12,7 @@ function ZoomableDiagram({ title, subtitle, badge = "ARCHITECTURE DIAGRAM", chil
   const resetZoom = () => setScale(1);
 
   return (
-    <div className="p-4 sm:p-6 rounded-2xl faang-card glow-card-aurora space-y-3 relative group">
+    <div className="p-4 sm:p-6 rounded-2xl enterprise-card glow-card-aurora space-y-3 relative group">
       {/* Top Header & Zoom Toolbar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-white/5">
         <div>
@@ -507,7 +507,7 @@ export default function DocsPage() {
             </div>
 
             {/* Document Ingestion Engine Details */}
-            <div className="p-5 rounded-2xl faang-card glow-card-cyan hover-jiggle space-y-3 cursor-default">
+            <div className="p-5 rounded-2xl enterprise-card glow-card-cyan hover-jiggle space-y-3 cursor-default">
               <h3 className="text-sm font-bold text-white flex items-center gap-2">
                 <span>🛡️</span> Document Ingestion &amp; Sanitization Engine (<code className="text-cyan-400 text-xs">/api/parse-resume</code>)
               </h3>

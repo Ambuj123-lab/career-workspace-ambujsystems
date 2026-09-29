@@ -356,7 +356,7 @@ export default function InputForm({ onGenerate }) {
             processFile(e.dataTransfer.files[0]);
           }}
           onClick={() => fileInputRef.current?.click()}
-          className={`p-6 rounded-2xl border-2 border-dashed transition-all cursor-pointer text-center faang-card glow-card-emerald hover-jiggle ${
+          className={`p-6 rounded-2xl border-2 border-dashed transition-all cursor-pointer text-center enterprise-card glow-card-emerald hover-jiggle ${
             dragActive
               ? "border-emerald-500 bg-emerald-500/10"
               : fileMeta
