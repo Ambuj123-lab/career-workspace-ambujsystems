@@ -2319,41 +2319,41 @@ export default function ResultsPanel({
               <div className="absolute bottom-0 left-0 w-96 h-96 bg-yellow-500/10 rounded-full blur-3xl pointer-events-none" />
 
               <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/10 pb-5">
-                <div className="flex items-start gap-4">
-                  <div className="w-14 h-14 rounded-2xl bg-black/60 border border-amber-500/40 flex items-center justify-center text-3xl shadow-lg shadow-amber-500/10">
+                <div className="flex flex-col sm:flex-row sm:items-start gap-3 sm:gap-4 min-w-0">
+                  <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-black/60 border border-amber-500/40 flex items-center justify-center text-2xl sm:text-3xl shadow-lg shadow-amber-500/10 shrink-0">
                     🤗
                   </div>
-                  <div>
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="text-xs font-mono font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center gap-1.5">
+                  <div className="min-w-0 flex-1">
+                    <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mb-1">
+                      <span className="text-[10px] sm:text-xs font-mono font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center gap-1.5 whitespace-nowrap">
                         <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
                         <span>VERIFIED PRODUCTION WEIGHTS</span>
                       </span>
-                      <span className="text-[11px] font-mono text-gray-400">MCP Tool 8 of 8 Registered</span>
+                      <span className="text-[10px] sm:text-[11px] font-mono text-gray-400">MCP Tool 8 of 8 Registered</span>
                     </div>
-                    <h3 className="text-xl font-extrabold text-white flex items-center gap-2">
+                    <h3 className="text-base sm:text-xl font-extrabold text-white flex flex-wrap items-center gap-2">
                       <span>Hugging Face Evidence Ledger</span>
                       <a
                         href={hfData?.profile_url || "https://huggingface.co/invincibleambuj"}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-xs font-mono text-amber-400 hover:text-amber-300 underline font-normal"
+                        className="text-xs font-mono text-amber-400 hover:text-amber-300 underline font-normal break-all"
                       >
                         @{hfData?.hf_handle || "invincibleambuj"} ↗
                       </a>
                     </h3>
-                    <p className="text-xs text-gray-300 mt-1 max-w-xl">
+                    <p className="text-xs text-gray-300 mt-1 max-w-xl leading-relaxed">
                       Verifiable open-source model weights, GGUF quants, LoRA adapters, and live Gradio spaces. Direct proof of real-world GenAI community adoption and production engineering.
                     </p>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2 shrink-0">
+                <div className="flex items-center gap-2 shrink-0 w-full sm:w-auto">
                   <a
                     href={hfData?.profile_url || "https://huggingface.co/invincibleambuj"}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-4 py-2 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-amber-600 to-yellow-600 hover:from-amber-500 hover:to-yellow-500 shadow-md shadow-amber-500/20 transition-all flex items-center gap-1.5"
+                    className="w-full sm:w-auto px-4 py-2 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-amber-600 to-yellow-600 hover:from-amber-500 hover:to-yellow-500 shadow-md shadow-amber-500/20 transition-all flex items-center justify-center gap-1.5"
                   >
                     <span>View Public Profile</span>
                     <span>↗</span>
@@ -2387,9 +2387,9 @@ export default function ResultsPanel({
             </div>
 
             {/* Main Grid: Verified Models + Live MCP Terminal */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 min-w-0 w-full overflow-hidden">
               {/* Models List (2 Columns on Desktop) */}
-              <div className="lg:col-span-2 space-y-4">
+              <div className="lg:col-span-2 space-y-4 min-w-0 w-full overflow-hidden">
                 <div className="flex items-center justify-between">
                   <h4 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
                     <span>Verified Open-Source Models & Weights</span>
@@ -2464,35 +2464,35 @@ export default function ResultsPanel({
                 ])]).sort((a, b) => (b.downloads || 0) - (a.downloads || 0)).map((model, idx) => (
                   <div
                     key={idx}
-                    className="p-5 rounded-xl bg-[#0e0904] border border-white/10 hover:border-amber-500/40 transition-all shadow-lg space-y-3 group"
+                    className="p-4 sm:p-5 rounded-xl bg-[#0e0904] border border-white/10 hover:border-amber-500/40 transition-all shadow-lg space-y-3 group min-w-0 w-full overflow-hidden"
                   >
-                    <div className="flex items-start justify-between gap-3">
-                      <div>
-                        <div className="flex items-center gap-2">
+                    <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2.5 sm:gap-3">
+                      <div className="min-w-0 flex-1">
+                        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
                           <a
                             href={model.model_url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-base font-bold text-amber-300 hover:text-amber-200 group-hover:underline flex items-center gap-1.5"
+                            className="text-sm sm:text-base font-bold text-amber-300 hover:text-amber-200 group-hover:underline flex items-center gap-1.5 break-all"
                           >
-                            <span>{model.model_name}</span>
+                            <span className="break-all">{model.model_name}</span>
                             <span className="text-xs text-gray-500 group-hover:text-amber-400">↗</span>
                           </a>
-                          <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                          <span className="px-2 py-0.5 rounded text-[9px] sm:text-[10px] font-mono font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 whitespace-nowrap">
                             {model.proof_badge || "WEIGHTS_VERIFIED"}
                           </span>
                         </div>
-                        <p className="text-xs text-gray-400 mt-1 font-mono">
-                          Pipeline: <span className="text-gray-300">{model.pipeline_tag || "text-generation"}</span> | ID: {model.model_id}
+                        <p className="text-[11px] sm:text-xs text-gray-400 mt-1 font-mono break-all leading-relaxed">
+                          Pipeline: <span className="text-gray-300">{model.pipeline_tag || "text-generation"}</span> | ID: <span className="text-gray-300 break-all">{model.model_id}</span>
                         </p>
                       </div>
 
-                      <div className="flex items-center gap-2 shrink-0">
-                        <span className="text-[11px] font-mono text-emerald-400 px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/20">
-                          📥 {model.downloads} downloads
+                      <div className="flex items-center gap-2 shrink-0 self-start sm:self-auto">
+                        <span className="text-[11px] font-mono text-emerald-400 px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/20 whitespace-nowrap">
+                          📦 {model.downloads} downloads
                         </span>
                         {model.likes > 0 && (
-                          <span className="text-[11px] font-mono text-yellow-400 px-2 py-0.5 rounded bg-yellow-500/10 border border-yellow-500/20">
+                          <span className="text-[11px] font-mono text-yellow-400 px-2 py-0.5 rounded bg-yellow-500/10 border border-yellow-500/20 whitespace-nowrap">
                             ⭐ {model.likes}
                           </span>
                         )}
@@ -2539,12 +2539,12 @@ export default function ResultsPanel({
                     ]).map((space, sIdx) => (
                       <div
                         key={sIdx}
-                        className="p-4 rounded-xl bg-black/40 border border-white/10 hover:border-amber-500/30 transition-all flex items-center justify-between"
+                        className="p-3.5 sm:p-4 rounded-xl bg-black/40 border border-white/10 hover:border-amber-500/30 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 min-w-0"
                       >
-                        <div>
-                          <div className="text-xs font-bold text-white flex items-center gap-1.5">
-                            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                            <span>{space.space_name}</span>
+                        <div className="min-w-0">
+                          <div className="text-xs font-bold text-white flex items-center gap-1.5 truncate">
+                            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
+                            <span className="truncate">{space.space_name}</span>
                           </div>
                           <div className="text-[10px] font-mono text-gray-400 mt-0.5">SDK: {space.sdk}</div>
                         </div>
@@ -2552,7 +2552,7 @@ export default function ResultsPanel({
                           href={space.space_url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="px-2.5 py-1 rounded bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/20 text-[11px] font-mono transition-all"
+                          className="px-2.5 py-1 rounded bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/20 text-[11px] font-mono transition-all text-center self-start sm:self-auto shrink-0"
                         >
                           Launch Space ↗
                         </a>
