@@ -775,18 +775,13 @@ export default function DocsPage() {
                     href="https://m8ven.ai/mcp/ambuj123-lab/career-workspace-ambujsystems"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex flex-wrap sm:flex-nowrap items-center gap-2 hover:scale-105 transition-transform shrink-0"
-                    title="View M8ven MCP Trust Index Audit & Score"
+                    className="flex items-center hover:scale-105 transition-transform shrink-0"
+                    title="View M8ven MCP Trust Index Audit"
                   >
-                    <img
-                      src="https://m8ven.ai/badge/mcp/ambuj123-lab/career-workspace-ambujsystems"
-                      alt="M8ven Score 89/100"
-                      className="h-8 w-auto rounded shadow-[0_0_12px_rgba(139,92,246,0.5)]"
-                    />
                     <img
                       src="https://m8ven.ai/badge/mcp/ambuj123-lab/career-workspace-ambujsystems?variant=verified"
                       alt="M8ven Verified MCP"
-                      className="h-8 w-auto rounded shadow-[0_0_12px_rgba(139,92,246,0.5)] hidden sm:inline"
+                      className="h-8 w-auto rounded shadow-[0_0_12px_rgba(139,92,246,0.5)]"
                     />
                   </a>
                   <div>
