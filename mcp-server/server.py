@@ -1,6 +1,6 @@
 """
 AI Cover Letter Generator - MCP Server
-6 Tools: company_research, evidence_validator, jd_analyzer, ats_readiness, source_filter, cover_letter_generator
+7 Tools: company_research, evidence_validator, jd_analyzer, ats_readiness, source_filter, cover_letter_generator
 
 Transport: Stdio transport (Standard I/O) / Streamable HTTP SSE capable
 Dependencies: pip install "mcp[cli]" google-generativeai tavily-python python-dotenv
@@ -14,7 +14,8 @@ import sys
 import argparse
 from mcp.server import Server
 from mcp.server.stdio import stdio_server
-from mcp.types import Tool, TextContent
+from mcp.types import Tool, TextContent, ToolAnnotations
+from tools.github_proofer import github_proofer
 
 from tools.company_research import company_research
 from tools.evidence_validator import evidence_validator
@@ -38,7 +39,7 @@ server = Server("ai-cover-letter-mcp")
 
 @server.list_tools()
 async def list_tools() -> list[Tool]:
-    """Register all 6 MCP tools."""
+    """Register all 7 MCP tools."""
     return [
         Tool(
             name="company_research",
@@ -187,6 +188,40 @@ async def list_tools() -> list[Tool]:
                 },
                 "required": ["candidate_name", "role", "company", "matched_skills"],
             },
+        annotations=ToolAnnotations(
+                readOnlyHint=True,
+                destructiveHint=False,
+                idempotentHint=True,
+                openWorldHint=False,
+            ),
+        ),
+        Tool(
+            name="github_proofer",
+            description=(
+                "Inspect a candidate's public GitHub profile and repositories. "
+                "Cross-references technical resume claims with verifiable production code commits."
+            ),
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "candidate_github_or_resume": {
+                        "type": "string",
+                        "description": "GitHub profile URL, username handle, or resume text containing GitHub link",
+                    },
+                    "technical_claims": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "description": "Optional list of technical skills or claims to verify against code repos",
+                    },
+                },
+                "required": ["candidate_github_or_resume"],
+            },
+            annotations=ToolAnnotations(
+                readOnlyHint=True,
+                destructiveHint=False,
+                idempotentHint=True,
+                openWorldHint=True,
+            ),
         ),
     ]
 
