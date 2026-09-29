@@ -91,6 +91,7 @@ export default function ResultsPanel({
   atsData,
   defenseData,
   githubData,
+  hfData,
   mcpLogs = [],
   onRefreshDefense,
   isDefenseLoading,
