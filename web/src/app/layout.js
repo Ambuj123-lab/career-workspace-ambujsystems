@@ -100,14 +100,14 @@ export default function RootLayout({ children }) {
   };
 
   return (
-    <html lang="en" className={`${inter.variable} h-full antialiased overflow-x-hidden`}>
+    <html lang="en" className={`${inter.variable} h-full antialiased`}>
       <head>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className="min-h-full flex flex-col bg-[#030712] text-gray-50 overflow-x-hidden w-full max-w-full">
+      <body className="min-h-full flex flex-col bg-[#030712] text-gray-50 overflow-x-clip w-full max-w-full">
         <Providers>
           {children}
         </Providers>

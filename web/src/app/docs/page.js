@@ -279,12 +279,13 @@ export default function DocsPage() {
         </div>
       )}
 
-      {/* Main Container */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 grid lg:grid-cols-12 gap-8 items-start">
-        {/* Left Sticky Sidebar (Desktop & Tablet Landscape) */}
-        <aside className="lg:col-span-3 sticky top-20 hidden lg:block space-y-2 p-4 rounded-2xl bg-white/[0.02] border border-white/5 backdrop-blur-md">
-          <div className="text-[11px] uppercase tracking-wider font-bold text-gray-400 px-3 pb-2 border-b border-white/5">
-            Architecture Index
+      {/* Main Container: Flexbox Architecture with Sticky Left Sidebar */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col lg:flex-row gap-8 items-start">
+        {/* Left Sticky Sidebar (Always Pinned During Document Scroll) */}
+        <aside className="w-full lg:w-72 xl:w-80 shrink-0 sticky top-20 self-start hidden lg:block space-y-2 p-4 rounded-2xl bg-[#080d1a]/90 border border-white/10 backdrop-blur-xl shadow-2xl max-h-[calc(100vh-6rem)] overflow-y-auto scrollbar-thin">
+          <div className="text-[11px] uppercase tracking-wider font-bold text-gray-400 px-3 pb-2 border-b border-white/5 flex items-center justify-between">
+            <span>Architecture Index</span>
+            <span className="text-[10px] font-mono text-rose-400/90 bg-rose-500/10 px-1.5 py-0.5 rounded border border-rose-500/20">10 Chapters</span>
           </div>
           <nav className="space-y-1">
             {navItems.map((item) => (
@@ -294,8 +295,8 @@ export default function DocsPage() {
                 onClick={() => setActiveSection(item.id)}
                 className={`block px-3 py-2 rounded-lg text-xs font-medium transition-all ${
                   activeSection === item.id
-                    ? "bg-rose-500/15 text-rose-400 border border-rose-500/30 font-semibold"
-                    : "text-gray-400 hover:text-gray-200 hover:bg-white/[0.03]"
+                    ? "bg-rose-500/15 text-rose-400 border border-rose-500/30 font-semibold shadow-sm"
+                    : "text-gray-400 hover:text-gray-200 hover:bg-white/[0.04]"
                 }`}
               >
                 {item.label}
@@ -304,13 +305,19 @@ export default function DocsPage() {
           </nav>
 
           <div className="pt-4 border-t border-white/5 text-[11px] text-gray-500 space-y-1">
-            <div>Engine Version: 2.4-Production</div>
-            <div>Code Audit: 100% Verifiable</div>
+            <div className="flex items-center justify-between">
+              <span>Engine Version:</span>
+              <span className="text-gray-400 font-mono">2.4-Prod</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span>Audit Status:</span>
+              <span className="text-emerald-400 font-mono">100% Verified</span>
+            </div>
           </div>
         </aside>
 
         {/* Main Document Body */}
-        <main className="lg:col-span-9 space-y-12 sm:space-y-16 min-w-0 max-w-full overflow-hidden">
+        <main className="flex-1 min-w-0 max-w-full space-y-12 sm:space-y-16">
           {/* Header Banner */}
           <div className="space-y-4 border-b border-white/10 pb-8">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-semibold">
@@ -768,30 +775,30 @@ export default function DocsPage() {
             </p>
 
             {/* M8ven MCP Verified Trust Index Accreditation Callout */}
-            <div className="p-4 sm:p-5 rounded-2xl border border-violet-500/30 bg-gradient-to-r from-violet-950/40 via-purple-950/20 to-black/40 backdrop-blur-xl relative overflow-hidden shadow-[0_0_30px_rgba(139,92,246,0.15)] my-6">
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                <div className="flex items-start sm:items-center gap-3.5">
+            <div className="p-4 sm:p-6 rounded-2xl border border-violet-500/30 bg-gradient-to-r from-violet-950/40 via-purple-950/20 to-[#080d1a] backdrop-blur-xl relative overflow-hidden shadow-[0_0_30px_rgba(139,92,246,0.15)] my-6">
+              <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                <div className="flex items-start sm:items-center gap-3.5 flex-1 min-w-0">
                   <a
                     href="https://m8ven.ai/mcp/ambuj123-lab/career-workspace-ambujsystems"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center hover:scale-105 transition-transform shrink-0"
+                    className="hover:scale-105 transition-transform shrink-0"
                     title="View M8ven MCP Trust Index Audit"
                   >
                     <img
                       src="https://m8ven.ai/badge/mcp/ambuj123-lab/career-workspace-ambujsystems?variant=verified"
                       alt="M8ven Verified MCP"
-                      className="h-8 w-auto rounded shadow-[0_0_12px_rgba(139,92,246,0.5)]"
+                      className="h-7 sm:h-8 w-auto rounded shadow-[0_0_12px_rgba(139,92,246,0.5)] shrink-0"
                     />
                   </a>
-                  <div>
+                  <div className="flex-1 min-w-0">
                     <div className="flex flex-wrap items-center gap-2">
                       <span className="text-sm font-bold text-white tracking-tight">M8ven MCP Trust Index Certified Publisher</span>
                       <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-blue-500/20 text-blue-300 border border-blue-500/40">Score 89/100 · Grade B</span>
                       <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">0 Findings</span>
-                      <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-violet-500/20 text-violet-300 border border-violet-500/40 hidden md:inline">Live Monitored</span>
+                      <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-violet-500/20 text-violet-300 border border-violet-500/40 hidden sm:inline">Live Monitored</span>
                     </div>
-                    <p className="text-xs text-gray-300 mt-1 leading-relaxed">
+                    <p className="text-xs text-gray-300 mt-1.5 leading-relaxed">
                       All 7 registered FastMCP tools independently audited against the official Model Context Protocol specification with Grade B (Emerging, 89/100), zero security findings, and continuous git commit verification.
                     </p>
                   </div>
