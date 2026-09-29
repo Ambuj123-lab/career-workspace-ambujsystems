@@ -21,6 +21,7 @@ export default function GeneratePage() {
   const [progress, setProgress] = useState("");
   const [isDefenseLoading, setIsDefenseLoading] = useState(false);
   const [githubData, setGithubData] = useState(null);
+  const [hfData, setHfData] = useState(null);
   const [mcpLogs, setMcpLogs] = useState([]);
 
   // Helper to append real-time MCP log events
@@ -117,6 +118,40 @@ export default function GeneratePage() {
       } catch (ghErr) {
         console.warn("GitHub proofer non-fatal notice:", ghErr);
       }
+
+      // Step 1.6: Call MCP Tool: huggingface_proofer (Real-Time Model Weights & Community Proof)
+      setProgress("Calling MCP Tool: huggingface_proofer...");
+      addMcpLog("call", "huggingface_proofer", "Auditing candidate's public Hugging Face models, spaces, and real downloads...", {
+        hf_input: data.hf || "Auto-extract from resume",
+        candidate: data.name,
+      });
+
+      try {
+        const hfRes = await fetch("/api/hf-verify", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            resume_text: data.resume,
+            candidate_name: data.name,
+            hf_username: data.hf,
+            technical_claims: analysis.required_skills?.map((s) => s.skill) || [],
+          }),
+        });
+        const hfResult = await hfRes.json();
+        setHfData(hfResult);
+
+        addMcpLog("result", "huggingface_proofer", `Audited ${hfResult.verified_models?.length || 0} models (${hfResult.aggregate_model_downloads || 0} downloads) and ${hfResult.verified_spaces?.length || 0} live spaces!`, {
+          hf_handle: hfResult.hf_handle,
+          verified_models: hfResult.verified_models?.map((m) => m.model_name),
+          aggregate_downloads: hfResult.aggregate_model_downloads,
+          aggregate_likes: hfResult.aggregate_model_likes,
+          proof_confidence: `${hfResult.proof_confidence}%`,
+          audit_verdict: hfResult.audit_verdict,
+        });
+      } catch (hfErr) {
+        console.warn("HF proofer non-fatal notice:", hfErr);
+      }
+
 
       addMcpLog("result", "jd_analyzer", `Analysis completed: Overall Fit ${analysis.overall_match}% with ${analysis.required_skills?.length || 0} skills mapped.`, {
         overall_match: analysis.overall_match,
@@ -670,6 +705,7 @@ export default function GeneratePage() {
             atsData={atsData}
             defenseData={defenseData}
             githubData={githubData}
+            hfData={hfData}
             mcpLogs={mcpLogs}
             onRefreshDefense={() => triggerDefense()}
             isDefenseLoading={isDefenseLoading}
