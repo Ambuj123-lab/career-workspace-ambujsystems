@@ -12,6 +12,7 @@
 [![Live Production Demo](https://img.shields.io/badge/🚀_LIVE_PRODUCTION-Visit_App-059669?style=for-the-badge&logoColor=white)](https://career-workspace-ambujsystems.vercel.app/)
 [![Interactive System Docs](https://img.shields.io/badge/📖_INTERACTIVE_DOCS-System_Architecture-2563EB?style=for-the-badge)](https://career-workspace-ambujsystems.vercel.app/docs)
 [![Featured on UptimeRobot](https://img.shields.io/badge/FEATURED_IN-UptimeRobot_Official_Blog-047857?style=for-the-badge&logo=uptimerobot&logoColor=3BD671)](https://uptimerobot.com/blog/community-spotlight-ambuj-kumar-tripathi/)
+[![M8ven Score](https://m8ven.ai/badge/mcp/ambuj123-lab/career-workspace-ambujsystems)](https://m8ven.ai/mcp/ambuj123-lab/career-workspace-ambujsystems)
 [![M8ven Verified](https://m8ven.ai/badge/mcp/ambuj123-lab/career-workspace-ambujsystems?variant=verified)](https://m8ven.ai/mcp/ambuj123-lab/career-workspace-ambujsystems)
 [![Author Portfolio](https://img.shields.io/badge/👤_PORTFOLIO-Ambuj_Tripathi-8B5CF6?style=for-the-badge)](https://ambuj-ai-portfolio.vercel.app/)
 
@@ -106,8 +107,10 @@ When LLM JSON structures are delayed or partially populated, a deterministic reg
 ### 4. Native Model Context Protocol (MCP) Integration (7 Production Tools)
 
 > [!TIP]
-> **🛡️ M8ven MCP Trust Index Verified Publisher:**  
-> CoverCraft's FastMCP server and its 7 registered tools have been independently audited on the public [M8ven MCP Trust Index](https://m8ven.ai/mcp/ambuj123-lab/career-workspace-ambujsystems) with **0 Security Findings** and verified tool schemas.  
+> **🛡️ M8ven MCP Trust Index Verified Publisher (Score 89/100 · Grade B):**  
+> CoverCraft's FastMCP server and its 7 registered tools have been independently audited on the public [M8ven MCP Trust Index](https://m8ven.ai/mcp/ambuj123-lab/career-workspace-ambujsystems) with **Score 89/100 (Grade B - Emerging)**, **0 Security Findings**, and continuous live push monitoring.  
+> 
+> [![M8ven Score](https://m8ven.ai/badge/mcp/ambuj123-lab/career-workspace-ambujsystems)](https://m8ven.ai/mcp/ambuj123-lab/career-workspace-ambujsystems)
 > [![M8ven Verified](https://m8ven.ai/badge/mcp/ambuj123-lab/career-workspace-ambujsystems?variant=verified)](https://m8ven.ai/mcp/ambuj123-lab/career-workspace-ambujsystems)
 
 - Contains a standalone **Anthropic Model Context Protocol (MCP)** server written in Python 3.11 (`mcp-server/`).

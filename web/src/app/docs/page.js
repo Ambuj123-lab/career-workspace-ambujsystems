@@ -770,27 +770,34 @@ export default function DocsPage() {
             {/* M8ven MCP Verified Trust Index Accreditation Callout */}
             <div className="p-4 sm:p-5 rounded-2xl border border-violet-500/30 bg-gradient-to-r from-violet-950/40 via-purple-950/20 to-black/40 backdrop-blur-xl relative overflow-hidden shadow-[0_0_30px_rgba(139,92,246,0.15)] my-6">
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                <div className="flex items-center gap-3.5">
+                <div className="flex items-start sm:items-center gap-3.5">
                   <a
                     href="https://m8ven.ai/mcp/ambuj123-lab/career-workspace-ambujsystems"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hover:scale-105 transition-transform shrink-0"
-                    title="View M8ven MCP Trust Index Audit"
+                    className="flex flex-wrap sm:flex-nowrap items-center gap-2 hover:scale-105 transition-transform shrink-0"
+                    title="View M8ven MCP Trust Index Audit & Score"
                   >
+                    <img
+                      src="https://m8ven.ai/badge/mcp/ambuj123-lab/career-workspace-ambujsystems"
+                      alt="M8ven Score 89/100"
+                      className="h-8 w-auto rounded shadow-[0_0_12px_rgba(139,92,246,0.5)]"
+                    />
                     <img
                       src="https://m8ven.ai/badge/mcp/ambuj123-lab/career-workspace-ambujsystems?variant=verified"
                       alt="M8ven Verified MCP"
-                      className="h-8 w-auto rounded shadow-[0_0_12px_rgba(139,92,246,0.5)]"
+                      className="h-8 w-auto rounded shadow-[0_0_12px_rgba(139,92,246,0.5)] hidden sm:inline"
                     />
                   </a>
                   <div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-wrap items-center gap-2">
                       <span className="text-sm font-bold text-white tracking-tight">M8ven MCP Trust Index Certified Publisher</span>
+                      <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-blue-500/20 text-blue-300 border border-blue-500/40">Score 89/100 · Grade B</span>
                       <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">0 Findings</span>
+                      <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-violet-500/20 text-violet-300 border border-violet-500/40 hidden md:inline">Live Monitored</span>
                     </div>
-                    <p className="text-xs text-gray-300 mt-0.5 leading-relaxed">
-                      All 7 registered FastMCP tools independently audited and verified against the official MCP specification with full schema compliance.
+                    <p className="text-xs text-gray-300 mt-1 leading-relaxed">
+                      All 7 registered FastMCP tools independently audited against the official Model Context Protocol specification with Grade B (Emerging, 89/100), zero security findings, and continuous git commit verification.
                     </p>
                   </div>
                 </div>
