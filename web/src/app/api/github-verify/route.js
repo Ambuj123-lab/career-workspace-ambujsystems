@@ -239,3 +239,14 @@ export async function POST(req) {
     );
   }
 }
+
+
+export async function GET(req) {
+  const { searchParams } = new URL(req.url);
+  const user = searchParams.get("user") || "Ambuj123-lab";
+  return POST(new Request(req.url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ github_username: user }),
+  }));
+}

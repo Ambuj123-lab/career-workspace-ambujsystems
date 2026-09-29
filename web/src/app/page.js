@@ -47,6 +47,24 @@ export default function Home() {
               </span>
               <span className="text-[10px] sm:text-[11px] font-mono text-gray-400 leading-tight">
                 built by <a href="https://ambuj-ai-portfolio.vercel.app" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white transition-colors underline decoration-dotted underline-offset-2 font-medium">Ambuj Kumar Tripathi</a>
+                <a
+                  href="https://huggingface.co/invincibleambuj"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block p-4 rounded-xl enterprise-card glow-card-amber hover-jiggle group transition-all"
+                >
+                  <div className="flex items-center justify-between text-xs font-bold text-white group-hover:text-amber-300">
+                    <span className="flex items-center gap-1.5">
+                      <span>🤗</span>
+                      <span>Hugging Face Model Weights (@invincibleambuj)</span>
+                    </span>
+                    <span>↗</span>
+                  </div>
+                  <p className="text-[11px] text-gray-400 mt-1 leading-relaxed">
+                    6 published GenAI models, GGUF quants, and live interactive Gradio spaces with 726+ verified community downloads.
+                  </p>
+                </a>
+
               </span>
             </div>
           </div>
@@ -309,7 +327,7 @@ export default function Home() {
           <div className="max-w-7xl mx-auto px-6 py-6 flex flex-wrap items-center justify-center gap-x-8 sm:gap-x-12 gap-y-4 text-xs sm:text-sm text-gray-400">
             {[
               "M8ven Verified MCP Publisher (Trust Index)",
-              "7 Production MCP Tools (Live GitHub Grounding)",
+              "8 Production MCP Tools (GitHub & Hugging Face Grounding)",
               "Live GitHub Commit & Code Proof",
               "Langfuse LLM Telemetry",
               "Outdated News & Stale Tech Filter",
@@ -330,14 +348,14 @@ export default function Home() {
         <section id="how-it-works" className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-16 sm:py-24 overflow-hidden">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">
-              Four Core Pillars. <span className="gradient-text-warm">Zero Fluff.</span>
+              Five Core Pillars. <span className="gradient-text-warm">Zero Overclaims. Real Proof.</span>
             </h2>
             <p className="text-gray-400 max-w-xl mx-auto">
               Every feature earns its place. No vanity metrics. No overclaiming.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6 w-full max-w-full">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 w-full max-w-full">
             {/* Feature 1: Evidence Job Fit */}
             <div className="enterprise-card glow-card-rose hover-jiggle p-4 sm:p-8 group cursor-default w-full max-w-full overflow-hidden">
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-rose-500/20 to-orange-500/20 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
@@ -445,6 +463,28 @@ export default function Home() {
                 </div>
               </div>
             </div>
+
+          {/* Feature 5: Verified Hugging Face Model & Weights Auditor (MCP Tool #8) */}
+          <div className="enterprise-card glow-card-amber hover-jiggle p-4 sm:p-8 group cursor-default w-full max-w-full overflow-hidden">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500/20 to-yellow-500/20 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform text-2xl">
+              🤗
+            </div>
+            <h3 className="text-xl font-bold mb-3">Verified Hugging Face Weights (Tool #8)</h3>
+            <p className="text-gray-400 text-sm leading-relaxed mb-4">
+              Queries candidate models via <span className="text-amber-400 font-semibold">Hugging Face MCP</span>. Validates actual <span className="text-yellow-300 font-semibold">open-source weights, GGUF/LoRA quants, and 726+ real downloads</span> to detect fake AI claims.
+            </p>
+            <div className="mt-4 p-3 rounded-lg bg-white/[0.03] border border-white/5 text-xs space-y-2">
+              <div className="flex items-center justify-between text-[11px] pb-1 border-b border-white/5">
+                <span className="text-amber-400 font-semibold">✓ Weights &amp; Quants Verified</span>
+                <span className="text-yellow-300 font-mono text-[10px]">726 Downloads</span>
+              </div>
+              <div className="text-gray-400 text-[11px] italic truncate">&ldquo;Ambuj-Tripathi-Indian-Legal-Llama-GGUF (38 stars)&rdquo;</div>
+              <div className="flex items-center justify-between pt-1 text-[11px]">
+                <span className="text-emerald-400 font-semibold">✓ 2 Live Gradio Spaces</span>
+                <span className="text-amber-400 font-mono text-[10px]">VERIFIED_PRODUCTION_WEIGHTS</span>
+              </div>
+            </div>
+          </div>
           </div>
         </section>
 
@@ -480,7 +520,7 @@ export default function Home() {
             </div>
 
             <div className="flex flex-wrap gap-2 justify-center mt-12">
-              {["Next.js 16", "Gemini 3.5 & Fallback Cascade", "7 MCP Tools", "GitHub API Grounding", "Langfuse Telemetry", "Tavily Advanced", "Jina Reader", "Overclaim Red-Teamer", "Stale Tech Filter", "Recharts", "Tailwind CSS", "Vercel Edge"].map((tech) => (
+              {["Next.js 16", "Gemini 3.5 & Fallback Cascade", "8 MCP Tools", "GitHub API Grounding", "Langfuse Telemetry", "Tavily Advanced", "Jina Reader", "Overclaim Red-Teamer", "Stale Tech Filter", "Recharts", "Tailwind CSS", "Vercel Edge"].map((tech) => (
                 <span key={tech} className="px-3 py-1 rounded-full text-xs font-medium border border-white/10 bg-white/5 text-gray-400">{tech}</span>
               ))}
             </div>
@@ -576,6 +616,16 @@ export default function Home() {
                     <span>LinkedIn</span>
                     <span>↗</span>
                   </a>
+                <a
+                  href="https://huggingface.co/invincibleambuj"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-300 text-xs font-semibold transition-colors"
+                >
+                  <span>🤗</span>
+                  <span>Hugging Face</span>
+                  <span>↗</span>
+                </a>
                 </div>
               </div>
 

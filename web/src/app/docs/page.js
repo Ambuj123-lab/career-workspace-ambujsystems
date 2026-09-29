@@ -799,7 +799,7 @@ export default function DocsPage() {
                       <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-violet-500/20 text-violet-300 border border-violet-500/40 hidden sm:inline">Live Monitored</span>
                     </div>
                     <p className="text-xs text-gray-300 mt-1.5 leading-relaxed">
-                      All 7 registered FastMCP tools independently audited against the official Model Context Protocol specification with Grade B (Emerging, 89/100), zero security findings, and continuous git commit verification.
+                      All 8 registered FastMCP tools independently audited against the official Model Context Protocol specification with Grade B (Emerging, 89/100), zero security findings, and continuous git commit verification.
                     </p>
                   </div>
                 </div>
@@ -815,7 +815,7 @@ export default function DocsPage() {
               </div>
             </div>
 
-            {/* The 7 Registered Tools */}
+            {/* The 8 Registered Tools */}
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
               {[
                 { tool: "company_research", desc: "Executes real-time Tavily search queries for company developments and engineering initiatives with verifiable source citations and domain filtering." },
@@ -824,6 +824,14 @@ export default function DocsPage() {
                 { tool: "ats_readiness", desc: "Deterministic heuristic audit: Evaluates keyword coverage, skills presence, and length without fake commercial ATS vendor scores." },
                 { tool: "source_filter", desc: "Domain credibility & recency filter: Evaluates source tiers (Official company newsroom, SEC filings, tech media) and discards outdated articles (>18m)." },
                 { tool: "cover_letter_generator", desc: "Evidence-grounded synthesis engine: Generates structured letter paragraphs with verified in-line citation markers and zero-overclaim enforcement." },
+              {
+                tool: "github_proofer",
+                desc: "Real-time candidate GitHub portfolio & commit history verification engine ($0 free tier PAT, 5,000 req/hr). Inspects public repositories, extracts commit SHAs and messages, and anchors resume technical claims directly into verifiable code evidence with zero overclaiming.",
+              },
+              {
+                tool: "huggingface_proofer",
+                desc: "Autonomous GenAI model weights & community adoption auditor ($0 free tier HF Token, 30,000 req/hr). Inspects candidate's public Hugging Face models, spaces, datasets, and aggregate download metrics (700+ model downloads, qLoRA fine-tuning, GGUF quantization), cross-referencing AI claims against verifiable weights.",
+              },
               ].map((t, idx) => (
                 <div key={idx} className="p-3.5 rounded-xl bg-black/40 border border-white/5 space-y-1.5">
                   <div className="flex items-center gap-2">

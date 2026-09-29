@@ -10,6 +10,7 @@ const SAMPLE_DATA = {
   name: "Ambuj Kumar Tripathi",
   email: "ambuj.tripathi@example.com",
   github: "https://github.com/Ambuj123-lab",
+  hf: "https://huggingface.co/invincibleambuj",
   linkedin: "linkedin.com/in/ambuj-tripathi",
   role: "Senior AI Engineer (Agentic Systems)",
   company: "Google DeepMind",
@@ -44,6 +45,7 @@ export default function InputForm({ onGenerate }) {
     name: "",
     email: "",
     github: "",
+    hf: "",
     linkedin: "",
     role: "",
     company: "",
@@ -128,6 +130,7 @@ export default function InputForm({ onGenerate }) {
           name: prev.name || result.entities.name || "",
           email: prev.email || result.entities.email || "",
           github: prev.github || result.entities.github || "",
+          hf: prev.hf || result.entities.hf || "",
           linkedin: prev.linkedin || result.entities.linkedin || "",
         }));
       }
