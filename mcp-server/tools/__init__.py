@@ -5,6 +5,7 @@ from .ats_readiness import ats_readiness
 from .source_filter import source_filter
 from .cover_letter_generator import cover_letter_generator
 from .github_proofer import github_proofer
+from .huggingface_proofer import huggingface_proofer
 
 __all__ = [
     "company_research",
@@ -14,4 +15,5 @@ __all__ = [
     "source_filter",
     "cover_letter_generator",
     "github_proofer",
+    "huggingface_proofer",
 ]

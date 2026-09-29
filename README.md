@@ -114,7 +114,7 @@ When LLM JSON structures are delayed or partially populated, a deterministic reg
 > [![M8ven Verified](https://m8ven.ai/badge/mcp/ambuj123-lab/career-workspace-ambujsystems?variant=verified)](https://m8ven.ai/mcp/ambuj123-lab/career-workspace-ambujsystems)
 
 - Contains a standalone **Anthropic Model Context Protocol (MCP)** server written in Python 3.11 (`mcp-server/`).
-- Exposes **7 Registered Tools** via standard Model Context Protocol **stdio transport** and **Streamable HTTP SSE transport**:
+- Exposes **8 Registered Tools** via standard Model Context Protocol **stdio transport** and **Streamable HTTP SSE transport**:
   1. `company_research`: Real-time web search via Tavily with traceable source citations.
   2. `evidence_validator`: Claim Ledger validation against source data returning `VERIFIED` / `PARTIAL` / `UNSUPPORTED`.
   3. `jd_analyzer`: Evidence-backed JD matching against resume with actual proof anchors.
@@ -122,6 +122,7 @@ When LLM JSON structures are delayed or partially populated, a deterministic reg
   5. `source_filter`: Algorithmic domain authority tiering, noise suppression, and Outdated News & Stale Tech Filter (<9m company initiatives, <18m engineering stack, [Historical Context] tag).
   6. `cover_letter_generator`: Evidence-grounded synthesis with structured in-line citation markers and zero-overclaim enforcement.
   7. `github_proofer`: Real-time candidate GitHub portfolio & commit history verification engine ($0 free tier PAT, 5,000 req/hr). Inspects public repositories, extracts commit SHAs and messages, and anchors resume technical claims directly into verifiable code evidence with zero overclaiming.
+  8. `huggingface_proofer`: Autonomous GenAI model & weights verification engine ($0 free tier HF Token, 30,000 req/hr). Inspects candidate's public Hugging Face models, spaces, datasets, and aggregate download metrics (e.g. 700+ model downloads, qLoRA fine-tuning, GGUF quantization), cross-referencing AI claims against verifiable weights.
 - Dual-transport support: run locally with Claude Desktop/Cursor via `stdio_server` or deploy as an independent streaming microservice using `--transport=sse`.
 
 ### 5. Live GitHub Code Proof & Commit Auditor (MCP Tool #7)

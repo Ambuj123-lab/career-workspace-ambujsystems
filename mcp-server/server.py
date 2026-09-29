@@ -16,6 +16,7 @@ from mcp.server import Server
 from mcp.server.stdio import stdio_server
 from mcp.types import Tool, TextContent, ToolAnnotations
 from tools.github_proofer import github_proofer
+from tools.huggingface_proofer import huggingface_proofer
 
 from tools.company_research import company_research
 from tools.evidence_validator import evidence_validator
@@ -253,6 +254,35 @@ async def list_tools() -> list[Tool]:
                 openWorldHint=True,
             ),
         ),
+        Tool(
+            name="huggingface_proofer",
+            description=(
+                "Inspect a candidate's public Hugging Face profile, models, spaces, and datasets. "
+                "Cross-references GenAI resume claims (fine-tuning, LoRA, GGUF, Quantization, Legal AI) "
+                "with verifiable Hugging Face model weights, spaces, and real-world downloads."
+            ),
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "candidate_hf_or_resume": {
+                        "type": "string",
+                        "description": "Hugging Face profile URL, handle (e.g. 'invincibleambuj'), or resume text containing Hugging Face link",
+                    },
+                    "ai_technical_claims": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "description": "Optional list of GenAI claims or models to verify against Hugging Face",
+                    },
+                },
+                "required": ["candidate_hf_or_resume"],
+            },
+            annotations=ToolAnnotations(
+                readOnlyHint=True,
+                destructiveHint=False,
+                idempotentHint=True,
+                openWorldHint=True,
+            ),
+        ),
     ]
 
 
@@ -299,6 +329,11 @@ async def call_tool(name: str, arguments: dict) -> list[TextContent]:
                 candidate_github_or_resume=arguments["candidate_github_or_resume"],
                 technical_claims=arguments.get("technical_claims"),
             )
+        elif name == "huggingface_proofer":
+            result = await huggingface_proofer(
+                candidate_hf_or_resume=arguments["candidate_hf_or_resume"],
+                ai_technical_claims=arguments.get("ai_technical_claims"),
+            )
         else:
             logger.warning(f"Rejected invocation for unregistered tool: {name}")
             result = {
@@ -307,7 +342,7 @@ async def call_tool(name: str, arguments: dict) -> list[TextContent]:
                     "message": f"Tool '{name}' is not registered on this MCP server.",
                     "registered_tools": [
                         "company_research", "evidence_validator", "jd_analyzer",
-                        "ats_readiness", "source_filter", "cover_letter_generator", "github_proofer"
+                        "ats_readiness", "source_filter", "cover_letter_generator", "github_proofer", "huggingface_proofer"
                     ],
                 }
             }
@@ -368,7 +403,7 @@ async def main():
         except ImportError:
             logger.warning("Starlette/uvicorn not installed; falling back to standard stdio transport.")
 
-    logger.info("Starting CoverCraft MCP Server on stdio transport (7 Registered Tools)...")
+    logger.info("Starting CoverCraft MCP Server on stdio transport (8 Registered Tools)...")
     async with stdio_server() as (read_stream, write_stream):
         await server.run(
             read_stream,
