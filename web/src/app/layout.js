@@ -67,6 +67,9 @@ export const metadata = {
     "profile:last_name": "Tripathi",
     "profile:username": "Ambuj123-lab",
   },
+  verification: {
+    google: "fxOa07w-yAhEUj0CTKjbGjZZNmffFNuuOC8Do7T9NGA",
+  },
 };
 
 export default function RootLayout({ children }) {
@@ -105,6 +108,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${inter.variable} h-full antialiased`}>
       <head>
+        <meta name="google-site-verification" content="fxOa07w-yAhEUj0CTKjbGjZZNmffFNuuOC8Do7T9NGA" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
