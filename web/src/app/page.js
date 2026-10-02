@@ -837,34 +837,22 @@ export default function Home() {
                 </p>
               </div>
 
-              {/* Official Product Hunt Embed Card */}
+              {/* Official Product Hunt Dark Embed Badge */}
               <div className="w-full flex justify-center pt-2">
-                <div className="w-full max-w-[500px] text-left p-5 rounded-2xl bg-white text-gray-900 border border-gray-200 shadow-2xl shadow-black/50 hover:shadow-black/70 transition-all">
-                  <div className="flex items-center gap-3 mb-3">
-                    <img
-                      alt="CoverCraft AI"
-                      src="https://ph-files.imgix.net/14a2eaad-1f72-43d2-be87-1665ec8638ce.png?auto=compress,format&codec=mozjpeg&cs=strip&fit=crop&h=80&w=80"
-                      className="w-16 h-16 rounded-xl object-cover shrink-0 border border-gray-100 shadow-sm"
-                    />
-                    <div className="flex-1 min-w-0">
-                      <h4 className="m-0 text-lg font-bold text-gray-900 leading-tight truncate">
-                        CoverCraft AI
-                      </h4>
-                      <p className="mt-1 text-sm text-gray-600 line-clamp-2 leading-snug">
-                        Evidence-grounded AI for accurate, traceable job application
-                      </p>
-                    </div>
-                  </div>
-                  <a
-                    href="https://www.producthunt.com/products/covercraft-ai-3?embed=true&utm_source=embed&utm_medium=post_embed"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 mt-2 px-5 py-2.5 bg-[#ff6154] hover:bg-[#e55347] text-white no-underline rounded-full text-sm font-semibold leading-normal transition-all shadow-md shadow-[#ff6154]/25 hover:scale-[1.02] active:scale-[0.98]"
-                  >
-                    <span>Check it out on Product Hunt</span>
-                    <span>&rarr;</span>
-                  </a>
-                </div>
+                <a
+                  href="https://www.producthunt.com/products/covercraft-ai-3?embed=true&utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-covercraft-ai-3"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block hover:scale-105 transition-all duration-300 shadow-[0_0_30px_rgba(255,97,84,0.25)] rounded-2xl overflow-hidden hover:shadow-[0_0_40px_rgba(255,97,84,0.4)]"
+                >
+                  <img
+                    src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1267922&theme=dark"
+                    alt="CoverCraft AI - Evidence-grounded AI for accurate, traceable job application | Product Hunt"
+                    width="250"
+                    height="54"
+                    className="w-[250px] h-[54px] block"
+                  />
+                </a>
               </div>
             </div>
           </div>
