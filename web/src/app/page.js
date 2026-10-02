@@ -20,6 +20,7 @@ export default function Home() {
   const { data: session, status } = useSession();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const [dismissBanner, setDismissBanner] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -42,6 +43,43 @@ export default function Home() {
       <div className="fixed inset-0 -z-10 bg-[#020408]" />
 
       {/* ===== NAV ===== */}
+      {/* ===== PRODUCT HUNT LAUNCH ANNOUNCEMENT BAR ===== */}
+      {!dismissBanner && (
+        <aside 
+          aria-label="Product Hunt Launch Announcement"
+          className="relative z-50 bg-gradient-to-r from-[#ff6154]/20 via-[#f59e0b]/15 to-[#ff6154]/20 border-b border-[#ff6154]/30 py-2.5 px-4 backdrop-blur-xl"
+        >
+          <div className="max-w-7xl mx-auto flex items-center justify-between gap-3 text-xs sm:text-sm">
+            <div className="flex-1 flex items-center justify-center gap-2 sm:gap-3 flex-wrap text-center">
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#ff6154] text-white font-bold text-[10px] sm:text-xs tracking-wide uppercase shadow-sm shadow-[#ff6154]/40">
+                <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping" />
+                Live on Product Hunt
+              </span>
+              <span className="font-medium text-gray-200">
+                CoverCraft AI is competing on Product Hunt today!
+              </span>
+              <a
+                href="https://www.producthunt.com/products/covercraft-ai-3?embed=true&utm_source=embed&utm_medium=post_embed"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 font-bold text-[#ff8075] hover:text-white transition-colors group underline decoration-[#ff6154]/60 hover:decoration-white ml-1"
+              >
+                <span>Vote &amp; Support our launch</span>
+                <span className="group-hover:translate-x-0.5 transition-transform">&rarr;</span>
+              </a>
+            </div>
+            <button
+              onClick={() => setDismissBanner(true)}
+              className="text-gray-400 hover:text-white p-1 text-sm leading-none transition-colors shrink-0 cursor-pointer"
+              aria-label="Dismiss banner"
+              title="Dismiss"
+            >
+              &times;
+            </button>
+          </div>
+        </aside>
+      )}
+
       <nav className="sticky top-0 z-50 border-b border-white/5 bg-[#020408]/90 backdrop-blur-xl">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2.5 sm:gap-3">
@@ -812,6 +850,59 @@ export default function Home() {
                   <span>View Source</span>
                   <span className="text-white/40 group-hover:translate-x-1 transition-transform">&rarr;</span>
                 </a>
+              </div>
+            </div>
+          </div>
+        </section>
+      
+        {/* ===== PRODUCT HUNT OFFICIAL EMBED SECTION ===== */}
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 pb-20">
+          <div className="p-6 sm:p-10 md:p-12 rounded-2xl sm:rounded-3xl bg-[#050814]/90 border border-white/10 backdrop-blur-2xl text-center relative overflow-hidden shadow-2xl flex flex-col items-center">
+            <div className="absolute top-0 right-1/2 translate-x-1/2 w-96 h-96 bg-[#ff6154]/10 rounded-full blur-[100px] pointer-events-none" />
+
+            <div className="relative z-10 space-y-5 max-w-xl flex flex-col items-center">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#ff6154]/30 bg-[#ff6154]/10 text-[#ff8075] text-xs font-semibold uppercase tracking-wider font-mono">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#ff6154] animate-pulse" />
+                Featured on Product Hunt
+              </div>
+
+              <div className="space-y-2">
+                <h3 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+                  Support Our Launch on <span className="text-[#ff6154]">Product Hunt</span>
+                </h3>
+                <p className="text-xs sm:text-sm text-gray-400 max-w-md mx-auto leading-relaxed">
+                  Help bring authentic, evidence-grounded AI tools to more job seekers. Check out our launch, leave a review, and join the discussion!
+                </p>
+              </div>
+
+              {/* Official Product Hunt Embed Card */}
+              <div className="w-full flex justify-center pt-2">
+                <div className="w-full max-w-[500px] text-left p-5 rounded-2xl bg-white text-gray-900 border border-gray-200 shadow-2xl shadow-black/50 hover:shadow-black/70 transition-all">
+                  <div className="flex items-center gap-3 mb-3">
+                    <img
+                      alt="CoverCraft AI"
+                      src="https://ph-files.imgix.net/14a2eaad-1f72-43d2-be87-1665ec8638ce.png?auto=compress,format&codec=mozjpeg&cs=strip&fit=crop&h=80&w=80"
+                      className="w-16 h-16 rounded-xl object-cover shrink-0 border border-gray-100 shadow-sm"
+                    />
+                    <div className="flex-1 min-w-0">
+                      <h4 className="m-0 text-lg font-bold text-gray-900 leading-tight truncate">
+                        CoverCraft AI
+                      </h4>
+                      <p className="mt-1 text-sm text-gray-600 line-clamp-2 leading-snug">
+                        Evidence-grounded AI for accurate, traceable job application
+                      </p>
+                    </div>
+                  </div>
+                  <a
+                    href="https://www.producthunt.com/products/covercraft-ai-3?embed=true&utm_source=embed&utm_medium=post_embed"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 mt-2 px-5 py-2.5 bg-[#ff6154] hover:bg-[#e55347] text-white no-underline rounded-full text-sm font-semibold leading-normal transition-all shadow-md shadow-[#ff6154]/25 hover:scale-[1.02] active:scale-[0.98]"
+                  >
+                    <span>Check it out on Product Hunt</span>
+                    <span>&rarr;</span>
+                  </a>
+                </div>
               </div>
             </div>
           </div>
