@@ -20,7 +20,6 @@ export default function Home() {
   const { data: session, status } = useSession();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
-  const [dismissBanner, setDismissBanner] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -43,43 +42,6 @@ export default function Home() {
       <div className="fixed inset-0 -z-10 bg-[#020408]" />
 
       {/* ===== NAV ===== */}
-      {/* ===== PRODUCT HUNT LAUNCH ANNOUNCEMENT BAR ===== */}
-      {!dismissBanner && (
-        <aside 
-          aria-label="Product Hunt Launch Announcement"
-          className="relative z-50 bg-gradient-to-r from-[#ff6154]/20 via-[#f59e0b]/15 to-[#ff6154]/20 border-b border-[#ff6154]/30 py-2.5 px-4 backdrop-blur-xl"
-        >
-          <div className="max-w-7xl mx-auto flex items-center justify-between gap-3 text-xs sm:text-sm">
-            <div className="flex-1 flex items-center justify-center gap-2 sm:gap-3 flex-wrap text-center">
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#ff6154] text-white font-bold text-[10px] sm:text-xs tracking-wide uppercase shadow-sm shadow-[#ff6154]/40">
-                <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping" />
-                Live on Product Hunt
-              </span>
-              <span className="font-medium text-gray-200">
-                CoverCraft AI is competing on Product Hunt today!
-              </span>
-              <a
-                href="https://www.producthunt.com/products/covercraft-ai-3?embed=true&utm_source=embed&utm_medium=post_embed"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 font-bold text-[#ff8075] hover:text-white transition-colors group underline decoration-[#ff6154]/60 hover:decoration-white ml-1"
-              >
-                <span>Vote &amp; Support our launch</span>
-                <span className="group-hover:translate-x-0.5 transition-transform">&rarr;</span>
-              </a>
-            </div>
-            <button
-              onClick={() => setDismissBanner(true)}
-              className="text-gray-400 hover:text-white p-1 text-sm leading-none transition-colors shrink-0 cursor-pointer"
-              aria-label="Dismiss banner"
-              title="Dismiss"
-            >
-              &times;
-            </button>
-          </div>
-        </aside>
-      )}
-
       <nav className="sticky top-0 z-50 border-b border-white/5 bg-[#020408]/90 backdrop-blur-xl">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2.5 sm:gap-3">
