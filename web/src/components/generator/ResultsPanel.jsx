@@ -59,7 +59,7 @@ AI Systems & Autonomous Agent Engineer | London / Remote
 Email: candidate@covercraft.ai | GitHub: github.com/ambuj | LinkedIn: linkedin.com/in/ambuj
 
 PROFESSIONAL SUMMARY
-Senior AI Engineer specializing in production Model Context Protocol (MCP) tooling, agentic RAG orchestration with LangGraph, and strict evidence-grounded claim verification. Track record of designing high-reliability systems with zero generative hallucinations.
+Senior AI Engineer specializing in production Model Context Protocol (MCP) tooling, agentic RAG orchestration with LangGraph, and strict evidence-grounded claim verification. Track record of designing high-reliability systems with strict evidence grounding and verifiable provenance.
 
 CORE TECHNICAL SKILLS
 • Languages & Frameworks: Python, TypeScript, Next.js 15, FastAPI, LangGraph, LangChain, PyTorch.

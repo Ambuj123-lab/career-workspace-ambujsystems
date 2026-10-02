@@ -268,7 +268,7 @@ Web search tools frequently hallucinate timeliness by surfacing legacy news arti
 
 ## 15. Dual-Mode Interactive Evidence Citations & Clean Recruiter Export
 
-To eliminate hallucination while preserving recruitment-ready aesthetics, CoverCraft implements a decoupled dual-presentation paradigm:
+To strictly enforce evidence grounding and prevent unverified claims while preserving recruitment-ready aesthetics, CoverCraft implements a decoupled dual-presentation paradigm:
 
 - **Interactive Candidate Audit Mode:** In the application workspace, every generated claim displays interactive badges (e.g. `[Resume: Line 24]` and `[Source 2: TechBlog]`). Clicking or hovering reveals tooltips displaying the exact verbatim excerpt and source URL.
 - **Deterministic Clean Recruiter Export:** When candidates click **Copy Letter**, **Download Markdown**, or **Export PDF**, the system invokes `cleanFullLetterText()`, which strips internal bracket citations via regex (`/\s*\[(?:Resume|Source|\d+)[^\]]*\]/gi`). The resulting document is 100% natural, polished prose without machine brackets.
