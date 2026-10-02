@@ -219,27 +219,42 @@ cd career-workspace-ambujsystems/web
 ```
 
 ### 2. Configure Environment Variables
-Create `.env.local` inside the `web/` folder:
+Create `.env.local` inside the `web/` folder (or copy `.env.example` from repository root):
 ```env
-# Gemini API Key (Google AI Studio)
-GEMINI_API_KEY=your_gemini_api_key
+# --- Core AI & Grounding Search (Required) ---
+GEMINI_API_KEY=your_gemini_api_key_here
+TAVILY_API_KEY=your_tavily_api_key_here
 
-# Tavily AI Search (Real-time web crawl)
-TAVILY_API_KEY=your_tavily_api_key
-
-# Jina AI Reader (Markdown extraction)
-JINA_API_KEY=your_jina_api_key
-
-# Google OAuth 2.0 Credentials (NextAuth)
-GOOGLE_CLIENT_ID=your_google_client_id
-GOOGLE_CLIENT_SECRET=your_google_client_secret
+# --- Authentication & Security (NextAuth.js) ---
+GOOGLE_CLIENT_ID=your_google_client_id_here
+GOOGLE_CLIENT_SECRET=your_google_client_secret_here
 NEXTAUTH_URL=http://localhost:3000
-NEXTAUTH_SECRET=your_random_secret_32_characters
+NEXTAUTH_SECRET=your_random_32_character_secret_here
 
-# MongoDB Atlas Telemetry
-MONGODB_URI=mongodb+srv://<user>:<password>@cluster.mongodb.net/?appName=CoverCraft
+# --- Candidate Proofing & Verification (Optional) ---
+GITHUB_TOKEN=your_github_token_here
+HF_TOKEN=your_huggingface_token_here
+JINA_API_KEY=your_jina_api_key_here
+
+# --- LLM Provider Fallback & Telemetry (Optional) ---
+OPENROUTER_API_KEY=your_openrouter_api_key_here
+MONGODB_URI=mongodb+srv://<username>:<password>@cluster.mongodb.net/?appName=CoverCraft
 MONGODB_DB_NAME=covercraft_db
 ```
+
+#### Credential Audit & Transparency (M8ven Verified)
+| Credential / Variable | Scope | Requirement | Purpose & Audit Description |
+| :--- | :--- | :--- | :--- |
+| `GEMINI_API_KEY` | Server / LLM | **Required** | Primary synthesis engine (Google AI Studio Gemini 2.5 / Flash) |
+| `TAVILY_API_KEY` | Server / Web Search | **Required** | Live web grounding & target company intelligence crawler |
+| `GOOGLE_CLIENT_SECRET` | NextAuth OAuth | Required for Auth | Google OAuth 2.0 client secret for candidate sign-in |
+| `GOOGLE_CLIENT_ID` | NextAuth OAuth | Required for Auth | Google OAuth 2.0 client ID |
+| `NEXTAUTH_SECRET` | Web Security | Required for Auth | Cryptographic signing secret for JWT session cookies |
+| `GITHUB_TOKEN` | MCP / API | Optional | Higher rate limits for candidate public GitHub repository audits |
+| `HF_TOKEN` | MCP / API | Optional | Candidate Hugging Face ML models, spaces, and dataset proofing |
+| `JINA_API_KEY` | Web Crawler | Optional | Markdown parser fallback for target company landing pages |
+| `OPENROUTER_API_KEY` | LLM Fallback | Optional | Multi-model provider fallback if primary Gemini API quota is throttled |
+| `MONGODB_URI` | Telemetry / DB | Optional | Telemetry, generation audit logs, and user feedback persistence |
 
 ### 3. Install Dependencies & Launch
 ```bash
