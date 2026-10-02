@@ -45,8 +45,12 @@ export default function Home() {
       <nav className="sticky top-0 z-50 border-b border-white/5 bg-[#020408]/90 backdrop-blur-xl">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2.5 sm:gap-3">
-            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-gradient-to-br from-rose-500 to-orange-400 flex items-center justify-center text-white font-black text-xs sm:text-sm shadow-md shadow-rose-500/20 shrink-0">
-              CL
+            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl overflow-hidden border border-orange-500/40 bg-[#070b18] shadow-md shadow-orange-500/20 shrink-0 flex items-center justify-center p-0.5">
+              <img
+                src="/logo-mark.png"
+                alt="CoverCraft AI Logo"
+                className="w-full h-full object-cover rounded-[7px] sm:rounded-[10px]"
+              />
             </div>
             <div className="flex flex-col">
               <span className="text-base sm:text-lg font-bold tracking-tight leading-tight">
@@ -866,8 +870,12 @@ export default function Home() {
             {/* Col 1 & 2: Brand & Mission */}
             <div className="sm:col-span-2 lg:col-span-2 space-y-4">
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-rose-500 to-orange-400 flex items-center justify-center text-white font-black text-sm shadow-md shadow-rose-500/20 shrink-0">
-                  CL
+                <div className="w-9 h-9 rounded-xl overflow-hidden border border-orange-500/40 bg-[#070b18] shadow-md shadow-orange-500/20 shrink-0 flex items-center justify-center p-0.5">
+                  <img
+                    src="/logo-mark.png"
+                    alt="CoverCraft AI Logo"
+                    className="w-full h-full object-cover rounded-[10px]"
+                  />
                 </div>
                 <div className="flex flex-col">
                   <span className="text-xl font-bold tracking-tight leading-tight">
