@@ -94,6 +94,21 @@ export default function Home() {
               />
             </a>
 
+            {/* Live Product Hunt Launch Badge */}
+            <a
+              href="https://www.producthunt.com/products/covercraft-ai-3?embed=true&utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-covercraft-ai-3"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center hover:opacity-90 hover:scale-105 transition-all rounded shrink-0"
+              title="CoverCraft AI on Product Hunt"
+            >
+              <img
+                src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1267922&theme=dark"
+                alt="CoverCraft AI - Evidence-grounded AI for accurate, traceable job application | Product Hunt"
+                className="h-6 w-auto"
+              />
+            </a>
+
             <Link
               href="/docs"
               className="text-sm font-semibold text-cyan-400 hover:text-cyan-300 transition-colors flex items-center gap-1.5"
@@ -821,44 +836,17 @@ export default function Home() {
           </div>
         </section>
       
-        {/* ===== PRODUCT HUNT OFFICIAL EMBED SECTION ===== */}
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 pb-20">
-          <div className="p-6 sm:p-10 md:p-12 rounded-2xl sm:rounded-3xl bg-[#050814]/90 border border-white/10 backdrop-blur-2xl text-center relative overflow-hidden shadow-2xl flex flex-col items-center">
-            <div className="absolute top-0 right-1/2 translate-x-1/2 w-96 h-96 bg-[#ff6154]/10 rounded-full blur-[100px] pointer-events-none" />
-
-            <div className="relative z-10 space-y-5 max-w-xl flex flex-col items-center">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#ff6154]/30 bg-[#ff6154]/10 text-[#ff8075] text-xs font-semibold uppercase tracking-wider font-mono">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#ff6154] animate-pulse" />
-                Featured on Product Hunt
-              </div>
-
-              <div className="space-y-2">
-                <h3 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-                  Support Our Launch on <span className="text-[#ff6154]">Product Hunt</span>
-                </h3>
-                <p className="text-xs sm:text-sm text-gray-400 max-w-md mx-auto leading-relaxed">
-                  Help bring authentic, evidence-grounded AI tools to more job seekers. Check out our launch, leave a review, and join the discussion!
-                </p>
-              </div>
-
-              {/* Official Product Hunt Dark Embed Badge */}
-              <div className="w-full flex justify-center pt-2">
-                <a
-                  href="https://www.producthunt.com/products/covercraft-ai-3?embed=true&utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-covercraft-ai-3"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-block hover:scale-105 transition-all duration-300 shadow-[0_0_30px_rgba(255,97,84,0.25)] rounded-2xl overflow-hidden hover:shadow-[0_0_40px_rgba(255,97,84,0.4)]"
-                >
-                  <img
-                    src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1267922&theme=dark"
-                    alt="CoverCraft AI - Evidence-grounded AI for accurate, traceable job application | Product Hunt"
-                    width="250"
-                    height="54"
-                    className="w-[250px] h-[54px] block"
-                  />
-                </a>
+        {/* ===== PRODUCT HUNT EMBED LAUNCH SECTION ===== */}
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 pb-20 flex justify-center">
+          <div style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif', border: '1px solid rgb(224, 224, 224)', borderRadius: '12px', padding: '20px', maxWidth: '500px', width: '100%', background: 'rgb(255, 255, 255)', boxShadow: 'rgba(0, 0, 0, 0.05) 0px 2px 8px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
+              <img alt="CoverCraft AI" src="https://ph-files.imgix.net/14a2eaad-1f72-43d2-be87-1665ec8638ce.png?auto=compress,format&codec=mozjpeg&cs=strip&fit=crop&h=80&w=80" style={{ width: '64px', height: '64px', borderRadius: '8px', objectFit: 'cover', flexShrink: 0 }} />
+              <div style={{ flex: '1 1 0%', minWidth: '0px' }}>
+                <h3 style={{ margin: '0px', fontSize: '18px', fontWeight: 600, color: 'rgb(26, 26, 26)', lineHeight: 1.3, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>CoverCraft AI</h3>
+                <p style={{ margin: '4px 0px 0px', fontSize: '14px', color: 'rgb(102, 102, 102)', lineHeight: 1.4, overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>Evidence-grounded AI for accurate, traceable job application</p>
               </div>
             </div>
+            <a href="https://www.producthunt.com/products/covercraft-ai-3?embed=true&utm_source=embed&utm_medium=post_embed" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', marginTop: '12px', padding: '8px 16px', background: 'rgb(255, 97, 84)', color: 'rgb(255, 255, 255)', textDecoration: 'none', borderRadius: '9999px', fontSize: '16px', fontWeight: 600, lineHeight: 1.5 }}>Check it out on Product Hunt →</a>
           </div>
         </section>
       </main>
