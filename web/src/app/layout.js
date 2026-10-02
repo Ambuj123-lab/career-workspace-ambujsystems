@@ -1,4 +1,4 @@
-import { Inter } from "next/font/google";
+import { Inter, Newsreader } from "next/font/google";
 import Script from "next/script";
 import Providers from "@/components/Providers";
 import "./globals.css";
@@ -7,6 +7,13 @@ const inter = Inter({
   variable: "--font-geist-sans",
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700", "800", "900"],
+});
+
+const newsreader = Newsreader({
+  variable: "--font-newsreader",
+  subsets: ["latin"],
+  style: ["normal", "italic"],
+  weight: ["400", "500", "600", "700"],
 });
 
 const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_ID || "G-RZPS5NW5XT";
@@ -116,7 +123,7 @@ export default function RootLayout({ children }) {
   };
 
   return (
-    <html lang="en" className={`${inter.variable} h-full antialiased`}>
+    <html lang="en" className={`${inter.variable} ${newsreader.variable} h-full antialiased`}>
       <head>
         <meta name="google-site-verification" content="fxOa07w-yAhEUj0CTKjbGjZZNmffFNuuOC8Do7T9NGA" />
         <script
@@ -124,7 +131,7 @@ export default function RootLayout({ children }) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className="min-h-full flex flex-col bg-[#030712] text-gray-50 overflow-x-clip w-full max-w-full">
+      <body className="min-h-full flex flex-col bg-[#020408] text-gray-50 overflow-x-clip w-full max-w-full">
         {GA_MEASUREMENT_ID && (
           <>
             <Script

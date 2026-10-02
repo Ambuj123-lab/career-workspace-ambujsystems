@@ -2,7 +2,18 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import AuthButton from "@/components/AuthButton";
+import dynamic from "next/dynamic";
 import LandingHeroPreview from "@/components/LandingHeroPreview";
+
+const WireframeWaveGrid = dynamic(
+  () => import("@/components/WireframeWaveGrid"),
+  { ssr: false }
+);
+
+const HeroDocumentWorkspace = dynamic(
+  () => import("@/components/HeroDocumentWorkspace"),
+  { ssr: false }
+);
 import { useSession, signIn } from "next-auth/react";
 
 export default function Home() {
@@ -27,15 +38,11 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      {/* ===== AMBIENT BACKGROUND ===== */}
-      <div className="fixed inset-0 -z-10">
-        <div className="absolute inset-0 glow-rose" />
-        <div className="absolute inset-0 glow-orange" />
-        <div className="absolute inset-0 glow-violet" />
-      </div>
+      {/* ===== AMBIENT BACKGROUND (Deep Obsidian Void) ===== */}
+      <div className="fixed inset-0 -z-10 bg-[#020408]" />
 
       {/* ===== NAV ===== */}
-      <nav className="sticky top-0 z-50 border-b border-white/5 bg-[#030712]/90 backdrop-blur-xl">
+      <nav className="sticky top-0 z-50 border-b border-white/5 bg-[#020408]/90 backdrop-blur-xl">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2.5 sm:gap-3">
             <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-gradient-to-br from-rose-500 to-orange-400 flex items-center justify-center text-white font-black text-xs sm:text-sm shadow-md shadow-rose-500/20 shrink-0">
@@ -146,7 +153,7 @@ export default function Home() {
 
         {/* Mobile Dropdown Menu */}
         {mobileMenuOpen && (
-          <div className="md:hidden border-t border-white/10 px-4 py-4 space-y-3 bg-[#030712]/95 backdrop-blur-2xl animate-in slide-in-from-top-2 duration-150">
+          <div className="md:hidden border-t border-white/10 px-4 py-4 space-y-3 bg-[#020408]/95 backdrop-blur-2xl animate-in slide-in-from-top-2 duration-150">
             {/* Mobile M8ven Trust Callout */}
             <a
               href="https://m8ven.ai/mcp/ambuj123-lab/career-workspace-ambujsystems"
@@ -222,85 +229,121 @@ export default function Home() {
 
       {/* ===== HERO ===== */}
       <main className="flex-1">
-        <section className="relative overflow-hidden pt-20 pb-16 md:pt-32 md:pb-28">
-          {/* Subtle Minimal Small Square Grid Pattern (Original ambient gradients preserved) */}
-          <div 
-            className="absolute inset-0 pointer-events-none -z-10 bg-[linear-gradient(to_right,rgba(255,255,255,0.035)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.035)_1px,transparent_1px)] [background-size:20px_20px] [mask-image:radial-gradient(ellipse_80%_60%_at_50%_35%,#000_30%,transparent_100%)]" 
-          />
+        <section className="relative overflow-hidden pt-8 pb-14 md:pt-12 md:pb-24">
+          {/* 3D Wireframe Wave / Mesh Grid Animation Canvas */}
+          <WireframeWaveGrid />
 
-          <div className="max-w-7xl mx-auto px-4 sm:px-6">
-            <div className="max-w-4xl mx-auto text-center">
-            <div className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3 mb-8">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-white/10 bg-white/5 shadow-inner">
-                <span className="status-dot" />
-                <span className="text-xs font-medium text-gray-400 tracking-wide uppercase">
-                  Evidence-First AI
-                </span>
+          {/* Ambient Top Ember Radial Glow (From Attached Design) */}
+          <div className="absolute inset-0 pointer-events-none -z-10 bg-[radial-gradient(ellipse_60%_35%_at_50%_0%,rgba(180,83,9,0.11),rgba(2,4,8,0)_70%)]" />
+
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
+            {/* Split Hero Layout: Left-Aligned Editorial Content + Right-Side Document Workspace */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center pt-2 pb-6">
+              {/* Left Column (Editorial Typography, Amber Accent & CTAs) */}
+              <div className="lg:col-span-7 text-left space-y-5 sm:space-y-6">
+                {/* Top Semantic MCP Discovery Pill & Verified Badge */}
+                <div className="flex flex-wrap items-center gap-2.5">
+                  <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-amber-500/35 bg-amber-950/25 text-amber-300 text-xs font-mono tracking-wider uppercase shadow-[0_0_15px_rgba(245,158,11,0.18)] backdrop-blur-md">
+                    <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse shadow-[0_0_8px_#f59e0b]" />
+                    <span>SEMANTIC MCP ARCHITECTURE FOR EVIDENCE DISCOVERY</span>
+                  </div>
+
+                  <a
+                    href="https://m8ven.ai/mcp/ambuj123-lab/career-workspace-ambujsystems"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-violet-500/35 bg-violet-950/25 hover:bg-violet-900/30 text-xs font-mono transition-all group shadow-[0_0_16px_rgba(139,92,246,0.18)] backdrop-blur-md"
+                    title="View verified publisher audit on M8ven MCP Trust Index"
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full bg-violet-400 shadow-[0_0_8px_#a78bfa] group-hover:scale-125 transition-transform" />
+                    <span className="font-semibold text-violet-200 group-hover:text-white transition-colors">
+                      Verified Publisher
+                    </span>
+                    <span className="text-violet-400/40">·</span>
+                    <span className="text-emerald-300 font-bold bg-emerald-500/15 px-2 py-0.5 rounded-full border border-emerald-500/30 shadow-[0_0_8px_rgba(52,211,153,0.2)]">
+                      89/100 (0 Vulns)
+                    </span>
+                    <span className="text-violet-300 group-hover:text-white group-hover:translate-x-0.5 transition-all text-[11px]">&rarr;</span>
+                  </a>
+                </div>
+
+                {/* Modern High-Impact AI Architecture Headline */}
+                <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-[62px] font-black tracking-[-0.038em] leading-[1.05]">
+                  <span className="bg-gradient-to-r from-white via-[#fef08a] to-[#f59e0b] bg-clip-text text-transparent drop-shadow-[0_2px_24px_rgba(245,158,11,0.28)]">
+                    Evidence-Grounded AI
+                  </span>{" "}
+                  <br />
+                  <span className="text-white drop-shadow-[0_2px_14px_rgba(0,0,0,0.9)]">
+                    for High-Stakes Career Applications.
+                  </span>
+                </h1>
+
+                {/* Subtitle with High-Impact Word Highlights */}
+                <p className="text-base sm:text-lg text-slate-300 max-w-xl leading-relaxed font-sans">
+                  An <span className="text-white font-semibold underline decoration-amber-400/40 underline-offset-4">audited engineering workspace</span> designed to keep generated career claims anchored in <span className="text-emerald-300 font-semibold bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20">verified candidate evidence</span>. Backed by <span className="text-cyan-300 font-medium">8 live FastMCP tools</span>, GitHub code proof, and <span className="text-amber-300 font-medium">adversarial interview defense</span>.
+                </p>
+
+                {/* Live Verifiable Protocol Proof Pills */}
+                <div className="flex flex-wrap items-center gap-2.5 pt-1 text-xs text-gray-300 font-mono">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/[0.04] border border-white/10 text-gray-300 backdrop-blur-sm shadow-sm">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_#34d399]" />
+                    8 FastMCP Tools
+                  </span>
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/[0.04] border border-white/10 text-gray-300 backdrop-blur-sm shadow-sm">
+                    <span className="w-1.5 h-1.5 rounded-full bg-sky-400 shadow-[0_0_6px_#38bdf8]" />
+                    GitHub &amp; HuggingFace Telemetry
+                  </span>
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/[0.04] border border-white/10 text-gray-300 backdrop-blur-sm shadow-sm">
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-400 shadow-[0_0_6px_#fbbf24]" />
+                    Adversarial Red-Teamer
+                  </span>
+                </div>
+
+                {/* Action CTAs (Matching Attached Warm Accent) */}
+                <div className="flex flex-col sm:flex-row gap-3.5 sm:gap-4 pt-2 items-stretch sm:items-center">
+                  {status === "authenticated" && session?.user ? (
+                    <Link
+                      href="/generate"
+                      className="inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-xl sm:rounded-2xl bg-[#f59e0b] hover:bg-[#d97706] text-black font-bold text-base hover:scale-[1.02] active:scale-[0.98] transition-all shadow-[0_4px_25px_rgba(245,158,11,0.35)] text-center whitespace-nowrap cursor-pointer group"
+                    >
+                      <span>Launch Workspace</span>
+                      <span className="text-black/80 font-bold group-hover:translate-x-1 transition-transform">&rarr;</span>
+                    </Link>
+                  ) : (
+                    <button
+                      onClick={() => signIn("google", { callbackUrl: "/generate" })}
+                      className="inline-flex items-center justify-center gap-3 px-8 py-4 rounded-xl sm:rounded-2xl bg-[#f59e0b] hover:bg-[#fbbf24] text-black font-bold text-base hover:scale-[1.02] active:scale-[0.98] transition-all shadow-[0_4px_25px_rgba(245,158,11,0.35)] text-center whitespace-nowrap cursor-pointer group"
+                    >
+                      <svg className="w-[18px] h-[18px] shrink-0" viewBox="0 0 24 24">
+                        <path fill="#000" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                        <path fill="#000" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                        <path fill="#000" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                        <path fill="#000" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+                      </svg>
+                      <span>Sign in with Google</span>
+                      <span className="text-black/70 font-bold group-hover:translate-x-1 transition-transform">&rarr;</span>
+                    </button>
+                  )}
+                  <a
+                    href="#how-it-works"
+                    className="px-7 py-4 rounded-xl sm:rounded-2xl border border-white/15 hover:border-white/30 text-gray-200 hover:text-white font-semibold text-base bg-white/5 hover:bg-white/10 transition-all flex items-center justify-center gap-2.5 whitespace-nowrap group shadow-sm active:scale-[0.98]"
+                  >
+                    <span>See How It Works</span>
+                    <span className="text-gray-400 group-hover:translate-y-0.5 transition-transform">&darr;</span>
+                  </a>
+                </div>
               </div>
-              <a
-                href="https://m8ven.ai/mcp/ambuj123-lab/career-workspace-ambujsystems"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-violet-500/40 bg-violet-500/10 hover:bg-violet-500/20 text-violet-300 text-xs font-semibold tracking-wide transition-all shadow-[0_0_20px_rgba(139,92,246,0.3)] hover:shadow-[0_0_30px_rgba(168,85,247,0.55)] group cursor-pointer"
-                title="Verified Publisher on M8ven MCP Trust Index"
-              >
-                <span className="w-2 h-2 rounded-full bg-violet-400 animate-pulse shadow-[0_0_8px_#a78bfa]" />
-                <span className="flex items-center gap-1.5">
-                  <span className="text-violet-200">M8ven Verified Publisher</span>
-                  <span className="text-emerald-300 font-mono text-[10px] font-bold bg-emerald-500/20 px-1.5 py-0.5 rounded border border-emerald-500/40">0 Vulnerabilities</span>
-                  <span className="text-violet-400/90 font-mono text-[10px] uppercase tracking-wider bg-violet-500/25 px-1.5 py-0.5 rounded border border-violet-500/40 hidden sm:inline">MCP Trust Index</span>
-                </span>
-                <span className="text-violet-400 group-hover:translate-x-0.5 transition-transform">&rarr;</span>
-              </a>
+
+              {/* Right Column: Animated Evidence -> Verified Output Document Workspace */}
+              <div className="lg:col-span-5 relative w-full flex items-center justify-center">
+                <HeroDocumentWorkspace />
+              </div>
             </div>
 
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight leading-[1.08] mb-6">
-              <span className="gradient-text">Evidence-Grounded AI</span>{" "}
-              <br className="hidden sm:block" />
-              for High-Stakes Career Applications
-            </h1>
-
-            <p className="text-base sm:text-lg md:text-xl text-gray-400 max-w-3xl mx-auto mb-10 leading-relaxed">
-              An <span className="text-gray-200 font-medium">engineering-first workspace</span> designed to keep generated claims grounded in candidate evidence. Every qualification is audited against verified resume quotes, grounded with cited MCP company research, and prepared for adversarial interview defense.
-            </p>
-
-            <div className="flex flex-col sm:flex-row gap-3.5 sm:gap-4 justify-center items-center max-w-md sm:max-w-none mx-auto">
-              {status === "authenticated" && session?.user ? (
-                <Link
-                  href="/generate"
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 sm:px-9 py-4 rounded-xl sm:rounded-2xl bg-[#131314] hover:bg-[#1f1f21] text-white font-semibold text-base hover:scale-[1.02] active:scale-[0.98] transition-all shadow-[0_1px_3px_rgba(0,0,0,0.3),0_6px_20px_-4px_rgba(0,0,0,0.5)] border border-white/[0.08] hover:border-white/15 text-center whitespace-nowrap cursor-pointer group"
-                >
-                  <span className="text-white/90 text-lg">⚡</span>
-                  <span className="tracking-tight">Launch Generator</span>
-                  <span className="text-white/50 font-semibold group-hover:translate-x-1 transition-transform">&rarr;</span>
-                </Link>
-              ) : (
-                <button
-                  onClick={() => signIn("google", { callbackUrl: "/generate" })}
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 sm:px-9 py-4 rounded-xl sm:rounded-2xl bg-[#131314] hover:bg-[#1f1f21] text-white font-semibold text-base hover:scale-[1.02] active:scale-[0.98] transition-all shadow-[0_1px_3px_rgba(0,0,0,0.3),0_6px_20px_-4px_rgba(0,0,0,0.5)] border border-white/[0.08] hover:border-white/15 text-center whitespace-nowrap cursor-pointer group"
-                >
-                  <svg className="w-[18px] h-[18px] shrink-0" viewBox="0 0 24 24">
-                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
-                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
-                  </svg>
-                  <span className="tracking-tight">Sign in with Google</span>
-                  <span className="text-white/40 font-semibold group-hover:translate-x-1 transition-transform">&rarr;</span>
-                </button>
-              )}
-              <a
-                href="#how-it-works"
-                className="w-full sm:w-auto px-7 sm:px-8 py-4 rounded-xl sm:rounded-2xl border border-white/15 hover:border-white/30 text-gray-200 hover:text-white font-semibold text-base bg-white/5 hover:bg-white/10 transition-all flex items-center justify-center gap-2.5 whitespace-nowrap group shadow-sm active:scale-[0.98]"
-              >
-                <span>See How It Works</span>
-                <span className="text-gray-400 group-hover:translate-y-0.5 transition-transform">&darr;</span>
-              </a>
+            {/* Interactive Evidence Engine Showcase (Full-width below) */}
+            <div className="mt-12 sm:mt-16">
+              <LandingHeroPreview />
             </div>
-          </div>
-
-          {/* Interactive Evidence Engine Showcase */}
-          <LandingHeroPreview />
           </div>
         </section>
 
@@ -734,26 +777,26 @@ export default function Home() {
         {/* ===== CTA ===== */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 pb-16 sm:pb-24">
           <div className="p-6 sm:p-12 md:p-16 rounded-2xl sm:rounded-3xl bg-[#050814]/90 border border-white/10 backdrop-blur-2xl text-center relative overflow-hidden shadow-2xl">
-            <div className="absolute inset-0 bg-gradient-to-br from-rose-500/8 via-transparent to-violet-500/8 pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-br from-amber-500/10 via-transparent to-cyan-500/8 pointer-events-none" />
             <div className="relative z-10 max-w-2xl mx-auto">
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight mb-3 sm:mb-4">
-                Explore the <span className="gradient-text">Engineering</span> Behind It
+                Explore the <span className="bg-gradient-to-r from-white via-amber-200 to-amber-400 bg-clip-text text-transparent">Engineering</span> Behind It
               </h2>
               <p className="text-sm sm:text-base text-gray-400 max-w-lg mx-auto mb-6 sm:mb-8 leading-relaxed">
                 Every design decision documented. Every MCP tool explained. Full source code available for inspection.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center">
-                {/* Primary: Architecture Docs */}
+                {/* Primary: Architecture Docs (Hero Warm Amber Aesthetic) */}
                 <Link
                   href="/docs"
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-7 py-3.5 sm:px-9 sm:py-4 rounded-xl sm:rounded-2xl bg-gradient-to-r from-rose-500/90 to-violet-500/90 hover:from-rose-500 hover:to-violet-500 text-white font-bold text-sm sm:text-base hover:scale-[1.03] active:scale-[0.97] transition-all shadow-[0_4px_20px_-4px_rgba(244,63,94,0.4),0_8px_32px_-8px_rgba(139,92,246,0.3)] border border-white/10 whitespace-nowrap cursor-pointer group"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-3.5 sm:px-9 sm:py-4 rounded-xl sm:rounded-2xl bg-[#f59e0b] hover:bg-[#fbbf24] text-black font-bold text-sm sm:text-base hover:scale-[1.03] active:scale-[0.97] transition-all shadow-[0_4px_25px_rgba(245,158,11,0.35)] text-center whitespace-nowrap cursor-pointer group"
                 >
-                  <svg className="w-[18px] h-[18px] shrink-0 text-white/90" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+                  <svg className="w-[18px] h-[18px] shrink-0 text-black/90" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.2">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
                   </svg>
                   <span>Architecture Docs</span>
-                  <span className="text-white/60 group-hover:translate-x-1 transition-transform">&rarr;</span>
+                  <span className="text-black/75 font-bold group-hover:translate-x-1 transition-transform">&rarr;</span>
                 </Link>
 
                 {/* Secondary: GitHub Source */}
