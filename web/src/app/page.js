@@ -933,14 +933,12 @@ export default function Home() {
             <div>
               <h4 className="text-xs font-bold text-gray-300 mb-4 uppercase tracking-wider font-mono">Tech Stack</h4>
               <ul className="space-y-2.5 text-sm text-gray-400">
+                <li><span>Google Gemini AI</span></li>
+                <li><span>Python FastMCP Server</span></li>
                 <li><span>Next.js 16 &middot; Turbopack</span></li>
-                <li><span>Python 3.11 MCP Server</span></li>
-                <li><span>Gemini 3.5 &amp; Fallback Cascade</span></li>
-                <li><span>OpenRouter Nemotron 550B Failover</span></li>
-                <li><span>Langfuse Grounding Telemetry</span></li>
-                <li><span>Tavily Deep Search API</span></li>
-                <li><span>Recharts Telemetry</span></li>
-                <li><span>Tailwind CSS</span></li>
+                <li><span>Tavily Deep Search</span></li>
+                <li><span>Langfuse Telemetry</span></li>
+                <li><span>MongoDB &middot; NextAuth</span></li>
               </ul>
             </div>
 
