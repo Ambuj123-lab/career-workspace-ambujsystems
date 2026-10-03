@@ -289,6 +289,21 @@ export default function Home() {
                     </span>
                     <span className="text-violet-300 group-hover:text-white group-hover:translate-x-0.5 transition-all text-[11px]">&rarr;</span>
                   </a>
+
+                  {/* Live UptimeRobot Status Badge (Instantly visible on mobile & all devices upon opening) */}
+                  <a
+                    href="https://stats.uptimerobot.com/4tYmSQnuBE?utm_source=status_badge&utm_medium=referral"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center hover:opacity-90 hover:scale-105 transition-all shadow-[0_0_12px_rgba(16,185,129,0.22)] rounded-full overflow-hidden"
+                    title="Ambuj's Cloud Environment Live Uptime Status"
+                  >
+                    <img
+                      src="https://badge.uptimerobot.com/psp/6d03dcfe5d5c495465fe9a459d7f778b.svg?style=logo&theme=dark"
+                      alt="Ambuj's Cloud Environment: Up"
+                      className="h-[27px] sm:h-[28px] w-auto block"
+                    />
+                  </a>
                 </div>
 
                 {/* Official Product Hunt Live Badge (Original Size 250x54) */}
