@@ -175,8 +175,28 @@ export default function Home() {
                 <span className="text-[11px] font-bold text-violet-200">Verified Publisher</span>
               </div>
               <span className="text-[10px] font-mono text-emerald-300 bg-emerald-500/20 px-1.5 py-0.5 rounded border border-emerald-500/30">
-                Score 89/100 ↗
+                Score 89/100 &rarr;
               </span>
+            </a>
+
+            {/* Mobile Uptime Live Status */}
+            <a
+              href="https://stats.uptimerobot.com/4tYmSQnuBE?utm_source=status_badge&utm_medium=referral"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center justify-between p-2.5 rounded-xl border border-emerald-500/25 bg-emerald-950/20 hover:bg-emerald-900/30 transition-all shadow-[0_0_12px_rgba(16,185,129,0.15)]"
+              title="Ambuj's Cloud Environment Live Uptime Status"
+            >
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_#34d399]" />
+                <span className="text-[11px] font-bold text-emerald-200 font-mono">Live Cloud Uptime</span>
+              </div>
+              <img
+                src="https://badge.uptimerobot.com/psp/6d03dcfe5d5c495465fe9a459d7f778b.svg?style=logo&theme=dark"
+                alt="Uptime Status"
+                className="h-5 w-auto"
+              />
             </a>
             <Link
               href="/docs"
