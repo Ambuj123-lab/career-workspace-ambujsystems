@@ -12,7 +12,7 @@
 [![Live Production Demo](https://img.shields.io/badge/LIVE_PRODUCTION-Visit_App-059669?style=for-the-badge&logoColor=white)](https://career-workspace-ambujsystems.vercel.app/)
 [![Interactive System Docs](https://img.shields.io/badge/INTERACTIVE_DOCS-System_Architecture-2563EB?style=for-the-badge)](https://career-workspace-ambujsystems.vercel.app/docs)
 [![GitHub Release](https://img.shields.io/github/v/release/Ambuj123-lab/career-workspace-ambujsystems?color=10b981&label=Release&style=for-the-badge&logo=github)](https://github.com/Ambuj123-lab/career-workspace-ambujsystems/releases/latest)
-[![Live Uptime Status](https://badge.uptimerobot.com/psp/6d03dcfe5d5c495465fe9a459d7f778b.svg?style=logo&theme=dark)](https://stats.uptimerobot.com/4tYmSQnuBE?utm_source=status_badge&utm_medium=referral)
+[![Uptime SLA 99.998%](https://badge.uptimerobot.com/sla/18a544b11fc4799a468704cc7acccedb.svg?theme=dark)](https://stats.uptimerobot.com/4tYmSQnuBE?utm_source=status_badge&utm_medium=referral)
 [![Product Hunt](https://img.shields.io/badge/Product_Hunt-Live_Launch-FF6154?style=for-the-badge&logo=producthunt&logoColor=white)](https://www.producthunt.com/products/covercraft-ai-3)
 [![Featured on UptimeRobot](https://img.shields.io/badge/FEATURED_IN-UptimeRobot_Official_Blog-047857?style=for-the-badge&logo=uptimerobot&logoColor=3BD671)](https://uptimerobot.com/blog/community-spotlight-ambuj-kumar-tripathi/)
 [![M8ven Verified](https://m8ven.ai/badge/mcp/ambuj123-lab/career-workspace-ambujsystems?variant=verified)](https://m8ven.ai/mcp/ambuj123-lab/career-workspace-ambujsystems)

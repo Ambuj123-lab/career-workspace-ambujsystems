@@ -211,8 +211,8 @@ export default function DocsPage() {
               title="Ambuj's Cloud Environment Live Uptime Status"
             >
               <img
-                src="https://badge.uptimerobot.com/psp/6d03dcfe5d5c495465fe9a459d7f778b.svg?style=logo&theme=dark"
-                alt="Ambuj's Cloud Environment: Up"
+                src="https://badge.uptimerobot.com/sla/18a544b11fc4799a468704cc7acccedb.svg?theme=dark"
+                alt="Ambuj's Cloud Environment: 99.998% SLA"
                 className="h-4 sm:h-6 w-auto max-w-[90px] sm:max-w-none"
               />
             </a>
@@ -1079,8 +1079,8 @@ export default function DocsPage() {
                     title="Ambuj's Cloud Environment Live Status"
                   >
                     <img
-                      src="https://badge.uptimerobot.com/psp/6d03dcfe5d5c495465fe9a459d7f778b.svg?style=logo&theme=dark"
-                      alt="Ambuj's Cloud Environment: Up"
+                      src="https://badge.uptimerobot.com/sla/18a544b11fc4799a468704cc7acccedb.svg?theme=dark"
+                      alt="Ambuj's Cloud Environment: 99.998% SLA"
                       className="h-5 w-auto"
                     />
                   </a>

@@ -88,8 +88,8 @@ export default function Home() {
               title="Ambuj's Cloud Environment Live Uptime Status"
             >
               <img
-                src="https://badge.uptimerobot.com/psp/6d03dcfe5d5c495465fe9a459d7f778b.svg?style=logo&theme=dark"
-                alt="Ambuj's Cloud Environment: Up"
+                src="https://badge.uptimerobot.com/sla/18a544b11fc4799a468704cc7acccedb.svg?theme=dark"
+                alt="Ambuj's Cloud Environment: 99.998% SLA"
                 className="h-6 w-auto"
               />
             </a>
@@ -137,8 +137,8 @@ export default function Home() {
               title="Ambuj's Cloud Environment Live Uptime Status"
             >
               <img
-                src="https://badge.uptimerobot.com/psp/6d03dcfe5d5c495465fe9a459d7f778b.svg?style=logo&theme=dark"
-                alt="UptimeRobot Status"
+                src="https://badge.uptimerobot.com/sla/18a544b11fc4799a468704cc7acccedb.svg?theme=dark"
+                alt="Uptime SLA: 99.998%"
                 className="h-5 w-auto"
               />
             </a>
@@ -193,8 +193,8 @@ export default function Home() {
                 <span className="text-[11px] font-bold text-emerald-200 font-mono">Live Cloud Uptime</span>
               </div>
               <img
-                src="https://badge.uptimerobot.com/psp/6d03dcfe5d5c495465fe9a459d7f778b.svg?style=logo&theme=dark"
-                alt="Uptime Status"
+                src="https://badge.uptimerobot.com/sla/18a544b11fc4799a468704cc7acccedb.svg?theme=dark"
+                alt="Uptime SLA: 99.998%"
                 className="h-5 w-auto"
               />
             </a>
@@ -299,8 +299,8 @@ export default function Home() {
                     title="Ambuj's Cloud Environment Live Uptime Status"
                   >
                     <img
-                      src="https://badge.uptimerobot.com/psp/6d03dcfe5d5c495465fe9a459d7f778b.svg?style=logo&theme=dark"
-                      alt="Ambuj's Cloud Environment: Up"
+                      src="https://badge.uptimerobot.com/sla/18a544b11fc4799a468704cc7acccedb.svg?theme=dark"
+                      alt="Ambuj's Cloud Environment: 99.998% SLA"
                       className="h-[27px] sm:h-[28px] w-auto block"
                     />
                   </a>
