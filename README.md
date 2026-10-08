@@ -16,6 +16,7 @@
 [![Product Hunt](https://img.shields.io/badge/Product_Hunt-Live_Launch-FF6154?style=for-the-badge&logo=producthunt&logoColor=white)](https://www.producthunt.com/products/covercraft-ai-3)
 [![Featured on UptimeRobot](https://img.shields.io/badge/FEATURED_IN-UptimeRobot_Official_Blog-047857?style=for-the-badge&logo=uptimerobot&logoColor=3BD671)](https://uptimerobot.com/blog/community-spotlight-ambuj-kumar-tripathi/)
 [![M8ven Verified](https://m8ven.ai/badge/mcp/ambuj123-lab/career-workspace-ambujsystems?variant=verified)](https://m8ven.ai/mcp/ambuj123-lab/career-workspace-ambujsystems)
+[![Smithery Verified MCP](https://smithery.ai/badge/ambujonly761/covercraft-mcp)](https://smithery.ai/servers/ambujonly761/covercraft-mcp)
 [![Author Portfolio](https://img.shields.io/badge/PORTFOLIO-Ambuj_Tripathi-8B5CF6?style=for-the-badge)](https://ambuj-ai-portfolio.vercel.app/)
 
 <br/>
@@ -114,6 +115,7 @@ When LLM JSON structures are delayed or partially populated, a deterministic reg
 > 
 > [![M8ven Score](https://m8ven.ai/badge/mcp/ambuj123-lab/career-workspace-ambujsystems)](https://m8ven.ai/mcp/ambuj123-lab/career-workspace-ambujsystems)
 > [![M8ven Verified](https://m8ven.ai/badge/mcp/ambuj123-lab/career-workspace-ambujsystems?variant=verified)](https://m8ven.ai/mcp/ambuj123-lab/career-workspace-ambujsystems)
+[![Smithery Verified MCP](https://smithery.ai/badge/ambujonly761/covercraft-mcp)](https://smithery.ai/servers/ambujonly761/covercraft-mcp)
 
 - Contains a standalone **Anthropic Model Context Protocol (MCP)** server written in Python 3.11 (`mcp-server/`).
 - Exposes **8 Registered Tools** via standard Model Context Protocol **stdio transport** and **Streamable HTTP SSE transport**:

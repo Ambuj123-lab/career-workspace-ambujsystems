@@ -19,6 +19,22 @@ const MCP_TOOLS = [
         focus_areas: { type: "array", items: { type: "string" }, description: "Optional focus areas like tech_stack, culture, recent_news" }
       },
       required: ["company_name"]
+    },
+    outputSchema: {
+      type: "object",
+      properties: {
+        company: { type: "string", description: "Target company name" },
+        confidence: { type: "string", description: "Confidence level: HIGH, MEDIUM, LOW" },
+        summary: { type: "string", description: "Grounded company summary with source citations" },
+        sources_count: { type: "number", description: "Count of verified sources evaluated" }
+      },
+      required: ["company", "confidence", "summary"]
+    },
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+      openWorldHint: true
     }
   },
   {
@@ -31,6 +47,21 @@ const MCP_TOOLS = [
         sources: { type: "array", items: { type: "object" }, description: "List of source citations" }
       },
       required: ["claims", "sources"]
+    },
+    outputSchema: {
+      type: "object",
+      properties: {
+        claim_ledger: { type: "array", items: { type: "object" }, description: "Detailed ledger of verified and flagged claims" },
+        summary: { type: "object", description: "Summary counts of verified, partial, and unsupported claims" },
+        confidence: { type: "number", description: "Mathematical confidence score between 0.0 and 1.0" }
+      },
+      required: ["claim_ledger", "summary", "confidence"]
+    },
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+      openWorldHint: false
     }
   },
   {
@@ -43,6 +74,22 @@ const MCP_TOOLS = [
         resume_text: { type: "string", description: "Candidate resume text" }
       },
       required: ["jd_text", "resume_text"]
+    },
+    outputSchema: {
+      type: "object",
+      properties: {
+        role_title: { type: "string", description: "Identified target job title" },
+        overall_match: { type: "number", description: "Deterministic overall match percentage (0-100)" },
+        required_skills: { type: "array", items: { type: "object" }, description: "Extracted required skills with evidence match" },
+        chart_data: { type: "object", description: "Categorical breakdown of strong, partial, and missing skills" }
+      },
+      required: ["role_title", "overall_match", "required_skills"]
+    },
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+      openWorldHint: false
     }
   },
   {
@@ -55,6 +102,22 @@ const MCP_TOOLS = [
         jd_text: { type: "string", description: "Job description text" }
       },
       required: ["letter_text", "jd_text"]
+    },
+    outputSchema: {
+      type: "object",
+      properties: {
+        readiness_level: { type: "string", description: "Readiness classification: HIGH, MEDIUM, LOW" },
+        word_count: { type: "number", description: "Evaluated word count against A4 length standards" },
+        metrics_found: { type: "number", description: "Number of quantifiable impact metrics detected" },
+        disclaimer: { type: "string", description: "Honest heuristic disclaimer" }
+      },
+      required: ["readiness_level", "word_count", "metrics_found"]
+    },
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+      openWorldHint: false
     }
   },
   {
@@ -67,6 +130,22 @@ const MCP_TOOLS = [
         company_domain: { type: "string", description: "Official company website domain" }
       },
       required: ["sources"]
+    },
+    outputSchema: {
+      type: "object",
+      properties: {
+        status: { type: "string", description: "Status of domain evaluation" },
+        total_evaluated: { type: "number", description: "Total sources analyzed" },
+        retained_count: { type: "number", description: "Authoritative sources retained" },
+        ranked_sources: { type: "array", items: { type: "object" }, description: "Sources sorted by trust score" }
+      },
+      required: ["status", "total_evaluated", "ranked_sources"]
+    },
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+      openWorldHint: false
     }
   },
   {
@@ -83,6 +162,24 @@ const MCP_TOOLS = [
         tone: { type: "string", description: "Tone: professional, enthusiastic, concise" }
       },
       required: ["candidate_name", "role", "company", "matched_skills"]
+    },
+    outputSchema: {
+      type: "object",
+      properties: {
+        candidate_name: { type: "string", description: "Candidate full name" },
+        role: { type: "string", description: "Applied position" },
+        company: { type: "string", description: "Target company" },
+        subject_line: { type: "string", description: "Email or letter subject" },
+        paragraphs: { type: "array", items: { type: "string" }, description: "3 evidence-grounded paragraphs" },
+        evidence_grounding: { type: "object", description: "Metadata linking claims to verified skills" }
+      },
+      required: ["paragraphs", "subject_line"]
+    },
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+      openWorldHint: false
     }
   },
   {
@@ -95,6 +192,22 @@ const MCP_TOOLS = [
         technical_claims: { type: "array", items: { type: "string" }, description: "Technical claims to verify" }
       },
       required: ["candidate_github_or_resume"]
+    },
+    outputSchema: {
+      type: "object",
+      properties: {
+        username: { type: "string", description: "Inspected GitHub handle" },
+        profile_url: { type: "string", description: "Public GitHub profile URL" },
+        verified_status: { type: "string", description: "Verification classification" },
+        audit_verdict: { type: "string", description: "Audit conclusion" }
+      },
+      required: ["username", "profile_url", "verified_status"]
+    },
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+      openWorldHint: true
     }
   },
   {
@@ -107,9 +220,35 @@ const MCP_TOOLS = [
         ai_technical_claims: { type: "array", items: { type: "string" }, description: "AI/ML claims to verify" }
       },
       required: ["candidate_hf_or_resume"]
+    },
+    outputSchema: {
+      type: "object",
+      properties: {
+        username: { type: "string", description: "Inspected Hugging Face handle" },
+        profile_url: { type: "string", description: "Public Hugging Face profile URL" },
+        verified_status: { type: "string", description: "Verification status" },
+        audit_verdict: { type: "string", description: "GenAI competency audit verdict" }
+      },
+      required: ["username", "profile_url", "verified_status"]
+    },
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+      openWorldHint: true
     }
   }
 ];
+
+const SERVER_METADATA = {
+  name: "covercraft-mcp",
+  title: "CoverCraft AI by Ambuj Kumar Tripathi",
+  version: "1.0.0",
+  description: "Evidence-grounded AI Career Workspace & Model Context Protocol (MCP) Server architected by Ambuj Kumar Tripathi. Features 8 discrete verification tools for real-time company research, claim validation, ATS readiness, and automated GitHub & Hugging Face candidate audits.",
+  homepage: "https://career-workspace-ambujsystems.vercel.app",
+  repository: "https://github.com/Ambuj123-lab/career-workspace-ambujsystems",
+  icon: "https://career-workspace-ambujsystems.vercel.app/logo-mark.png",
+};
 
 export async function OPTIONS() {
   return new NextResponse(null, {
@@ -123,11 +262,7 @@ export async function GET() {
     {
       status: "ok",
       protocolVersion: "2024-11-05",
-      serverInfo: {
-        name: "covercraft-mcp",
-        version: "1.0.0",
-        description: "Official CoverCraft Model Context Protocol (MCP) Remote Server",
-      },
+      serverInfo: SERVER_METADATA,
       transport: "streamable-http",
       tools_count: MCP_TOOLS.length,
       tools: MCP_TOOLS,
@@ -155,10 +290,7 @@ export async function POST(req) {
               tools: { listChanged: false },
               logging: {},
             },
-            serverInfo: {
-              name: "covercraft-mcp",
-              version: "1.0.0",
-            },
+            serverInfo: SERVER_METADATA,
           },
         },
         { headers: CORS_HEADERS }
