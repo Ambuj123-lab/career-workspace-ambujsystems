@@ -1,0 +1,7 @@
+﻿name: covercraft-mcp
+description: Official Model Context Protocol (MCP) server for CoverCraft with 8 tools for company research, claim validation, ATS readiness, JD matching, GitHub and Hugging Face audits.
+version: 1.0.0
+entrypoint: https://career-workspace-ambujsystems.vercel.app/api/mcp
+startCommand:
+  type: http
+  url: https://career-workspace-ambujsystems.vercel.app/api/mcp

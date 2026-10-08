@@ -53,43 +53,7 @@ export async function POST(req) {
 
     const { company_name, role } = await req.json();
     if (!company_name) {
-      
-    // Asynchronously log company research dossier trace to Langfuse (non-blocking)
-    recordTrace({
-      name: "company-intelligence-research",
-      input: {
-        company_name,
-        role: role || "Engineering Candidate",
-        query_used: query,
-        search_provider: searchProvider,
-      },
-      output: {
-        company_type: synthData.company_identity?.company_type || "Not stated",
-        sources_cited: Math.min(processedSources.length, synthData.company_snapshot?.sources_count || processedSources.length),
-        official_sources: companySourcesList.length,
-        signals_count: (synthData.recent_signals || []).length,
-      },
-      model: "3-tier-fallback-pipeline",
-      metadata: {
-        search_provider: searchProvider,
-        jina_scraped_count: jinaEnrichedCount,
-        confidence: processedSources.length >= 3 ? "HIGH" : "MEDIUM",
-      },
-      scores: [
-        {
-          name: "source_credibility",
-          value: processedSources.length > 0 ? Math.round((processedSources.reduce((acc, s) => acc + (s.trustScore || 50), 0) / processedSources.length)) / 100 : 0.5,
-          comment: `Average trust score across ${processedSources.length} verified web sources`,
-        },
-        {
-          name: "official_source_presence",
-          value: companySourcesList.length > 0 ? 1.0 : 0.6,
-          comment: companySourcesList.length > 0 ? "Official company web sources identified" : "Secondary sources only",
-        },
-      ],
-    }).catch(() => {});
-
-    return NextResponse.json({ error: "Company name required" }, { status: 400 });
+      return NextResponse.json({ error: "Company name required" }, { status: 400 });
     }
 
     const query = `${company_name} company overview tech stack engineering hiring jobs careers naukri ambitionbox indeed`;

@@ -1,4 +1,4 @@
-"""
+﻿"""
 Unit tests for CoverCraft MCP Server Tools.
 Tests schema validity, registered tool signatures, and safety boundaries across all 7 tools.
 """
@@ -19,7 +19,7 @@ class TestMCPTools(unittest.TestCase):
         )
 
     def test_registered_tools_count(self):
-        """Ensure all 7 production tools are registered in server.py list_tools."""
+        """Ensure all 8 production tools are registered in server.py list_tools."""
         with open(self.server_path, "r", encoding="utf-8") as f:
             tree = ast.parse(f.read())
 
@@ -38,8 +38,9 @@ class TestMCPTools(unittest.TestCase):
             "source_filter",
             "cover_letter_generator",
             "github_proofer",
+            "huggingface_proofer",
         ]
-        self.assertEqual(len(tools), 7)
+        self.assertEqual(len(tools), 8)
         self.assertListEqual(tools, expected)
 
     def test_all_tool_files_exist(self):
@@ -52,6 +53,7 @@ class TestMCPTools(unittest.TestCase):
             "source_filter.py",
             "cover_letter_generator.py",
             "github_proofer.py",
+            "huggingface_proofer.py",
         ]
         for fname in expected_files:
             fpath = os.path.join(self.tools_dir, fname)
@@ -69,3 +71,4 @@ class TestMCPTools(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
