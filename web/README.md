@@ -15,6 +15,7 @@
 [![Uptime SLA 99.998%](https://badge.uptimerobot.com/sla/18a544b11fc4799a468704cc7acccedb.svg?theme=dark)](https://stats.uptimerobot.com/4tYmSQnuBE?utm_source=status_badge&utm_medium=referral)
 [![Product Hunt](https://img.shields.io/badge/Product_Hunt-Live_Launch-FF6154?style=for-the-badge&logo=producthunt&logoColor=white)](https://www.producthunt.com/products/covercraft-ai-3)
 [![Featured on UptimeRobot](https://img.shields.io/badge/FEATURED_IN-UptimeRobot_Official_Blog-047857?style=for-the-badge&logo=uptimerobot&logoColor=3BD671)](https://uptimerobot.com/blog/community-spotlight-ambuj-kumar-tripathi/)
+[![Glama MCP Score](https://glama.ai/mcp/servers/Ambuj123-lab/career-workspace-ambujsystems/badges/score.svg)](https://glama.ai/mcp/servers/Ambuj123-lab/career-workspace-ambujsystems)
 [![M8ven Verified](https://m8ven.ai/badge/mcp/ambuj123-lab/career-workspace-ambujsystems?variant=verified)](https://m8ven.ai/mcp/ambuj123-lab/career-workspace-ambujsystems)
 [![Author Portfolio](https://img.shields.io/badge/PORTFOLIO-Ambuj_Tripathi-8B5CF6?style=for-the-badge)](https://ambuj-ai-portfolio.vercel.app/)
 
@@ -101,13 +102,26 @@ When LLM JSON structures are delayed or partially populated, a deterministic reg
 - **No Fabricated Bridges:** If a candidate lacks a required skill (e.g., Kubernetes), the engine does not claim proficiency; it anchors to adjacent foundational experience (e.g., Docker containerization) or leaves it unstated.
 - **Human-in-the-Loop (HITL) Gate:** Users explicitly inspect and toggle on/off scraped web sources before any intelligence enters the LLM generation prompt.
 
-### 4. Native Model Context Protocol (MCP) Integration
+### 4. Native Model Context Protocol (MCP) Integration (8 Production Tools)
+
+> [!TIP]
+> **🛡️ Triple-Registry Verified FastMCP Server (Glama · Smithery · M8ven):**  
+> CoverCraft's FastMCP server is audited and verified across [Glama](https://glama.ai/mcp/servers/Ambuj123-lab/career-workspace-ambujsystems) (**Grade A - A**), [M8ven MCP Trust Index](https://m8ven.ai/mcp/ambuj123-lab/career-workspace-ambujsystems) (**Score 89/100, Grade B**), and [Smithery](https://smithery.ai/servers/ambujonly761/covercraft-mcp) (**Verified 8 Tools**).
+> 
+> [![Glama MCP Score](https://glama.ai/mcp/servers/Ambuj123-lab/career-workspace-ambujsystems/badges/score.svg)](https://glama.ai/mcp/servers/Ambuj123-lab/career-workspace-ambujsystems)
+> [![M8ven Score](https://m8ven.ai/badge/mcp/ambuj123-lab/career-workspace-ambujsystems)](https://m8ven.ai/mcp/ambuj123-lab/career-workspace-ambujsystems)
+> [![Smithery Verified MCP](https://img.shields.io/badge/SMITHERY_MCP-VERIFIED_8_TOOLS-FF6000?style=for-the-badge&logoColor=white)](https://smithery.ai/servers/ambujonly761/covercraft-mcp)
+
 - Contains a standalone **Anthropic Model Context Protocol (MCP)** server written in Python 3.11 (`mcp-server/`).
-- Exposes **4 Registered Tools** via the standard Model Context Protocol **stdio transport**:
+- Exposes **8 Registered Tools** via standard Model Context Protocol **stdio transport** and **Streamable HTTP SSE transport**:
   1. `company_research`: Real-time web search via Tavily with traceable source citations.
   2. `evidence_validator`: Claim Ledger validation against source data returning `VERIFIED` / `PARTIAL` / `UNSUPPORTED`.
   3. `jd_analyzer`: Evidence-backed JD matching against resume with actual proof anchors.
   4. `ats_readiness`: Deterministic heuristic audit on keyword coverage, format integrity, and length.
+  5. `source_filter`: Algorithmic domain authority tiering, noise suppression, and recency filter (<18m).
+  6. `cover_letter_generator`: Evidence-grounded synthesis with structured in-line citation markers.
+  7. `github_proofer`: Real-time candidate GitHub portfolio & commit history verification engine (5,000 req/hr).
+  8. `huggingface_proofer`: Autonomous GenAI model & weights verification engine (30,000 req/hr).
 - Allows AI agents (Claude Desktop, Cursor, Windsurf, Custom Agents) to programmatically trigger evidence analysis, web grounding, and claim verification.
 
 ### 5. Production Observability & Multi-Stage Containerization

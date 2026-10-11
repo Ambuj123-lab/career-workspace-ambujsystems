@@ -791,27 +791,52 @@ export default function DocsPage() {
                       className="h-7 sm:h-8 w-auto rounded shadow-[0_0_12px_rgba(139,92,246,0.5)] shrink-0"
                     />
                   </a>
+                  <a
+                    href="https://glama.ai/mcp/servers/Ambuj123-lab/career-workspace-ambujsystems"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:scale-105 transition-transform shrink-0"
+                    title="View Glama MCP Quality & Maintenance Score: A - A"
+                  >
+                    <img
+                      src="https://glama.ai/mcp/servers/Ambuj123-lab/career-workspace-ambujsystems/badges/score.svg"
+                      alt="Glama MCP Score: A - A"
+                      className="h-7 sm:h-8 w-auto rounded shadow-[0_0_12px_rgba(16,185,129,0.3)] shrink-0"
+                    />
+                  </a>
                   <div className="flex-1 min-w-0">
                     <div className="flex flex-wrap items-center gap-2">
-                      <span className="text-sm font-bold text-white tracking-tight">M8ven MCP Trust Index Certified Publisher</span>
-                      <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-blue-500/20 text-blue-300 border border-blue-500/40">Score 89/100 · Grade B</span>
-                      <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">0 Findings</span>
+                      <span className="text-sm font-bold text-white tracking-tight">Triple-Registry Verified FastMCP Server</span>
+                      <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">Glama A - A</span>
+                      <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-blue-500/20 text-blue-300 border border-blue-500/40">M8ven 89/100</span>
+                      <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-purple-500/20 text-purple-300 border border-purple-500/40">Smithery 98/100</span>
                       <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-violet-500/20 text-violet-300 border border-violet-500/40 hidden sm:inline">Live Monitored</span>
                     </div>
                     <p className="text-xs text-gray-300 mt-1.5 leading-relaxed">
-                      All 8 registered FastMCP tools independently audited against the official Model Context Protocol specification with Grade B (Emerging, 89/100), zero security findings, and continuous git commit verification.
+                      All 8 registered FastMCP tools independently audited across leading directories: Glama Grade A - A, M8ven MCP Trust Index Grade B (89/100, 0 security findings), and Smithery MCP verification.
                     </p>
                   </div>
                 </div>
-                <a
-                  href="https://m8ven.ai/mcp/ambuj123-lab/career-workspace-ambujsystems"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-violet-600/30 hover:bg-violet-600/50 border border-violet-500/40 text-violet-200 text-xs font-semibold transition-all hover:scale-105"
-                >
-                  <span>Audit Report</span>
-                  <span>↗</span>
-                </a>
+                <div className="flex items-center gap-2 shrink-0">
+                  <a
+                    href="https://glama.ai/mcp/servers/Ambuj123-lab/career-workspace-ambujsystems"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-600/20 hover:bg-emerald-600/35 border border-emerald-500/35 text-emerald-300 text-xs font-semibold transition-all hover:scale-105"
+                  >
+                    <span>Glama Profile</span>
+                    <span>↗</span>
+                  </a>
+                  <a
+                    href="https://m8ven.ai/mcp/ambuj123-lab/career-workspace-ambujsystems"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-violet-600/30 hover:bg-violet-600/50 border border-violet-500/40 text-violet-200 text-xs font-semibold transition-all hover:scale-105"
+                  >
+                    <span>M8ven Audit</span>
+                    <span>↗</span>
+                  </a>
+                </div>
               </div>
             </div>
 

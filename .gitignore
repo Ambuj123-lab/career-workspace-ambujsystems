@@ -42,3 +42,8 @@ REDDIT_POST.md
 
 Enterprise_Agentic_AI_Master_Dossier_Topmate.*
 *.pdf
+
+# Local design & brainstorm posters
+*.jpg
+!web/public/*.jpg
+REDDIT_POST*.md

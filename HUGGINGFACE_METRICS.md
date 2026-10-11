@@ -1,71 +1,80 @@
-# Hugging Face Model Telemetry & Deployment Metrics
-**Author:** [Ambuj Kumar Tripathi (@invincibleambuj)](https://huggingface.co/invincibleambuj)  
-**Domain Focus:** Domain-Specific LLM Fine-Tuning, Quantization (GGUF), & CPU-First Edge Inference  
-**Last Verified Date:** October 11, 2026
+# Indian Legal LLMs on Hugging Face: Usage Metrics
+
+**Author:** [Ambuj Kumar Tripathi](https://huggingface.co/invincibleambuj) · **Profile:** [huggingface.co/invincibleambuj](https://huggingface.co/invincibleambuj) · **Snapshot date:** October 11, 2026
+
+Six public models: Llama 3.x (1B, 3B, 8B) fine-tuned with 4-bit QLoRA on Indian legal Q&A, with GGUF (Q4_K_M) builds for CPU-first local inference.
 
 ---
 
-## 1. Executive Summary
+## At a Glance
 
-| Metric | Verified Value | Source / Methodology |
-|---|:---:|---|
-| **Total All-Time Downloads** | **18,026+** | Hugging Face Metadata (`downloadsAllTime`) |
-| **Active Monthly Downloads (30D)** | **925** | Hugging Face Public Web Badge |
-| **Total Community Likes / Stars** | **39** | Hugging Face Public Repository Hearts |
-| **Total Published Models** | **6** | Verified Public Hugging Face Repositories |
-| **Primary Domain Specialization** | **Indian Legal LLM** | Fine-Tuned Llama-3.x (1B, 3B, 8B architectures) |
-| **Primary Deployment Formats** | **GGUF (Q4_K_M)** / QLoRA | Optimized for LM Studio, Ollama, & llama.cpp |
+| Models published | All-time downloads | Downloads, last 30 days | Likes |
+|:---:|:---:|:---:|:---:|
+| **6** | **18,026** | **925** | **39** |
+
+Flagship: the 1B GGUF build, with **16,486** all-time downloads and **744** in the last 30 days.
 
 ---
 
-## 2. Complete Model-by-Model Breakdown
+## Models
 
-| # | Model Name & Public Link | Architecture / Type | All-Time Downloads | Monthly (30D) | Likes | Inference Engines |
-|---|---|---|:---:|:---:|:---:|---|
-| **1** | [Ambuj-Tripathi-Indian-Legal-Llama-GGUF](https://huggingface.co/invincibleambuj/Ambuj-Tripathi-Indian-Legal-Llama-GGUF) | **Llama 3.2 1B (GGUF Q4_K_M)** | **16,486** | **744** | **38** ⭐ | LM Studio, Ollama, llama.cpp |
-| **2** | [Ambuj-Tripathi-Indian-Legal-Llama-3B-GGUF](https://huggingface.co/invincibleambuj/Ambuj-Tripathi-Indian-Legal-Llama-3B-GGUF) | **Llama 3.2 3B (GGUF Q4_K_M)** | **649** | **66** | **1** | LM Studio, Ollama, llama.cpp |
-| **3** | [Ambuj-Tripathi-Llama-3.1-8B-IndianLegal-GGUF](https://huggingface.co/invincibleambuj/Ambuj-Tripathi-Llama-3.1-8B-IndianLegal-GGUF) | **Llama 3.1 8B (GGUF Q4_K_M)** | **609** | **101** | **0** | LM Studio, Ollama, llama.cpp |
-| **4** | [Ambuj-Tripathi-Llama-8B-LoRA](https://huggingface.co/invincibleambuj/Ambuj-Tripathi-Llama-8B-LoRA) | **Llama 3.1 8B (LoRA Weights)** | **176** | **4** | **0** | Hugging Face PEFT / Transformers |
-| **5** | [llama-3.2-3b-legal-india-qlora-v2](https://huggingface.co/invincibleambuj/llama-3.2-3b-legal-india-qlora-v2) | **Llama 3.2 3B (QLoRA Adapter)** | **106** | **10** | **0** | Unsloth, Transformers |
-| **6** | [llama-3.2-1b-legal-india-qlora](https://huggingface.co/invincibleambuj/llama-3.2-1b-legal-india-qlora) | **Llama 3.2 1B (Base Adapter)** | **0** | **0** | **0** | Unsloth, Transformers |
-| **TOTAL** | **Across All 6 Repositories** | **Domain-Specific Model Suite** | **18,026+** | **925** | **39** | **Multi-Runtime Deployment** |
+| # | Model | Type | All-time | 30 days | Likes |
+|:-:|---|---|:-:|:-:|:-:|
+| 1 | [Ambuj-Tripathi-Indian-Legal-Llama-GGUF](https://huggingface.co/invincibleambuj/Ambuj-Tripathi-Indian-Legal-Llama-GGUF) | Llama 3.2 1B, GGUF Q4_K_M | 16,486 | 744 | 38 |
+| 2 | [Ambuj-Tripathi-Indian-Legal-Llama-3B-GGUF](https://huggingface.co/invincibleambuj/Ambuj-Tripathi-Indian-Legal-Llama-3B-GGUF) | Llama 3.2 3B, GGUF Q4_K_M | 649 | 66 | 1 |
+| 3 | [Ambuj-Tripathi-Llama-3.1-8B-IndianLegal-GGUF](https://huggingface.co/invincibleambuj/Ambuj-Tripathi-Llama-3.1-8B-IndianLegal-GGUF) | Llama 3.1 8B, GGUF Q4_K_M | 609 | 101 | 0 |
+| 4 | [Ambuj-Tripathi-Llama-8B-LoRA](https://huggingface.co/invincibleambuj/Ambuj-Tripathi-Llama-8B-LoRA) | Llama 3.1 8B, LoRA weights | 176 | 4 | 0 |
+| 5 | [llama-3.2-3b-legal-india-qlora-v2](https://huggingface.co/invincibleambuj/llama-3.2-3b-legal-india-qlora-v2) | Llama 3.2 3B, QLoRA adapter | 106 | 10 | 0 |
+| 6 | [llama-3.2-1b-legal-india-qlora](https://huggingface.co/invincibleambuj/llama-3.2-1b-legal-india-qlora) | Llama 3.2 1B, QLoRA adapter | 0 | 0 | 0 |
+| | **Total** | | **18,026** | **925** | **39** |
 
 ---
 
-## 3. How Anyone Can Verify Live (Zero Trust / 100% Deterministic)
+## How This Was Built
 
-Koi bhi recruiter, engineer, ya community member bina kisi login ya API key ke apne terminal (Windows CMD, PowerShell, Mac, ya Linux) me ye do official Hugging Face API commands run karke real-time live telemetry verify kar sakta hai:
+| Stage | Detail |
+|---|---|
+| Base models | Llama 3.2 1B, Llama 3.2 3B, Llama 3.1 8B |
+| Training data | 14,543 Indian legal Q&A pairs |
+| Fine-tuning | 4-bit QLoRA (Unsloth), plus a LoRA variant for 8B |
+| Quantization | GGUF Q4_K_M via `llama.cpp` |
+| Runs on | LM Studio, Ollama, `llama.cpp` (GGUF); PEFT / Transformers / Unsloth (adapters) |
+| Goal | Local, offline inference on low-RAM machines without a high-end GPU |
 
-### Verification 1: Flagship Model (30-Day Monthly & All-Time Total)
-Run this single command to fetch the live metrics for the flagship legal model directly from the Hugging Face API:
+---
+
+## Verify It Yourself
+
+Anyone can check these numbers without a Hugging Face account.
+
+**1. In the browser.** Open the [profile page](https://huggingface.co/invincibleambuj) to see all six model cards with their 30-day downloads and likes. The [flagship model page](https://huggingface.co/invincibleambuj/Ambuj-Tripathi-Indian-Legal-Llama-GGUF) shows the same for the 1B build.
+
+**2. With Python 3 (public API).**
+
+Flagship model, 30-day and all-time:
+
 ```bash
 python -c "import json,urllib.request as u; r=json.load(u.urlopen('https://huggingface.co/api/models/invincibleambuj/Ambuj-Tripathi-Indian-Legal-Llama-GGUF?expand[]=downloads&expand[]=downloadsAllTime')); print('30-day:', r['downloads'], '| all-time:', r['downloadsAllTime'])"
 ```
-* **Live Server Output:** `30-day: 744 | all-time: 16486`
 
----
+Output on the snapshot date: `30-day: 744 | all-time: 16486`
 
-### Verification 2: Grand Total Across All 6 Models (All-Time Total)
-Run this single command to query all models published by `@invincibleambuj` and aggregate total lifetime downloads:
+All six models, total all-time downloads:
+
 ```bash
 python -c "import json,urllib.request as u; d=json.load(u.urlopen('https://huggingface.co/api/models?author=invincibleambuj&expand[]=downloadsAllTime')); print('Models:', len(d), '| Total all-time downloads:', sum(m['downloadsAllTime'] for m in d))"
 ```
-* **Live Server Output:** `Models: 6 | Total all-time downloads: 18026`
+
+Output on the snapshot date: `Models: 6 | Total all-time downloads: 18026`
+
+The commands read live data, so a later run will show different numbers than this snapshot. All-time downloads only go up, while the 30-day figure rises and falls with recent activity. If more models are published later, the model count and totals will grow too.
 
 ---
 
-### Direct Browser Verification (No Terminal Required)
-Kisi bhi browser (Chrome / Edge / Safari) me bina command chalaye direct verify karne ke liye:
-* **Flagship Model Web Page:** [huggingface.co/invincibleambuj/Ambuj-Tripathi-Indian-Legal-Llama-GGUF](https://huggingface.co/invincibleambuj/Ambuj-Tripathi-Indian-Legal-Llama-GGUF) (Displays 744 monthly downloads & 38 likes)
-* **Official API JSON Endpoint:** [https://huggingface.co/api/models/invincibleambuj/Ambuj-Tripathi-Indian-Legal-Llama-GGUF?expand[]=downloads&expand[]=downloadsAllTime](https://huggingface.co/api/models/invincibleambuj/Ambuj-Tripathi-Indian-Legal-Llama-GGUF?expand[]=downloads&expand[]=downloadsAllTime)
+## Notes and Limitations
 
-## 4. Key Engineering Milestones & Architectural Takeaways
-
-1. **Quantization Efficiency (Edge & CPU-First):**
-   * Quantized 1B, 3B, and 8B models to `Q4_K_M` GGUF formats using `llama.cpp`.
-   * Enables local offline inference on resource-constrained consumer hardware (low RAM / no high-end GPU required).
-2. **Fine-Tuning Methodology:**
-   * Trained on Indian Legal QA pairs using 4-bit QLoRA via Unsloth.
-   * Parameter-efficient fine-tuning maintaining base reasoning capabilities while specializing in IPC/CrPC legal domain terminology.
-3. **Community Impact:**
-   * Sustained organic adoption with over **700+ recurring monthly downloads** and **16.4K+ cumulative all-time downloads** on the flagship model.
+- **What "downloads" means:** these are Hugging Face's file-download counts for each repository. They measure usage of the repositories, not the number of unique people.
+- **Concentration:** most downloads come from one model (the 1B GGUF build). The other five are early or niche releases.
+- **Scope:** research and educational use only. Not legal advice.
+- **Legal currency:** the training data uses IPC/CrPC-era terminology. These statutes were replaced by BNS/BNSS from July 2024, so the models may answer with outdated section references.
+- **License:** built on Llama 3.1 / 3.2 under the Llama Community License.

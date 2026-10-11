@@ -15,6 +15,7 @@
 [![Uptime SLA 99.998%](https://badge.uptimerobot.com/sla/18a544b11fc4799a468704cc7acccedb.svg?theme=dark)](https://stats.uptimerobot.com/4tYmSQnuBE?utm_source=status_badge&utm_medium=referral)
 [![Product Hunt](https://img.shields.io/badge/Product_Hunt-Live_Launch-FF6154?style=for-the-badge&logo=producthunt&logoColor=white)](https://www.producthunt.com/products/covercraft-ai-3)
 [![Featured on UptimeRobot](https://img.shields.io/badge/FEATURED_IN-UptimeRobot_Official_Blog-047857?style=for-the-badge&logo=uptimerobot&logoColor=3BD671)](https://uptimerobot.com/blog/community-spotlight-ambuj-kumar-tripathi/)
+[![Glama MCP Score](https://glama.ai/mcp/servers/Ambuj123-lab/career-workspace-ambujsystems/badges/score.svg)](https://glama.ai/mcp/servers/Ambuj123-lab/career-workspace-ambujsystems)
 [![M8ven Verified](https://m8ven.ai/badge/mcp/ambuj123-lab/career-workspace-ambujsystems?variant=verified)](https://m8ven.ai/mcp/ambuj123-lab/career-workspace-ambujsystems)
 [![Smithery Verified MCP](https://img.shields.io/badge/SMITHERY_MCP-VERIFIED_8_TOOLS-FF6000?style=for-the-badge&logoColor=white)](https://smithery.ai/servers/ambujonly761/covercraft-mcp)
 [![Author Portfolio](https://img.shields.io/badge/PORTFOLIO-Ambuj_Tripathi-8B5CF6?style=for-the-badge)](https://ambuj-ai-portfolio.vercel.app/)
@@ -107,15 +108,19 @@ When LLM JSON structures are delayed or partially populated, a deterministic reg
 - **Live Step Progress Tracker & Dynamic Elapsed Timer:** An event-driven 4-phase execution tracker (`01. Competency Match` → `02. MCP Company Research` → `03. Human Approval` → `04. Evidence Synthesis`) with a live counting timer (`00:04s`) and active tool indicator so candidates clearly follow live execution without confusion or perceived stalls.
 - **Human-in-the-Loop (HITL) Gate:** Users explicitly inspect, evaluate credibility scores, and toggle on/off scraped web sources before any external intelligence enters the LLM generation prompt.
 
-### 4. Native Model Context Protocol (MCP) Integration (7 Production Tools)
+### 4. Native Model Context Protocol (MCP) Integration (8 Production Tools)
 
 > [!TIP]
-> **🛡️ M8ven MCP Trust Index Verified Publisher (Score 89/100 · Grade B):**  
-> CoverCraft's FastMCP server and its 8 registered tools have been independently audited on the public [M8ven MCP Trust Index](https://m8ven.ai/mcp/ambuj123-lab/career-workspace-ambujsystems) with **Score 89/100 (Grade B - Emerging)**, **0 Security Findings**, and continuous live push monitoring.  
+> **🛡️ Triple-Registry Verified FastMCP Server (Glama · Smithery · M8ven):**  
+> CoverCraft's FastMCP server and its 8 registered tools have been independently audited and verified across leading registries with **Glama Grade A - A**, **M8ven Trust Score 89/100 (Grade B)**, and **Smithery Verified (8 Tools)** with continuous live monitoring and 0 security vulnerabilities.  
 > 
+> [![Glama MCP Score](https://glama.ai/mcp/servers/Ambuj123-lab/career-workspace-ambujsystems/badges/score.svg)](https://glama.ai/mcp/servers/Ambuj123-lab/career-workspace-ambujsystems)
 > [![M8ven Score](https://m8ven.ai/badge/mcp/ambuj123-lab/career-workspace-ambujsystems)](https://m8ven.ai/mcp/ambuj123-lab/career-workspace-ambujsystems)
 > [![M8ven Verified](https://m8ven.ai/badge/mcp/ambuj123-lab/career-workspace-ambujsystems?variant=verified)](https://m8ven.ai/mcp/ambuj123-lab/career-workspace-ambujsystems)
-[![Smithery Verified MCP](https://img.shields.io/badge/SMITHERY_MCP-VERIFIED_8_TOOLS-FF6000?style=for-the-badge&logoColor=white)](https://smithery.ai/servers/ambujonly761/covercraft-mcp)
+> [![Smithery Verified MCP](https://img.shields.io/badge/SMITHERY_MCP-VERIFIED_8_TOOLS-FF6000?style=for-the-badge&logoColor=white)](https://smithery.ai/servers/ambujonly761/covercraft-mcp)
+>
+> [![Glama MCP server](https://glama.ai/mcp/servers/Ambuj123-lab/career-workspace-ambujsystems/badges/card.svg)](https://glama.ai/mcp/servers/Ambuj123-lab/career-workspace-ambujsystems)
+
 
 - Contains a standalone **Anthropic Model Context Protocol (MCP)** server written in Python 3.11 (`mcp-server/`).
 - Exposes **8 Registered Tools** via standard Model Context Protocol **stdio transport** and **Streamable HTTP SSE transport**:
