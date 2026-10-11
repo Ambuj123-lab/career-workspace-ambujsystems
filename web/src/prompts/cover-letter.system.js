@@ -211,7 +211,7 @@ MANDATORY PHRASING PATTERN TO USE:
 "While I may not have direct production experience in [Target Must-Have Technology from JD], my deep background in [Verified Candidate Skill from Resume] gives me the exact technical foundation to rapidly adapt and execute in [Target Ecosystem] with zero friction."
 
 This ensures:
-- 100% honesty: zero hallucinations, zero false claims.
+- 100% honesty: zero fabricated statements, zero false claims.
 - The hiring manager's core checklist question is directly answered instead of ignored.
 - The candidate demonstrates high integrity, self-awareness, and strong learning agility.
 

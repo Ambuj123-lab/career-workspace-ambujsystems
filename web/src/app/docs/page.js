@@ -774,69 +774,119 @@ export default function DocsPage() {
               CoverCraft implements the open <strong>Model Context Protocol (MCP)</strong> standard, exposing an extensible tool server in <code className="text-purple-400 bg-white/5 px-1.5 py-0.5 rounded">mcp-server/server.py</code> and a streamable execution trace terminal in the frontend.
             </p>
 
-            {/* M8ven MCP Verified Trust Index Accreditation Callout */}
-            <div className="p-4 sm:p-6 rounded-2xl border border-violet-500/30 bg-gradient-to-r from-violet-950/40 via-purple-950/20 to-[#080d1a] backdrop-blur-xl relative overflow-hidden shadow-[0_0_30px_rgba(139,92,246,0.15)] my-6">
-              <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-                <div className="flex items-start sm:items-center gap-3.5 flex-1 min-w-0">
-                  <a
-                    href="https://m8ven.ai/mcp/ambuj123-lab/career-workspace-ambujsystems"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:scale-105 transition-transform shrink-0"
-                    title="View M8ven MCP Trust Index Audit"
-                  >
-                    <img
-                      src="https://m8ven.ai/badge/mcp/ambuj123-lab/career-workspace-ambujsystems?variant=verified"
-                      alt="M8ven Verified MCP"
-                      className="h-7 sm:h-8 w-auto rounded shadow-[0_0_12px_rgba(139,92,246,0.5)] shrink-0"
-                    />
-                  </a>
-                  <a
-                    href="https://glama.ai/mcp/servers/Ambuj123-lab/career-workspace-ambujsystems"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:scale-105 transition-transform shrink-0"
-                    title="View Glama MCP Quality & Maintenance Score: A - A"
-                  >
-                    <img
-                      src="https://glama.ai/mcp/servers/Ambuj123-lab/career-workspace-ambujsystems/badges/score.svg"
-                      alt="Glama MCP Score: A - A"
-                      className="h-7 sm:h-8 w-auto rounded shadow-[0_0_12px_rgba(16,185,129,0.3)] shrink-0"
-                    />
-                  </a>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <span className="text-sm font-bold text-white tracking-tight">Triple-Registry Verified FastMCP Server</span>
-                      <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">Glama A - A</span>
-                      <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-blue-500/20 text-blue-300 border border-blue-500/40">M8ven 89/100</span>
-                      <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-purple-500/20 text-purple-300 border border-purple-500/40">Smithery 98/100</span>
-                      <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-violet-500/20 text-violet-300 border border-violet-500/40 hidden sm:inline">Live Monitored</span>
-                    </div>
-                    <p className="text-xs text-gray-300 mt-1.5 leading-relaxed">
-                      All 8 registered FastMCP tools independently audited across leading directories: Glama Grade A - A, M8ven MCP Trust Index Grade B (89/100, 0 security findings), and Smithery MCP verification.
+            {/* Triple-Registry FastMCP Accreditation Card */}
+            <div className="p-4 sm:p-6 rounded-2xl border border-violet-500/30 bg-gradient-to-br from-violet-950/40 via-purple-950/20 to-[#080d1a] backdrop-blur-xl relative overflow-hidden shadow-[0_0_30px_rgba(139,92,246,0.15)] my-6 space-y-4 sm:space-y-5">
+              {/* Row 1: Header + Score Pills */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-white/10">
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <div className="w-8 h-8 rounded-xl bg-violet-500/20 border border-violet-500/40 flex items-center justify-center text-base shrink-0 shadow-sm shadow-violet-500/30">
+                    🛡️
+                  </div>
+                  <div className="min-w-0">
+                    <h3 className="text-sm sm:text-base font-bold text-white tracking-tight truncate">
+                      Triple-Registry Verified FastMCP Server
+                    </h3>
+                    <p className="text-[11px] text-gray-400 font-mono">
+                      8 Registered Production Tools &middot; Stdio &amp; Streamable HTTP SSE
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-2 shrink-0">
-                  <a
-                    href="https://glama.ai/mcp/servers/Ambuj123-lab/career-workspace-ambujsystems"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-600/20 hover:bg-emerald-600/35 border border-emerald-500/35 text-emerald-300 text-xs font-semibold transition-all hover:scale-105"
-                  >
-                    <span>Glama Profile</span>
-                    <span>↗</span>
-                  </a>
-                  <a
-                    href="https://m8ven.ai/mcp/ambuj123-lab/career-workspace-ambujsystems"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-violet-600/30 hover:bg-violet-600/50 border border-violet-500/40 text-violet-200 text-xs font-semibold transition-all hover:scale-105"
-                  >
-                    <span>M8ven Audit</span>
-                    <span>↗</span>
-                  </a>
+
+                {/* Score Pill Badges */}
+                <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 shrink-0">
+                  <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+                    Glama A - A
+                  </span>
+                  <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-blue-500/20 text-blue-300 border border-blue-500/40">
+                    M8ven 89/100
+                  </span>
+                  <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-purple-500/20 text-purple-300 border border-purple-500/40">
+                    Smithery 98/100
+                  </span>
+                  <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-violet-500/20 text-violet-300 border border-violet-500/40">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse mr-1" />
+                    Live Monitored
+                  </span>
                 </div>
+              </div>
+
+              {/* Row 2: Live Embedded SVG Registry Badges */}
+              <div className="flex flex-wrap items-center gap-3 pt-0.5">
+                <a
+                  href="https://m8ven.ai/mcp/ambuj123-lab/career-workspace-ambujsystems"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:scale-105 active:scale-95 transition-transform shrink-0"
+                  title="View M8ven MCP Trust Index Audit (89/100)"
+                >
+                  <img
+                    src="https://m8ven.ai/badge/mcp/ambuj123-lab/career-workspace-ambujsystems?variant=verified"
+                    alt="M8ven Verified MCP"
+                    className="h-6 sm:h-7 w-auto rounded shadow-[0_0_12px_rgba(139,92,246,0.4)]"
+                  />
+                </a>
+                <a
+                  href="https://glama.ai/mcp/servers/Ambuj123-lab/career-workspace-ambujsystems"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:scale-105 active:scale-95 transition-transform shrink-0"
+                  title="View Glama MCP Quality &amp; Maintenance Score: A - A"
+                >
+                  <img
+                    src="https://glama.ai/mcp/servers/Ambuj123-lab/career-workspace-ambujsystems/badges/score.svg"
+                    alt="Glama MCP Score: A - A"
+                    className="h-6 sm:h-7 w-auto rounded shadow-[0_0_12px_rgba(16,185,129,0.3)]"
+                  />
+                </a>
+                <a
+                  href="https://smithery.ai/servers/ambujonly761/covercraft-mcp"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:scale-105 active:scale-95 transition-transform shrink-0"
+                  title="View Smithery Verified MCP Listing"
+                >
+                  <img
+                    src="https://img.shields.io/badge/Smithery-Verified_8_Tools-FF6000?style=flat-square&logoColor=white"
+                    alt="Smithery Verified MCP"
+                    className="h-6 sm:h-7 w-auto rounded"
+                  />
+                </a>
+              </div>
+
+              {/* Row 3: Description Paragraph */}
+              <p className="text-xs sm:text-sm text-gray-300 leading-relaxed">
+                All 8 registered FastMCP tools independently audited across leading directories: <strong>Glama Quality &amp; Maintenance Grade A - A</strong>, <strong>M8ven MCP Trust Index Grade B (89/100, 0 security findings)</strong>, and <strong>Smithery MCP verification</strong> with continuous commit monitoring and verifiable stdio/SSE transports.
+              </p>
+
+              {/* Row 4: Action / Verification Links Bar */}
+              <div className="flex flex-wrap items-center gap-2.5 pt-1 border-t border-white/5">
+                <a
+                  href="https://glama.ai/mcp/servers/Ambuj123-lab/career-workspace-ambujsystems"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/30 text-emerald-300 text-xs font-semibold transition-all hover:scale-105"
+                >
+                  <span>Glama Profile</span>
+                  <span>↗</span>
+                </a>
+                <a
+                  href="https://m8ven.ai/mcp/ambuj123-lab/career-workspace-ambujsystems"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-violet-600/25 hover:bg-violet-600/40 border border-violet-500/40 text-violet-200 text-xs font-semibold transition-all hover:scale-105"
+                >
+                  <span>M8ven Audit Report</span>
+                  <span>↗</span>
+                </a>
+                <a
+                  href="https://smithery.ai/servers/ambujonly761/covercraft-mcp"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-orange-500/15 hover:bg-orange-500/25 border border-orange-500/30 text-orange-300 text-xs font-semibold transition-all hover:scale-105"
+                >
+                  <span>Smithery Registry</span>
+                  <span>↗</span>
+                </a>
               </div>
             </div>
 

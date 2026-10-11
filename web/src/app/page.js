@@ -875,40 +875,235 @@ export default function Home() {
           </div>
         </section>
       
-        {/* ===== PRODUCT HUNT EMBED LAUNCH SECTION ===== */}
+        {/* ===== VERIFIED TECHNICAL ECOSYSTEM & PRODUCTION TRUST SHOWCASE ===== */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 pb-20">
-          <div className="p-6 sm:p-10 md:p-12 rounded-2xl sm:rounded-3xl bg-[#050814]/90 border border-white/10 backdrop-blur-2xl text-center relative overflow-hidden shadow-2xl flex flex-col items-center">
-            <div className="absolute top-0 right-1/2 translate-x-1/2 w-96 h-96 bg-[#ff6154]/10 rounded-full blur-[100px] pointer-events-none" />
+          <div className="p-6 sm:p-10 md:p-12 rounded-2xl sm:rounded-3xl bg-[#050814]/90 border border-white/10 backdrop-blur-2xl relative overflow-hidden shadow-2xl space-y-8 sm:space-y-10">
+            {/* Ambient Warm Golden/Emerald Background Glows */}
+            <div className="absolute top-0 left-1/4 w-[450px] h-[300px] bg-amber-500/10 rounded-full blur-[120px] pointer-events-none" />
+            <div className="absolute bottom-0 right-1/4 w-[450px] h-[300px] bg-emerald-500/10 rounded-full blur-[120px] pointer-events-none" />
 
-            <div className="relative z-10 space-y-5 max-w-xl flex flex-col items-center">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#ff6154]/30 bg-[#ff6154]/10 text-[#ff8075] text-xs font-semibold uppercase tracking-wider font-mono">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#ff6154] animate-pulse" />
-                Featured on Product Hunt
+            {/* Header: Warm Amber & Gold Theme */}
+            <div className="relative z-10 text-center max-w-2xl mx-auto space-y-3">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-amber-500/30 bg-amber-500/10 text-amber-300 text-xs font-semibold uppercase tracking-wider font-mono">
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
+                <span>Independent Technical Audits &middot; Verifiable Telemetry</span>
               </div>
+              <h3 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white tracking-tight">
+                Verified Technical <span className="bg-gradient-to-r from-amber-200 via-amber-400 to-orange-400 bg-clip-text text-transparent">Ecosystem &amp; Production Trust</span>
+              </h3>
+              <p className="text-xs sm:text-sm text-gray-400 leading-relaxed max-w-xl mx-auto">
+                Every claim is anchored in verifiable engineering proof. CoverCraft's FastMCP tool server, cloud SLA, and open-source models are audited across leading registries:
+              </p>
+            </div>
 
-              <div className="space-y-2">
-                <h3 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-                  Support Our Launch on <span className="text-[#ff6154]">Product Hunt</span>
-                </h3>
-                <p className="text-xs sm:text-sm text-gray-400 max-w-md mx-auto leading-relaxed">
-                  Help bring authentic, evidence-grounded AI tools to more job seekers. Check out our launch, leave a review, and join the discussion!
-                </p>
-              </div>
-
-              {/* Official Product Hunt Embed Card */}
-              <div className="w-full flex justify-center pt-2">
-                <div style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif', border: '1px solid rgb(224, 224, 224)', borderRadius: '12px', padding: '20px', maxWidth: '500px', width: '100%', background: 'rgb(255, 255, 255)', boxShadow: 'rgba(0, 0, 0, 0.05) 0px 2px 8px', textAlign: 'left' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
-                    <img alt="CoverCraft AI" src="https://ph-files.imgix.net/14a2eaad-1f72-43d2-be87-1665ec8638ce.png?auto=compress,format&codec=mozjpeg&cs=strip&fit=crop&h=80&w=80" style={{ width: '64px', height: '64px', borderRadius: '8px', objectFit: 'cover', flexShrink: 0 }} />
-                    <div style={{ flex: '1 1 0%', minWidth: '0px' }}>
-                      <h4 style={{ margin: '0px', fontSize: '18px', fontWeight: 600, color: 'rgb(26, 26, 26)', lineHeight: 1.3, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>CoverCraft AI</h4>
-                      <p style={{ margin: '4px 0px 0px', fontSize: '14px', color: 'rgb(102, 102, 102)', lineHeight: 1.4, overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>Evidence-grounded AI for accurate, traceable job application</p>
+            {/* The 3 Interactive Trust Cards */}
+            <div className="relative z-10 grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6">
+              
+              {/* Card 1: MCP Trust Registries & Code Audit */}
+              <div className="p-5 sm:p-6 rounded-2xl bg-gradient-to-b from-amber-950/15 via-white/[0.02] to-transparent border border-white/10 hover:border-amber-500/40 transition-all duration-300 flex flex-col justify-between space-y-4 group">
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between gap-2 flex-wrap">
+                    <span className="text-xs font-mono font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1.5 shrink-0">
+                      <span>🏛️</span> MCP Trust Registries
+                    </span>
+                    <div className="flex items-center gap-1.5 shrink-0">
+                      <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-orange-500/20 text-orange-300 border border-orange-500/30">
+                        Smithery 8 Tools
+                      </span>
+                      <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                        Glama A - A
+                      </span>
                     </div>
                   </div>
-                  <a href="https://www.producthunt.com/products/covercraft-ai-3?embed=true&utm_source=embed&utm_medium=post_embed" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', marginTop: '12px', padding: '8px 16px', background: 'rgb(255, 97, 84)', color: 'rgb(255, 255, 255)', textDecoration: 'none', borderRadius: '9999px', fontSize: '16px', fontWeight: 600, lineHeight: 1.5 }}>Check it out on Product Hunt →</a>
+
+                  <h4 className="text-base sm:text-lg font-bold text-white group-hover:text-amber-200 transition-colors">
+                    M8ven Code Audit &amp; Trust Index
+                  </h4>
+
+                  <p className="text-xs text-gray-300 leading-relaxed">
+                    Evaluated across <strong className="text-white">Glama (Grade A - A)</strong>, <strong className="text-white">Smithery (Verified 8 Tools)</strong>, and the public <strong className="text-white">M8ven MCP Trust Index (89/100, Grade B)</strong> via automated <strong>static code audit</strong> with 0 security findings and continuous commit verification.
+                  </p>
+
+                  {/* Embedded Badges (Triple-Registry: M8ven, Glama, Smithery) */}
+                  <div className="flex flex-wrap items-center gap-2 pt-1">
+                    <a
+                      href="https://m8ven.ai/mcp/ambuj123-lab/career-workspace-ambujsystems"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:scale-105 active:scale-95 transition-transform shrink-0"
+                      title="M8ven MCP Verified Trust Index"
+                    >
+                      <img
+                        src="https://m8ven.ai/badge/mcp/ambuj123-lab/career-workspace-ambujsystems?variant=verified"
+                        alt="M8ven Verified MCP"
+                        className="h-6 w-auto rounded shadow-sm shadow-amber-500/20"
+                      />
+                    </a>
+                    <a
+                      href="https://glama.ai/mcp/servers/Ambuj123-lab/career-workspace-ambujsystems"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:scale-105 active:scale-95 transition-transform shrink-0"
+                      title="Glama MCP Quality &amp; Maintenance: A - A"
+                    >
+                      <img
+                        src="https://glama.ai/mcp/servers/Ambuj123-lab/career-workspace-ambujsystems/badges/score.svg"
+                        alt="Glama MCP Score: A - A"
+                        className="h-6 w-auto rounded shadow-sm shadow-emerald-500/30"
+                      />
+                    </a>
+                    <a
+                      href="https://smithery.ai/servers/ambujonly761/covercraft-mcp"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:scale-105 active:scale-95 transition-transform shrink-0"
+                      title="Smithery Verified MCP (8 Tools)"
+                    >
+                      <img
+                        src="https://img.shields.io/badge/Smithery-Verified_8_Tools-FF6000?style=flat-square&logoColor=white"
+                        alt="Smithery Verified MCP"
+                        className="h-6 w-auto rounded"
+                      />
+                    </a>
+                  </div>
+                </div>
+
+                <div className="pt-3 border-t border-white/5 flex items-center justify-between">
+                  <span className="text-[11px] text-gray-400 font-mono">8 Registered Tools</span>
+                  <Link
+                    href="/docs#mcp-protocol"
+                    className="text-xs text-amber-300 hover:text-white font-semibold flex items-center gap-1 group-hover:translate-x-0.5 transition-all"
+                  >
+                    <span>Inspect MCP Trace</span>
+                    <span>→</span>
+                  </Link>
                 </div>
               </div>
+
+              {/* Card 2: Enterprise Cloud SLA & UptimeRobot Feature */}
+              <div className="p-5 sm:p-6 rounded-2xl bg-gradient-to-b from-emerald-950/15 via-white/[0.02] to-transparent border border-white/10 hover:border-emerald-500/40 transition-all duration-300 flex flex-col justify-between space-y-4 group">
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-xs font-mono font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
+                      <span>⚡</span> Cloud Infrastructure
+                    </span>
+                    <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                      99.998% SLA
+                    </span>
+                  </div>
+
+                  <h4 className="text-base sm:text-lg font-bold text-white group-hover:text-emerald-200 transition-colors">
+                    Featured by UptimeRobot
+                  </h4>
+
+                  <p className="text-xs text-gray-300 leading-relaxed">
+                    Spotlighted on the official <strong className="text-white">UptimeRobot Community Blog</strong> for high-availability cloud architecture, 3-tier GenAI circuit breakers, and sub-second deterministic fallback telemetry.
+                  </p>
+
+                  {/* Embedded SLA Badge */}
+                  <div className="flex flex-wrap items-center gap-2 pt-1">
+                    <a
+                      href="https://stats.uptimerobot.com/4tYmSQnuBE?utm_source=status_badge&utm_medium=referral"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:scale-105 active:scale-95 transition-transform"
+                      title="Ambuj's Cloud Environment Live Status"
+                    >
+                      <img
+                        src="https://badge.uptimerobot.com/sla/18a544b11fc4799a468704cc7acccedb.svg?theme=dark"
+                        alt="Ambuj's Cloud Environment: 99.998% SLA"
+                        className="h-6 w-auto"
+                      />
+                    </a>
+                  </div>
+                </div>
+
+                <div className="pt-3 border-t border-white/5 flex items-center justify-between">
+                  <span className="text-[11px] text-gray-400 font-mono">24/7 Live Monitoring</span>
+                  <a
+                    href="https://uptimerobot.com/blog/community-spotlight-ambuj-kumar-tripathi/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs text-emerald-300 hover:text-white font-semibold flex items-center gap-1 group-hover:translate-x-0.5 transition-all"
+                  >
+                    <span>Read Article</span>
+                    <span>↗</span>
+                  </a>
+                </div>
+              </div>
+
+              {/* Card 3: Hugging Face Legal AI Model Suite */}
+              <div className="p-5 sm:p-6 rounded-2xl bg-gradient-to-b from-orange-950/15 via-white/[0.02] to-transparent border border-white/10 hover:border-orange-500/40 transition-all duration-300 flex flex-col justify-between space-y-4 group">
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between gap-2 flex-wrap">
+                    <span className="text-xs font-mono font-bold uppercase tracking-wider text-orange-400 flex items-center gap-1.5 shrink-0">
+                      <span>🤗</span> Open-Source AI Suite
+                    </span>
+                    <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-orange-500/20 text-orange-300 border border-orange-500/30 shrink-0">
+                      18K+ Downloads
+                    </span>
+                  </div>
+
+                  <h4 className="text-base sm:text-lg font-bold text-white group-hover:text-orange-200 transition-colors">
+                    Indian Legal LLM Suite
+                  </h4>
+
+                  <p className="text-xs text-gray-300 leading-relaxed">
+                    Suite of 6 fine-tuned, GGUF-quantized models (<strong className="text-white">Llama 3.2 1B &middot; 3B &middot; 8B</strong>) achieving <strong className="text-white">16,400+ downloads</strong> on the flagship legal build for resource-constrained, local edge inference.
+                  </p>
+
+                  {/* Metrics Badge: FULL WORDS (NO SHORTCUTS) */}
+                  <div className="flex flex-wrap items-center gap-2 pt-1 font-mono text-[11px]">
+                    <span className="px-2.5 py-1 rounded-lg bg-orange-500/10 border border-orange-500/30 text-orange-300 font-semibold">
+                      18,026 Total Downloads
+                    </span>
+                    <span className="px-2.5 py-1 rounded-lg bg-white/5 border border-white/10 text-gray-300">
+                      39 ⭐ Likes
+                    </span>
+                  </div>
+                </div>
+
+                <div className="pt-3 border-t border-white/5 flex items-center justify-between">
+                  <span className="text-[11px] text-gray-400 font-mono">Q4_K_M &middot; QLoRA</span>
+                  <a
+                    href="https://huggingface.co/invincibleambuj"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs text-orange-300 hover:text-white font-semibold flex items-center gap-1 group-hover:translate-x-0.5 transition-all"
+                  >
+                    <span>View Models</span>
+                    <span>↗</span>
+                  </a>
+                </div>
+              </div>
+
             </div>
+
+            {/* Bottom Proof Strip with Direct Docs CTA */}
+            <div className="relative z-10 pt-2 flex flex-col sm:flex-row items-center justify-between gap-4 p-4 rounded-xl bg-white/[0.02] border border-white/5 text-xs text-gray-400">
+              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3 sm:gap-6 font-mono text-[11px]">
+                <span className="flex items-center gap-1.5 text-gray-300">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                  Triple-Registry Verified (Glama &middot; M8ven &middot; Smithery)
+                </span>
+                <span className="hidden md:inline text-gray-600">&middot;</span>
+                <span className="text-gray-300">
+                  Evidence-Grounded Resume Anchors
+                </span>
+                <span className="hidden md:inline text-gray-600">&middot;</span>
+                <span className="text-gray-300">
+                  Deterministic ATS Readiness Heuristics
+                </span>
+              </div>
+              <Link
+                href="/docs"
+                className="shrink-0 px-4 py-2 rounded-lg bg-white/10 hover:bg-white/15 text-white font-semibold transition-all hover:scale-105 flex items-center gap-1.5"
+              >
+                <span>Read System Docs</span>
+                <span>→</span>
+              </Link>
+            </div>
+
           </div>
         </section>
       </main>
