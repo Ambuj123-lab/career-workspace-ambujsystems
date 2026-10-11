@@ -11,7 +11,14 @@ import asyncio
 import json
 import logging
 import sys
+import os
 import argparse
+
+# Ensure mcp-server directory is in sys.path regardless of execution working directory
+_SERVER_DIR = os.path.dirname(os.path.abspath(__file__))
+if _SERVER_DIR not in sys.path:
+    sys.path.insert(0, _SERVER_DIR)
+
 from mcp.server import Server
 from mcp.server.stdio import stdio_server
 from mcp.types import Tool, TextContent, ToolAnnotations
