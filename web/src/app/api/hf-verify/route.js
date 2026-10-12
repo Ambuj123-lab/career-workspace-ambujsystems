@@ -79,7 +79,7 @@ export async function POST(req) {
 
     // 1. Fetch Models from Hugging Face Hub API
     try {
-      const mRes = await fetch(`https://huggingface.co/api/models?author=${username}&expand[]=downloads&expand[]=downloadsAllTime`, {
+      const mRes = await fetch(`https://huggingface.co/api/models?author=${username}&expand[]=downloads&expand[]=downloadsAllTime&expand[]=likes`, {
         headers,
         next: { revalidate: 300 }, // 5 min cache
       });

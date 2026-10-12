@@ -914,7 +914,7 @@ async function executeHuggingFaceProofer(args) {
 
   try {
     const [mRes, sRes] = await Promise.all([
-      fetch(`https://huggingface.co/api/models?author=${user}&expand[]=downloads&expand[]=downloadsAllTime`, { headers }),
+      fetch(`https://huggingface.co/api/models?author=${user}&expand[]=downloads&expand[]=downloadsAllTime&expand[]=likes`, { headers }),
       fetch(`https://huggingface.co/api/spaces?author=${user}`, { headers }),
     ]);
     if (mRes.ok) modelsData = await mRes.json();

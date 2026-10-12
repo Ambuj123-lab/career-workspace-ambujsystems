@@ -87,7 +87,7 @@ async def huggingface_proofer(
 
     # 1. Fetch Models
     try:
-        url_models = f"{HF_API_BASE}/models?author={username}&expand[]=downloads&expand[]=downloadsAllTime"
+        url_models = f"{HF_API_BASE}/models?author={username}&expand[]=downloads&expand[]=downloadsAllTime&expand[]=likes"
         req_m = urllib.request.Request(url_models, headers=headers)
         with urllib.request.urlopen(req_m, timeout=8.0) as resp:
             if resp.status == 200:
