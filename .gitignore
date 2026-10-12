@@ -47,3 +47,6 @@ Enterprise_Agentic_AI_Master_Dossier_Topmate.*
 *.jpg
 !web/public/*.jpg
 REDDIT_POST*.md
+
+mcp-publisher.exe
+*.exe
