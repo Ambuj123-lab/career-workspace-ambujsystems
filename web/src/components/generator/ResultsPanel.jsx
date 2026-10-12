@@ -2369,9 +2369,13 @@ export default function ResultsPanel({
                   <div className="text-[10px] text-amber-400">via Hugging Face API</div>
                 </div>
                 <div className="p-3.5 rounded-xl bg-black/40 border border-white/5">
-                  <div className="text-[10px] font-mono uppercase text-gray-400">Verified Downloads</div>
-                  <div className="text-lg font-bold text-amber-400 mt-0.5">{(hfData?.aggregate_model_downloads ?? 726).toLocaleString()} Downloads</div>
-                  <div className="text-[10px] text-emerald-400">Real Community Usage</div>
+                  <div className="text-[10px] font-mono uppercase text-gray-400">All-Time Downloads</div>
+                  <div className="text-lg font-bold text-amber-400 mt-0.5">
+                    {(hfData?.aggregate_downloads_all_time ?? hfData?.aggregate_model_downloads ?? 18106).toLocaleString()} Total
+                  </div>
+                  <div className="text-[10px] text-emerald-400">
+                    {(hfData?.aggregate_downloads_last_30_days ?? 953).toLocaleString()} rolling (past 30d)
+                  </div>
                 </div>
                 <div className="p-3.5 rounded-xl bg-black/40 border border-white/5">
                   <div className="text-[10px] font-mono uppercase text-gray-400">Community Likes</div>
@@ -2489,7 +2493,10 @@ export default function ResultsPanel({
 
                       <div className="flex items-center gap-2 shrink-0 self-start sm:self-auto">
                         <span className="text-[11px] font-mono text-emerald-400 px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/20 whitespace-nowrap">
-                          📦 {model.downloads} downloads
+                          📦 {(model.downloads_all_time != null ? model.downloads_all_time : (model.downloadsAllTime != null ? model.downloadsAllTime : model.downloads)).toLocaleString()} all-time
+                        </span>
+                        <span className="text-[10px] font-mono text-gray-400 px-1.5 py-0.5 rounded bg-white/5 border border-white/10 whitespace-nowrap">
+                          {model.downloads_last_30_days ?? model.downloads} / 30d
                         </span>
                         {model.likes > 0 && (
                           <span className="text-[11px] font-mono text-yellow-400 px-2 py-0.5 rounded bg-yellow-500/10 border border-yellow-500/20 whitespace-nowrap">
@@ -2587,7 +2594,8 @@ export default function ResultsPanel({
                       status: "200_OK",
                       inspected_handle: hfData?.hf_handle || "invincibleambuj",
                       audit_verdict: hfData?.audit_verdict || "VERIFIED_PRODUCTION_WEIGHTS",
-                      aggregate_downloads: hfData?.aggregate_model_downloads || 726,
+                      aggregate_downloads_all_time: hfData?.aggregate_downloads_all_time || hfData?.aggregate_model_downloads || 18106,
+                      aggregate_downloads_last_30_days: hfData?.aggregate_downloads_last_30_days || 953,
                       aggregate_likes: hfData?.aggregate_model_likes || 39,
                       models_verified: hfData?.total_models_published || 6,
                     }, null, 2)}</pre>
@@ -2601,7 +2609,7 @@ export default function ResultsPanel({
                     <span>Why Engineering Leads Care</span>
                   </div>
                   <p className="text-xs text-gray-300 leading-relaxed">
-                    Anyone can claim <em>"Fine-tuned LLMs with LoRA & Quantization"</em>. But when engineering leads see actual downloadable weights with <strong>726+ real downloads</strong> on Hugging Face, it mathematically proves you deploy production-ready GenAI models.
+                    Anyone can claim <em>"Fine-tuned LLMs with LoRA & Quantization"</em>. But when engineering leads see actual downloadable weights with <strong>{(hfData?.aggregate_downloads_all_time || 18106).toLocaleString()}+ lifetime downloads</strong> ({(hfData?.verified_models?.[0]?.downloads_all_time || 16559).toLocaleString()} on flagship) on Hugging Face, it mathematically proves you deploy production-ready GenAI models.
                   </p>
                   <div className="pt-2 border-t border-white/5 flex items-center justify-between text-[11px] text-amber-400">
                     <span>Verified via Hugging Face Hub MCP</span>

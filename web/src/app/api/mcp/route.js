@@ -961,14 +961,19 @@ async function executeHuggingFaceProofer(args) {
       model_id: mId,
       model_name: mName,
       model_url: `https://huggingface.co/${mId}`,
-      downloads_last_30_days: monthlyD,
+      downloads: allTimeD,
       downloads_all_time: allTimeD,
+      downloadsAllTime: allTimeD,
+      downloads_last_30_days: monthlyD,
       likes: m.likes || 0,
       pipeline_tag: m.pipeline_tag || "text-generation",
       matched_capabilities: Array.from(new Set(matchedCapabilities)),
       proof_status: "VERIFIED_PUBLIC_WEIGHTS",
     });
   }
+
+  // Sort descending by all-time downloads (flagship with 16k+ first)
+  verifiedModels.sort((a, b) => (b.downloads_all_time || 0) - (a.downloads_all_time || 0));
 
   const verifiedSpaces = spacesData.map((s) => {
     backedAiSkills.add("Interactive AI Spaces (Gradio)");
@@ -1017,8 +1022,10 @@ async function executeHuggingFaceProofer(args) {
     profile_url: `https://huggingface.co/${user}`,
     total_models_published: modelsData.length,
     total_spaces_published: spacesData.length,
-    aggregate_downloads_last_30_days: totalMonthlyDownloads,
     aggregate_downloads_all_time: totalAllTimeDownloads,
+    aggregate_downloads_last_30_days: totalMonthlyDownloads,
+    aggregate_model_downloads: totalAllTimeDownloads,
+    aggregate_downloads: totalAllTimeDownloads,
     aggregate_model_likes: totalLikes,
     verified_models: verifiedModels,
     verified_spaces: verifiedSpaces,

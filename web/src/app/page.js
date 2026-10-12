@@ -554,7 +554,7 @@ export default function Home() {
             </div>
             <h3 className="text-xl font-bold mb-3">Verified Hugging Face Weights (Tool #8)</h3>
             <p className="text-gray-400 text-sm leading-relaxed mb-4">
-              Queries candidate models via <span className="text-amber-400 font-semibold">Hugging Face MCP</span>. Validates actual <span className="text-yellow-300 font-semibold">open-source weights, GGUF/LoRA quants, and 18,026 Total Downloads (16,486 on flagship)</span> to audit uncorroborated AI claims.
+              Queries candidate models via <span className="text-amber-400 font-semibold">Hugging Face MCP</span>. Validates actual <span className="text-yellow-300 font-semibold">open-source weights, GGUF/LoRA quants, and 18,106 Total Downloads (16,559 on flagship)</span> to audit uncorroborated AI claims.
             </p>
             <div className="mt-4 p-3 rounded-lg bg-white/[0.03] border border-white/5 text-xs space-y-2">
               <div className="flex items-center justify-between text-[11px] pb-1 border-b border-white/5">

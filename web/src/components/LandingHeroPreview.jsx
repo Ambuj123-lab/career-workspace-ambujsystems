@@ -551,7 +551,7 @@ export default function LandingHeroPreview() {
                   ✓
                 </div>
                 <div>
-                  <div className="text-xs font-bold text-white">18,026 Total Downloads</div>
+                  <div className="text-xs font-bold text-white">18,106 Total Downloads</div>
                   <div className="text-[10px] text-amber-300 font-medium">6 Open-Source Models, 39 Stars &amp; 2 Live Gradio Spaces</div>
                 </div>
               </div>
@@ -578,7 +578,7 @@ export default function LandingHeroPreview() {
                   Quantized domain-specific LLM for Indian legal case law, statutory analysis, and low-latency edge inference.
                 </p>
                 <div className="p-2.5 rounded-xl bg-black/40 border border-white/5 flex items-center justify-between text-[11px] font-mono">
-                  <span className="text-emerald-400">📥 16,486 Total Downloads (All-Time)</span>
+                  <span className="text-emerald-400">📥 16,559 Total Downloads (All-Time)</span>
                   <span className="text-yellow-400">⭐ 38 Likes</span>
                 </div>
               </div>
@@ -602,7 +602,7 @@ export default function LandingHeroPreview() {
                   Llama 3.1 8B instruction-tuned model fine-tuned on bilingual legal corpora with GGUF 4-bit and 8-bit quantization.
                 </p>
                 <div className="p-2.5 rounded-xl bg-black/40 border border-white/5 flex items-center justify-between text-[11px] font-mono">
-                  <span className="text-emerald-400">📥 609 Total Downloads</span>
+                  <span className="text-emerald-400">📥 613 Total Downloads</span>
                   <span className="text-cyan-400">2 Live Spaces (Gradio)</span>
                 </div>
               </div>

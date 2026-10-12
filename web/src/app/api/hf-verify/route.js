@@ -79,7 +79,7 @@ export async function POST(req) {
 
     // 1. Fetch Models from Hugging Face Hub API
     try {
-      const mRes = await fetch(`https://huggingface.co/api/models?author=${username}`, {
+      const mRes = await fetch(`https://huggingface.co/api/models?author=${username}&expand[]=downloads&expand[]=downloadsAllTime`, {
         headers,
         next: { revalidate: 300 }, // 5 min cache
       });
@@ -111,42 +111,48 @@ export async function POST(req) {
       models = [
         {
           id: "invincibleambuj/Ambuj-Tripathi-Indian-Legal-Llama-GGUF",
-          downloads: 613,
+          downloads: 780,
+          downloadsAllTime: 16559,
           likes: 38,
           pipeline_tag: "text-generation",
           tags: ["llama", "gguf", "legal", "quantization"],
         },
         {
           id: "invincibleambuj/Ambuj-Tripathi-Llama-3.1-8B-IndianLegal-GGUF",
-          downloads: 72,
+          downloads: 91,
+          downloadsAllTime: 613,
           likes: 0,
           pipeline_tag: "text-generation",
           tags: ["llama-3.1", "gguf", "legal"],
         },
         {
           id: "invincibleambuj/Ambuj-Tripathi-Indian-Legal-Llama-3B-GGUF",
-          downloads: 27,
+          downloads: 65,
+          downloadsAllTime: 649,
           likes: 1,
           pipeline_tag: "text-generation",
           tags: ["llama", "gguf", "legal"],
         },
         {
-          id: "invincibleambuj/llama-3.2-3b-legal-india-qlora-v2",
-          downloads: 9,
-          likes: 0,
-          pipeline_tag: "text-generation",
-          tags: ["qlora", "fine-tuning", "llama-3.2"],
-        },
-        {
           id: "invincibleambuj/Ambuj-Tripathi-Llama-8B-LoRA",
           downloads: 5,
+          downloadsAllTime: 177,
           likes: 0,
           pipeline_tag: "text-generation",
           tags: ["lora", "fine-tuning"],
         },
         {
+          id: "invincibleambuj/llama-3.2-3b-legal-india-qlora-v2",
+          downloads: 12,
+          downloadsAllTime: 108,
+          likes: 0,
+          pipeline_tag: "text-generation",
+          tags: ["qlora", "fine-tuning", "llama-3.2"],
+        },
+        {
           id: "invincibleambuj/llama-3.2-1b-legal-india-qlora",
           downloads: 0,
+          downloadsAllTime: 0,
           likes: 0,
           pipeline_tag: "text-generation",
           tags: ["qlora", "llama-3.2", "legal"],
@@ -158,7 +164,12 @@ export async function POST(req) {
       ];
     }
 
-    const totalDownloads = (models || []).reduce((acc, m) => acc + (m.downloads || 0), 0);
+    const totalMonthlyDownloads = (models || []).reduce((acc, m) => acc + (m.downloads || 0), 0);
+    const totalAllTimeDownloads = (models || []).reduce(
+      (acc, m) => acc + (m.downloadsAllTime != null ? m.downloadsAllTime : m.downloads || 0),
+      0
+    );
+    const totalDownloads = totalAllTimeDownloads;
     const totalLikes = (models || []).reduce((acc, m) => acc + (m.likes || 0), 0);
 
     const verifiedModels = [];
@@ -180,11 +191,16 @@ export async function POST(req) {
         }
       });
 
+      const monthlyD = m.downloads || 0;
+      const allTimeD = m.downloadsAllTime != null ? m.downloadsAllTime : monthlyD;
       verifiedModels.push({
         model_id: mId,
         model_name: mName,
         model_url: `https://huggingface.co/${mId}`,
-        downloads,
+        downloads: monthlyD,
+        downloads_last_30_days: monthlyD,
+        downloads_all_time: allTimeD,
+        downloadsAllTime: allTimeD,
         likes,
         pipeline_tag: m.pipeline_tag || "text-generation",
         matched_capabilities: matchedCapabilities,
@@ -193,7 +209,7 @@ export async function POST(req) {
     });
 
     // Sort models descending by downloads (highest community adoption first)
-    verifiedModels.sort((a, b) => (b.downloads || 0) - (a.downloads || 0));
+    verifiedModels.sort((a, b) => (b.downloads_all_time || 0) - (a.downloads_all_time || 0));
 
     const verifiedSpaces = (spaces || []).map((s) => {
       backedSkills.add("Interactive AI Spaces (Gradio)");
@@ -230,12 +246,14 @@ export async function POST(req) {
       is_live_fetch: isLiveFetch,
       total_models_published: verifiedModels.length,
       total_spaces_published: verifiedSpaces.length,
-      aggregate_model_downloads: totalDownloads,
+      aggregate_model_downloads: totalAllTimeDownloads,
+      aggregate_downloads_all_time: totalAllTimeDownloads,
+      aggregate_downloads_last_30_days: totalMonthlyDownloads,
       aggregate_model_likes: totalLikes,
       verified_models: verifiedModels,
       verified_spaces: verifiedSpaces,
       grounded_ai_skills: Array.from(backedSkills),
-      proof_confidence: totalDownloads >= 100 ? 99 : verifiedModels.length >= 1 ? 88 : 50,
+      proof_confidence: totalAllTimeDownloads >= 100 ? 99 : verifiedModels.length >= 1 ? 88 : 50,
       evidence_grade: evidenceGrade,
       audit_verdict: auditVerdict,
     };
