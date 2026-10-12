@@ -1,0 +1,18 @@
+{
+  "name": "io.github.Ambuj123-lab/covercraft-mcp",
+  "title": "CoverCraft AI by Ambuj Kumar Tripathi",
+  "description": "Live Hugging Face model proofing, ATS resume scoring and career tools by Ambuj Kumar Tripathi",
+  "version": "1.0.0",
+  "websiteUrl": "https://career-workspace-ambujsystems.vercel.app",
+  "repository": {
+    "url": "https://github.com/Ambuj123-lab/career-workspace-ambujsystems",
+    "source": "github"
+  },
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://career-workspace-ambujsystems.vercel.app/api/mcp"
+    }
+  ],
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json"
+}
