@@ -1,4 +1,4 @@
-﻿import { NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import mammoth from "mammoth";
 import { checkRateLimit, getClientIp } from "@/lib/rateLimit";
 

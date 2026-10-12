@@ -1,13 +1,13 @@
 """
 MCP Tool: ats_readiness
-Honest ATS readiness check - NOT a fake "ATS Score".
+Honest ATS readiness check - NOT an arbitrary "ATS Score".
 Returns individual checks with PASS/WARN/FAIL + disclaimer.
 
 IMPORTANT: Real ATS systems don't have one universal scoring formula.
 This is a heuristic estimate, clearly labeled as such.
 """
 import google.generativeai as genai
-from config import GEMINI_API_KEY, GEMINI_MODEL
+from config import GEMINI_API_KEY, GEMINI_MODEL, generate_content_with_fallback
 
 genai.configure(api_key=GEMINI_API_KEY)
 
@@ -73,9 +73,15 @@ Return JSON:
 }}"""
     
     try:
-        response = model.generate_content(prompt)
         import json
-        data = json.loads(response.text)
+        raw_text = await generate_content_with_fallback(
+            prompt,
+            generation_config=genai.GenerationConfig(
+                temperature=0.2,
+                response_mime_type="application/json",
+            )
+        )
+        data = json.loads(raw_text)
     except Exception as e:
         return {"error": f"ATS analysis failed: {str(e)}"}
     

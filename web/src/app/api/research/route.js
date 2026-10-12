@@ -247,7 +247,7 @@ Rules:
 2. For company_snapshot: write 2-3 crisp sentences summarizing what the company does, their engineering mission, and technological scale.
 3. For role_relevant_signals: extract 2 to 3 technical capability areas relevant to a "${role || "Software/AI Engineer"}" and explain "why_it_matters" for a candidate's application.
 4. For recent_signals: extract 3 to 5 real publications, announcements, or product launches with date or source domain.
-5. If no specific news is found, summarize the confirmed core products/missions. Never invent fake revenue or acquisitions.
+5. If no specific news is found, summarize the confirmed core products/missions. Never invent unverified revenue or acquisitions.
 
 Return JSON matching this schema:
 {

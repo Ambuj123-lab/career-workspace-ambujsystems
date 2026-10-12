@@ -13,7 +13,7 @@ import google.generativeai as genai
 from config import (
     GEMINI_API_KEY, GEMINI_MODEL, GEMINI_TEMPERATURE,
     MAX_JD_CHARS, MAX_RESUME_CHARS, sanitize_input,
-    validate_range, VALID_MATCH_RANGE,
+    validate_range, VALID_MATCH_RANGE, generate_content_with_fallback,
 )
 
 genai.configure(api_key=GEMINI_API_KEY)
@@ -105,9 +105,15 @@ Return JSON:
 }}"""
     
     try:
-        response = model.generate_content(prompt)
         import json
-        data = json.loads(response.text)
+        raw_text = await generate_content_with_fallback(
+            prompt,
+            generation_config=genai.GenerationConfig(
+                temperature=GEMINI_TEMPERATURE,
+                response_mime_type="application/json",
+            )
+        )
+        data = json.loads(raw_text)
     except Exception as e:
         return {"error": f"Analysis failed: {str(e)}"}
     
@@ -144,7 +150,7 @@ Return JSON:
         overall = 0
     
     try:
-        overall = validate_range(overall, VALID_MATCH_RANGE, "overall_match")
+        overall = validate_range(overall, VALID_MATCH_RANGE, generate_content_with_fallback, "overall_match")
     except ValueError:
         overall = 0
     

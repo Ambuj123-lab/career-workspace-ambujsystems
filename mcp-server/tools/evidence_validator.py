@@ -12,7 +12,7 @@ Pipeline:
 This is the evidence grounding & claim validation layer.
 """
 import google.generativeai as genai
-from config import GEMINI_API_KEY, GEMINI_MODEL, validate_range, VALID_CONFIDENCE_RANGE
+from config import GEMINI_API_KEY, GEMINI_MODEL, validate_range, VALID_CONFIDENCE_RANGE, generate_content_with_fallback
 
 genai.configure(api_key=GEMINI_API_KEY)
 
@@ -93,9 +93,15 @@ Return JSON array:
 ]"""
     
     try:
-        response = model.generate_content(prompt)
+        raw_text = await generate_content_with_fallback(
+            prompt,
+            generation_config=genai.GenerationConfig(
+                temperature=0.1,
+                response_mime_type="application/json",
+            )
+        )
         import json
-        results = json.loads(response.text)
+        results = json.loads(raw_text)
     except Exception as e:
         # Fallback: mark all as unsupported if validation fails
         results = [

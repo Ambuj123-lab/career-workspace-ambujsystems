@@ -9,7 +9,7 @@ import google.generativeai as genai
 from config import (
     TAVILY_API_KEY, GEMINI_API_KEY, GEMINI_MODEL,
     GEMINI_TEMPERATURE, TAVILY_SEARCH_DEPTH, TAVILY_MAX_RESULTS,
-    MAX_COMPANY_NAME_CHARS, validate_range, VALID_CONFIDENCE_RANGE,
+    MAX_COMPANY_NAME_CHARS, validate_range, VALID_CONFIDENCE_RANGE, generate_content_with_fallback,
 )
 
 genai.configure(api_key=GEMINI_API_KEY)
@@ -118,9 +118,15 @@ Return JSON:
 }}"""
     
     try:
-        response = model.generate_content(prompt)
         import json
-        data = json.loads(response.text)
+        raw_text = await generate_content_with_fallback(
+            prompt,
+            generation_config=genai.GenerationConfig(
+                temperature=GEMINI_TEMPERATURE,
+                response_mime_type="application/json",
+            )
+        )
+        data = json.loads(raw_text)
     except Exception as e:
         data = {
             "description": f"Summary generation failed: {str(e)}",

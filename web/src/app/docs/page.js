@@ -896,7 +896,7 @@ export default function DocsPage() {
                 { tool: "company_research", desc: "Executes real-time Tavily search queries for company developments and engineering initiatives with verifiable source citations and domain filtering." },
                 { tool: "evidence_validator", desc: "Claim Ledger gatekeeper: Quarantines statements inside <user_resume> boundary and validates candidate claims against source data (VERIFIED / PARTIAL / UNSUPPORTED)." },
                 { tool: "jd_analyzer", desc: "Evidence-backed JD matching: Extracts required competency vectors from JD and matches each against resume with actual evidence." },
-                { tool: "ats_readiness", desc: "Deterministic heuristic audit: Evaluates keyword coverage, skills presence, and length without fake commercial ATS vendor scores." },
+                { tool: "ats_readiness", desc: "Deterministic heuristic audit: Evaluates keyword coverage, skills presence, and length without arbitrary commercial ATS vendor scores." },
                 { tool: "source_filter", desc: "Domain credibility & recency filter: Evaluates source tiers (Official company newsroom, SEC filings, tech media) and discards outdated articles (>18m)." },
                 { tool: "cover_letter_generator", desc: "Evidence-grounded synthesis engine: Generates structured letter paragraphs with verified in-line citation markers and zero-overclaim enforcement." },
               {

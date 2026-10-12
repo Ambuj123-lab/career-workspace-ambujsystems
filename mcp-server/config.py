@@ -13,11 +13,37 @@ TAVILY_API_KEY = os.getenv("TAVILY_API_KEY", "")
 HF_TOKEN = os.getenv("HF_TOKEN", "")
 
 # ============================================================
-# Model Configuration
+# Model Configuration & Quota Failover
 # ============================================================
-GEMINI_MODEL = "gemini-2.0-flash"
-GEMINI_TEMPERATURE = 0.3   # Low creativity, high factuality
+GEMINI_PRIMARY_MODEL = os.getenv("GEMINI_PRIMARY_MODEL", "gemini-3.5-flash-lite")
+GEMINI_FALLBACK_MODEL = os.getenv("GEMINI_FALLBACK_MODEL", "gemini-3.1-flash-lite-preview")
+GEMINI_MODEL = GEMINI_PRIMARY_MODEL   # Backwards compatibility
+GEMINI_TEMPERATURE = 0.3              # Low creativity, high factuality
 GEMINI_MAX_TOKENS = 4096
+
+
+async def generate_content_with_fallback(prompt: str, generation_config=None) -> str:
+    """Generate LLM response with primary Gemini model, automatically failing over to secondary on 429/quota exhaustion."""
+    import google.generativeai as genai
+    import logging
+    _log = logging.getLogger("covercraft-mcp")
+
+    genai.configure(api_key=GEMINI_API_KEY)
+    models = [GEMINI_PRIMARY_MODEL, GEMINI_FALLBACK_MODEL]
+    last_err = None
+
+    for m_name in models:
+        try:
+            model = genai.GenerativeModel(m_name, generation_config=generation_config)
+            response = await model.generate_content_async(prompt)
+            if response and hasattr(response, "text") and response.text:
+                return response.text
+        except Exception as e:
+            last_err = e
+            _log.warning(f"MCP Gemini model '{m_name}' execution issue: {e}")
+            continue
+
+    raise last_err or RuntimeError("All configured Gemini models exhausted.")
 
 # ============================================================
 # Tavily Web Search Configuration
