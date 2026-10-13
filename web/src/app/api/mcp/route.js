@@ -1171,10 +1171,10 @@ async function executeGitHubProofer(args) {
 
   let userProfile = {};
   let reposData = [];
+  let apiErrorOccurred = false;
+  let apiErrorMessage = "";
 
   try {
-    let apiErrorOccurred = false;
-    let apiErrorMessage = "";
     const [uRes, rRes] = await Promise.all([
       fetch("https://api.github.com/users/" + user, { headers }),
       fetch("https://api.github.com/users/" + user + "/repos?sort=updated&per_page=100", { headers }),
