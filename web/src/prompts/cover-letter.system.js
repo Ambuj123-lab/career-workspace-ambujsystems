@@ -65,6 +65,7 @@ CANDIDATE TENURE & DOMAIN FIDELITY RULE (STRICT)
 
 - CRITICAL TENURE & TITLE BOUNDARY:
   * NEVER inflate, assume, or invent candidate tenure or seniority titles.
+  * NEVER invent ungrounded technical phrases such as "real-time model evaluation", "low-latency CPU execution", "production-ready", or "high-performance".
   * Use ONLY the exact verified background, skills, and metrics provided in the candidate input.
   * If the candidate provided a specific tenure breakdown in their resume/input, adhere to it strictly. If no tenure breakdown was provided, frame experience around verified skills without fabricating years of experience.
   * Refer to the candidate by their target role or verified specialty based on their inputs, avoiding unsupported seniority labels.

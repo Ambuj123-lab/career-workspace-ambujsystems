@@ -411,8 +411,8 @@ async function executeCompanyResearch(args) {
       const parsed = JSON.parse(text);
       if (parsed.description) summary = parsed.description;
       if (Array.isArray(parsed.tech_stack) && parsed.tech_stack.length > 0) {
-        techStack = parsed.tech_stack.filter(t => !/markdoc|docusaurus|jekyll|gitbook|hugo|mkdocs/i.test(t));
-        if (techStack.length === 0) techStack = ["Distributed Systems", "Cloud Infrastructure", "Modern API Architecture"];
+        const conceptBlocklist = /distributed\s*systems|cloud\s*infrastructure|modern\s*api|software\s*architecture|system\s*design|cloud\s*native|agile|microservices|markdoc|docusaurus|jekyll|gitbook|hugo|mkdocs/i;
+        techStack = parsed.tech_stack.filter(t => !conceptBlocklist.test(t));
       }
       if (parsed.engineering_culture) engineeringCulture = parsed.engineering_culture;
       if (Array.isArray(parsed.recent_news)) recentNews = parsed.recent_news;
@@ -446,7 +446,22 @@ async function executeCompanyResearch(args) {
     recent_news: recentNews,
     sources_count: filteredSources.length,
     sources: filteredSources,
-    source_gating: tier1Count > 0 ? "TIER_1_VERIFIED" : tier2Count > 0 ? "TIER_2_REPUTABLE" : "TIER_3_SECONDARY",
+    source_gating: (() => {
+      const cleanComp = companyName.toLowerCase().replace(/[^a-z0-9]/g, "");
+      const hasCompanyDomainTier1 = filteredSources.some(s => s.tier === "TIER_1_AUTHORITATIVE" && (s.url || "").toLowerCase().includes(cleanComp));
+      const authoritativeMajority = (tier1Count + tier2Count) >= Math.ceil(filteredSources.length / 2);
+      if ((tier1Count >= 2 || (tier1Count >= 1 && hasCompanyDomainTier1)) && authoritativeMajority) return "TIER_1_VERIFIED";
+      if (tier1Count >= 1 || tier2Count >= 1) return "TIER_2_REPUTABLE";
+      return "TIER_3_SECONDARY";
+    })(),
+    source_confidence: (() => {
+      const cleanComp = companyName.toLowerCase().replace(/[^a-z0-9]/g, "");
+      const hasCompanyDomainTier1 = filteredSources.some(s => s.tier === "TIER_1_AUTHORITATIVE" && (s.url || "").toLowerCase().includes(cleanComp));
+      const authoritativeMajority = (tier1Count + tier2Count) >= Math.ceil(filteredSources.length / 2);
+      if ((tier1Count >= 2 || (tier1Count >= 1 && hasCompanyDomainTier1)) && authoritativeMajority) return "HIGH";
+      if (tier1Count >= 1 || tier2Count >= 1) return "MEDIUM";
+      return "LOW";
+    })(),
   };
 
   companyResearchCache.set(cacheKey, result);
@@ -1253,6 +1268,7 @@ async function executeGitHubProofer(args) {
       stargazers_count: repo.stargazers_count || 0,
       forks_count: repo.forks_count || 0,
       matched_technologies: matchedTechs,
+      is_fork: Boolean(repo.fork),
       is_flagship: (repo.stargazers_count || 0) >= 5,
     });
   }
@@ -1272,7 +1288,8 @@ async function executeGitHubProofer(args) {
 
     // Check 1: Numeric star claims
     const starMatch = claimLower.match(/(\d+[\d,]*)\+?\s*(?:github\s*)?stars?/i);
-    const isSingleRepo = /single\s*repo|one\s*repo|flagship|single\s*repository|individual\s*repo/i.test(claimLower);
+    const isExplicitAggregate = /total|across\s*all|combined|aggregate|all\s*repos|account/i.test(claimLower);
+    const isSingleRepo = /single\s*repo|one\s*repo|flagship|single\s*repository|individual\s*repo|on a framework|on a repo|on a repository|on a project|on an open-source|on the/i.test(claimLower) || !isExplicitAggregate;
 
     if (starMatch || claimLower.includes("star")) {
       const rawNum = starMatch ? starMatch[1].replace(/,/g, "") : null;
@@ -1281,20 +1298,25 @@ async function executeGitHubProofer(args) {
         if (claimLower.includes(rawNum + "k")) threshold *= 1000;
 
         if (isSingleRepo) {
-          if (maxSingleRepoStars >= threshold) {
-            const topRepo = reposData.find(r => (r.stargazers_count || 0) === maxSingleRepoStars);
+          const namedRepo = reposData.find(r => claimLower.includes(r.name.toLowerCase()));
+          const topRepo = reposData.find(r => (r.stargazers_count || 0) === maxSingleRepoStars);
+          const targetRepo = namedRepo || topRepo;
+          const targetStars = targetRepo ? (targetRepo.stargazers_count || 0) : maxSingleRepoStars;
+          const targetName = targetRepo ? targetRepo.name : (topRepo?.name || "flagship");
+
+          if (targetStars >= threshold) {
             claimVerifications.push({
               claim,
               status: "VERIFIED_BY_GITHUB",
-              repo: topRepo?.name || null,
-              note: `Verified ${maxSingleRepoStars} stars on flagship repository '${topRepo?.name}' (Claimed: ${threshold}+ stars on single repo).`,
+              repo: targetName,
+              note: `Verified ${targetStars} stars on repository '${targetName}' (Claimed: ${threshold}+ stars on a repository/framework).`,
             });
           } else {
             claimVerifications.push({
               claim,
               status: "UNSUPPORTED_BY_GITHUB",
-              repo: null,
-              note: `Overclaim detected: Candidate's highest-starred single repository has ${maxSingleRepoStars} stars (Claimed: ${threshold}+ stars on single repository). Aggregate across all repositories is ${aggregateStars}.`,
+              repo: targetName,
+              note: `Overclaim detected: Candidate's highest-starred repository ('${targetName}') has ${targetStars} stars (Claimed: ${threshold}+ stars on a framework/repository). Total aggregate across all repos is ${aggregateStars}.`,
             });
           }
           continue;
@@ -1617,7 +1639,8 @@ async function executeHuggingFaceProofer(args) {
 
     // Check 1: Numeric download claims
     const dlMatch = claimLower.match(/(\d+[\d,]*)(?:k)?\+?\s*downloads?/i);
-    const isSingleAsset = /single\s*model|one\s*model|flagship|single\s*checkpoint|individual\s*model/i.test(claimLower);
+    const isExplicitAggregate = /total|across\s*all|combined|aggregate|all\s*models|lifetime|account/i.test(claimLower);
+    const isSingleAsset = /single\s*model|one\s*model|flagship|single\s*checkpoint|individual\s*model|on a model|on the model|on a checkpoint/i.test(claimLower) || !isExplicitAggregate;
 
     if (dlMatch) {
       const rawNum = dlMatch[1].replace(/,/g, "");
@@ -1625,17 +1648,25 @@ async function executeHuggingFaceProofer(args) {
       if (claimLower.includes(rawNum + "k")) threshold *= 1000;
 
       if (isSingleAsset) {
-        if (maxSingleModelDownloads >= threshold) {
+        const matchedSpecificModel = verifiedModels.find(m => claimLower.includes(m.model_name.toLowerCase()));
+        const flagshipModel = verifiedModels.find(m => m.downloads_all_time === maxSingleModelDownloads) || verifiedModels[0];
+        const targetModel = matchedSpecificModel || flagshipModel;
+        const targetDownloads = targetModel ? targetModel.downloads_all_time : maxSingleModelDownloads;
+        const targetName = targetModel ? targetModel.model_name : "flagship model";
+
+        if (targetDownloads >= threshold) {
           claimVerifications.push({
             claim,
             status: "VERIFIED_BY_HUGGINGFACE",
-            note: `Verified ${maxSingleModelDownloads} downloads on flagship model (Claimed: ${threshold}+ downloads on a single model)`,
+            matched_asset: targetModel?.model_id,
+            note: `Verified ${targetDownloads} downloads on model '${targetName}' (Claimed: ${threshold}+ downloads on a model)`,
           });
         } else {
           claimVerifications.push({
             claim,
             status: "UNSUPPORTED_BY_HUGGINGFACE",
-            note: `Overclaim detected: Candidate's highest-downloaded single model has ${maxSingleModelDownloads} downloads (Claimed: ${threshold}+ on a single model). Aggregate across all models is ${totalAllTimeDownloads}.`,
+            matched_asset: targetModel?.model_id,
+            note: `Numeric discrepancy: Claimed ${threshold}+ downloads on a model exceeds actual downloads of '${targetName}' (${targetDownloads}). Total aggregate across all models is ${totalAllTimeDownloads}.`,
           });
         }
         continue;
@@ -1748,7 +1779,7 @@ async function executeHuggingFaceProofer(args) {
     aggregate_likes: totalLikes,
     verified_models: verifiedModels,
     verified_spaces: verifiedSpaces,
-    grounded_ai_skills: Array.from(backedAiSkills),
+    grounded_ai_skills: Array.from(new Set([...backedAiSkills, ...(verifiedSpaces.length > 0 || spacesData.length > 0 ? ["Gradio"] : [])])),
     claim_verifications: claimVerifications,
     audit_verdict: verdict,
   };

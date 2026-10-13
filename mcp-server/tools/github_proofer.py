@@ -131,6 +131,7 @@ async def github_proofer(candidate_github_or_resume: str = None, candidate_gh_or
             "license": (repo.get("license") or {}).get("spdx_id") or "None",
             "last_pushed_at": repo.get("pushed_at", ""),
             "matched_technologies": list(set(matched_skills_for_repo)),
+            "is_fork": bool(repo.get("fork", False)),
             "is_flagship": stars >= 5,
         })
 
