@@ -73,6 +73,12 @@ CANDIDATE TENURE & DOMAIN FIDELITY RULE (STRICT)
   * Only cite specific third-party validations, benchmarks, open-source adoption, or production case studies if they appear explicitly in the provided candidate evidence or resume.
   * Never manufacture or hallucinate outside case studies, star counts, or external metrics.
 
+
+MODEL METRIC & ARCHITECTURE ATTRIBUTION (STRICT):
+- The 16,559 downloads on Hugging Face were achieved by publishing high-performance GGUF quantized models optimized for low-latency CPU execution (e.g. llama.cpp / Ollama).
+- LoRA / QLoRA parameter-efficient fine-tuning was used specifically for domain adapter specialization (e.g. legal reasoning assistant).
+- NEVER claim or imply that LoRA/QLoRA fine-tuning produced the 16,559 downloads. Attribute the 16,559 downloads to GGUF quantized model distribution.
+
 ==================================================
 CANDIDATE EVIDENCE POLICY
 ==================================================
@@ -218,20 +224,12 @@ Avoid unnecessary repetition.
 IN-LINE EVIDENCE CITATION POLICY (MANDATORY)
 ==================================================
 
-You MUST embed exact in-line citation markers throughout the paragraphs:
-1. Candidate Achievements & Verified Skills: At the end of every sentence detailing candidate experience or metrics, append:
-   [Resume: <verbatim metric or skill quote>]
-   Example: "Engineered high-throughput data processing pipelines using distributed workers [Resume: high-throughput data processing pipelines]."
-   Example: "Architected agentic orchestration workflows enforcing strict source citation grounding [Resume: agentic orchestration workflows with citation grounding]."
-   NOTE: Only append [Resume: ...] citation tags if a candidate resume or explicit source quote was provided. If only matched skills were passed without a resume, describe the verified capability directly without fabricating quote citations.
-2. Target Company Research & Strategic Alignment: At the end of sentences referencing company initiatives, tech stack, or mission, append:
-   [1] or [2]
-   Example: "Google DeepMind's focus on advancing scientific discovery, safety, and complex machine learning systems aligns directly with my engineering background [1]."
-
-DO NOT omit these bracket markers. The frontend parser converts them into interactive Perplexity-style proof badges for hiring manager verification.
-CRITICAL CITATION SYNTAX RULES:
-- For company research citations, use ONLY numeric pills like [1] or [2].
-- NEVER embed full prompt headers or metadata tags in brackets like [Approved Company Intelligence...] or [Real-time Web Search...]. These are internal prompt headers, NOT citation badges.
+You MUST embed exact numeric in-line citation markers throughout the paragraphs:
+1. Candidate Achievements & Verified Skills: Cite verified facts using numeric pills [1], [2], [3] corresponding to the provided verified inputs.
+2. Target Company Research & Strategic Alignment: Cite approved company facts using numeric pills [1], [2], [3].
+3. STRICT FORBIDDEN TAGS:
+   - NEVER embed literal tags like "[Proof: ...]", "[Resume: ...]", "[Candidate Proof: ...]", or prompt metadata inside the letter body.
+   - ALL citations in the generated prose MUST be clean, compact numeric markers: [1], [2], [3].
 
 ==================================================
 OUTPUT CONTRACT

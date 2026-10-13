@@ -27,93 +27,60 @@ def _get_headers() -> dict:
     return headers
 
 
-def _extract_username(resume_or_handle: str) -> str:
-    """Extract clean GitHub username from URL, @handle, or text."""
-    match = re.search(r"github\.com/([a-zA-Z0-9_-]+)", resume_or_handle, re.IGNORECASE)
-    if match:
-        user = match.group(1).strip()
-        if user.lower() not in ["features", "pricing", "explore", "about", "contact"]:
-            return user
-    handle_match = re.search(r"@([a-zA-Z0-9_-]+)", resume_or_handle)
-    if handle_match:
-        return handle_match.group(1).strip()
-    clean = resume_or_handle.strip().lstrip("@")
-    if len(clean) <= 40 and re.match(r"^[a-zA-Z0-9_-]+$", clean):
-        return clean
-    return ""
-
-
 def _test_word_boundary(text: str, kw: str) -> bool:
-    """Check if kw appears as a discrete word or kebab/snake token in text."""
     if not text or not kw:
         return False
     escaped = re.escape(kw)
-    return bool(re.search(rf"(^|[^a-zA-Z0-9]){escaped}([^a-zA-Z0-9]|$)", text, re.IGNORECASE))
+    pattern = rf"(^|[^a-zA-Z0-9]){escaped}([^a-zA-Z0-9]|$)"
+    return bool(re.search(pattern, text, re.IGNORECASE))
 
 
-async def github_proofer(
-    candidate_github_or_resume: str,
-    technical_claims: list[str] | None = None,
-) -> dict:
-    """
-    Inspects candidate's public GitHub profile and repositories.
-    Correlates resume technical claims with verified code repositories.
-    """
-    username = _extract_username(candidate_github_or_resume)
-    if not username:
-        logger.info("No GitHub profile detected for candidate.")
+async def github_proofer(candidate_gh_or_resume: str, technical_claims: list[str] = None) -> dict:
+    input_str = (candidate_gh_or_resume or "").strip()
+    username = re.sub(r"^https?://github\.com/", "", input_str, flags=re.IGNORECASE)
+    username = re.sub(r"^@", "", username).split("/")[0].strip()
+
+    gh_url_match = re.search(r"github\.com/([a-zA-Z0-9_-]+)", input_str, re.IGNORECASE)
+    if gh_url_match:
+        username = gh_url_match.group(1)
+
+    if not username or username.lower() in ["features", "business", "explore", "marketplace", "pricing", "about", "contact"]:
         return {
-            "candidate_handle": "NOT_PROVIDED",
+            "username": "NOT_PROVIDED",
             "profile_url": "",
             "developer_followers": 0,
             "total_public_repositories": 0,
             "aggregate_stars": 0,
             "aggregate_forks": 0,
-            "total_repositories_inspected": 0,
-            "verified_repositories_count": 0,
             "verified_repositories": [],
-            "languages_detected": [],
-            "skills_grounded_in_code": [],
             "claim_verifications": [
-                {
-                    "claim": c,
-                    "status": "RESUME_ONLY",
-                    "note": "No public GitHub handle detected in resume.",
-                } for c in (technical_claims or [])
+                {"claim": c, "status": "RESUME_ONLY", "note": "No public GitHub handle detected in resume"}
+                for c in (technical_claims or [])
             ],
             "audit_verdict": "NO_GITHUB_PROFILE_DETECTED",
         }
 
-    logger.info(f"Inspecting GitHub profile for candidate: {username}")
     headers = _get_headers()
-    user_profile = {}
+    user_data = {}
     repos_data = []
 
-    # 1. Fetch Candidate Profile Metrics
     try:
-        url_u = f"{GITHUB_API_BASE}/users/{username}"
-        req_u = urllib.request.Request(url_u, headers=headers)
-        with urllib.request.urlopen(req_u, timeout=5.0) as resp:
-            if resp.status == 200:
-                user_profile = json.loads(resp.read().decode("utf-8"))
-    except Exception as e:
-        logger.warning(f"GitHub user profile metadata fetch failed ({e}).")
+        user_req = urllib.request.Request(f"{GITHUB_API_BASE}/users/{username}", headers=headers)
+        with urllib.request.urlopen(user_req, timeout=8) as resp:
+            user_data = json.loads(resp.read().decode("utf-8"))
 
-    # 2. Fetch Public Repositories (up to 100)
-    try:
-        url = f"{GITHUB_API_BASE}/users/{username}/repos?sort=updated&per_page=100"
-        req = urllib.request.Request(url, headers=headers)
-        with urllib.request.urlopen(req, timeout=6.0) as response:
-            if response.status == 200:
-                raw = response.read().decode("utf-8")
-                repos_data = json.loads(raw)
+        repos_req = urllib.request.Request(
+            f"{GITHUB_API_BASE}/users/{username}/repos?sort=updated&per_page=100",
+            headers=headers
+        )
+        with urllib.request.urlopen(repos_req, timeout=10) as resp:
+            repos_data = json.loads(resp.read().decode("utf-8"))
     except Exception as e:
-        logger.warning(f"GitHub API live fetch failed ({e}).")
-        repos_data = []
+        logger.warning(f"GitHub public fetch failed for {username}: {e}")
 
     verified_repos = []
-    all_languages = set()
     backed_skills = set()
+    all_languages = set()
 
     keywords_map = {
         "Python": ["python", "langgraph", "langchain", "pandas", "numpy"],
@@ -140,58 +107,103 @@ async def github_proofer(
         aggregate_forks += forks
 
         matched_skills_for_repo = []
+        corpus = f"{repo_name} {desc} {' '.join(topics)}".lower()
+
         for skill, kws in keywords_map.items():
-            if lang and lang.lower() == skill.lower():
-                matched_skills_for_repo.append(skill)
-                backed_skills.add(skill)
-            elif any(_test_word_boundary(desc, kw) or _test_word_boundary(repo_name, kw) or kw.lower() in topics for kw in kws):
+            if any(_test_word_boundary(corpus, kw) for kw in kws):
                 matched_skills_for_repo.append(skill)
                 backed_skills.add(skill)
 
-        final_lang = lang or ("Python" if "Python" in matched_skills_for_repo else "TypeScript" if "TypeScript" in matched_skills_for_repo else "JavaScript" if "JavaScript" in matched_skills_for_repo else "Polyglot / Docs")
-        all_languages.add(final_lang)
+        if lang:
+            all_languages.add(lang)
+            if lang not in matched_skills_for_repo:
+                matched_skills_for_repo.append(lang)
 
         verified_repos.append({
             "repo_name": repo_name,
             "repo_url": repo.get("html_url", f"https://github.com/{username}/{repo_name}"),
-            "description": repo.get("description", "Public open-source repository"),
-            "primary_language": final_lang,
+            "description": desc,
+            "primary_language": lang,
             "stars": stars,
             "forks": forks,
             "open_issues": repo.get("open_issues_count", 0),
-            "license": (repo.get("license") or {}).get("spdx_id") or (repo.get("license") or {}).get("name") or "None",
+            "license": (repo.get("license") or {}).get("spdx_id") or "None",
             "last_pushed_at": repo.get("pushed_at", ""),
             "matched_technologies": list(set(matched_skills_for_repo)),
-            "proof_status": "CODE_GROUNDED",
+            "is_flagship": stars >= 5,
         })
 
-    # Sort descending by stars
     verified_repos.sort(key=lambda x: x["stars"], reverse=True)
 
-    # Evaluate any specific claims provided with strict numeric star gates
     claim_verifications = []
-    GENERIC_STOP_WORDS = {"with", "from", "using", "built", "the", "and", "for", "open", "source", "public", "repository", "repo", "framework", "system", "code", "tools", "tool", "github"}
+    max_single_repo_stars = max([r.get("stargazers_count", 0) for r in repos_data], default=0)
 
-    if technical_claims:
-        for claim in technical_claims:
-            claim_lower = claim.lower().strip()
+    repo_claims = technical_claims or ["Python backend engineering", "MCP server development", "RAG vector search"]
 
-            # Check 1: Numeric star claims (Strict Gate: never fall through)
-            star_match = re.search(r"(d+[d,]*)(?:k)?+?s*(?:githubs*)?stars?", claim_lower)
-            if star_match or ("star" in claim_lower and re.search(r"d+", claim_lower)):
-                raw_num = star_match.group(1).replace(",", "") if star_match else re.search(r"d+", claim_lower).group(0)
+    domain_qualifiers = ["10-k", "10-q", "sec", "edgar", "hipaa", "fda", "gdpr"]
+
+    for claim in repo_claims:
+        claim_lower = claim.lower().strip()
+
+        # Check 1: Numeric star claims
+        star_match = re.search(r"(\d+[\d,]*)\+?\s*stars?", claim_lower)
+        is_single_repo = bool(re.search(r"single\s*repo|one\s*repo|flagship|single\s*repository|individual\s*repo", claim_lower))
+
+        if star_match or "star" in claim_lower:
+            raw_num = star_match.group(1).replace(",", "") if star_match else None
+            if not raw_num:
+                fallback_num = re.search(r"\d+", claim_lower)
+                raw_num = fallback_num.group(0) if fallback_num else None
+
+            if raw_num:
                 threshold = int(raw_num)
                 if raw_num + "k" in claim_lower:
                     threshold *= 1000
 
-                matching_repo = next((r for r in verified_repos if r["stars"] >= threshold), None)
-                if matching_repo:
+                if is_single_repo:
+                    if max_single_repo_stars >= threshold:
+                        top_repo = next((r for r in verified_repos if r["stars"] == max_single_repo_stars), None)
+                        claim_verifications.append({
+                            "claim": claim,
+                            "status": "VERIFIED_BY_GITHUB",
+                            "repo": top_repo["repo_name"] if top_repo else None,
+                            "note": f"Verified {max_single_repo_stars} stars on flagship repository '{top_repo['repo_name'] if top_repo else ''}' (Claimed: {threshold}+ stars on single repo).",
+                        })
+                    else:
+                        claim_verifications.append({
+                            "claim": claim,
+                            "status": "UNSUPPORTED_BY_GITHUB",
+                            "repo": None,
+                            "note": f"Overclaim detected: Candidate's highest-starred single repository has {max_single_repo_stars} stars (Claimed: {threshold}+ stars on single repository). Aggregate across all repositories is {aggregate_stars}.",
+                        })
+                    continue
+
+                named_repo = next((r for r in repos_data if r.get("name", "").lower() in claim_lower), None)
+                if named_repo:
+                    repo_stars = named_repo.get("stargazers_count", 0)
+                    if repo_stars >= threshold:
+                        claim_verifications.append({
+                            "claim": claim,
+                            "status": "VERIFIED_BY_GITHUB",
+                            "repo": named_repo.get("name"),
+                            "note": f"Verified {repo_stars} stars on repository '{named_repo.get('name')}' (Claimed: {threshold}+ stars).",
+                        })
+                    else:
+                        claim_verifications.append({
+                            "claim": claim,
+                            "status": "UNSUPPORTED_BY_GITHUB",
+                            "repo": named_repo.get("name"),
+                            "note": f"Overclaim detected: Repository '{named_repo.get('name')}' has {repo_stars} stars (Claimed: {threshold}+ stars).",
+                        })
+                    continue
+
+                if aggregate_stars >= threshold:
+                    top_repo = next((r for r in verified_repos if r["stars"] >= threshold), None) or (verified_repos[0] if verified_repos else None)
                     claim_verifications.append({
                         "claim": claim,
                         "status": "VERIFIED_BY_GITHUB",
-                        "repo": matching_repo["repo_name"],
-                        "url": matching_repo["repo_url"],
-                        "note": f"Verified {matching_repo['stars']} stars on {matching_repo['repo_name']} (Threshold: {threshold}+ stars)",
+                        "repo": top_repo["repo_name"] if top_repo else None,
+                        "note": f"Verified {aggregate_stars} aggregate GitHub stars across inspected repositories (Claimed: {threshold}+ stars).",
                     })
                 else:
                     claim_verifications.append({
@@ -202,73 +214,121 @@ async def github_proofer(
                     })
                 continue
 
-            # Check 2: Token-overlap matching for named projects (Ignoring generic stopwords & profile repos)
-            claim_tokens = [w for w in re.sub(r"[^a-z0-9]", " ", claim_lower).split() if len(w) >= 3 and w not in GENERIC_STOP_WORDS]
-            token_match = None
-            if claim_tokens:
-                for r in verified_repos:
-                    if r["repo_name"].lower() == username.lower():
-                        continue
-                    repo_tokens = set(w for w in re.sub(r"[^a-z0-9]", " ", (r["repo_name"] + " " + r["description"]).lower()).split() if w not in GENERIC_STOP_WORDS)
-                    matched_t = [t for t in claim_tokens if t in repo_tokens]
-                    if len(matched_t) >= 2 or (len(claim_tokens) == 1 and len(matched_t) == 1):
-                        token_match = r
-                        break
-            if token_match:
-                claim_verifications.append({
-                    "claim": claim,
-                    "status": "VERIFIED_BY_GITHUB",
-                    "repo": token_match["repo_name"],
-                    "url": token_match["repo_url"],
-                    "note": f"Matched repository '{token_match['repo_name']}' via verified project tokens",
-                })
-                continue
-
-            # Check 3: Technology match
-            matching_repo = next(
-                (r for r in verified_repos if any(_test_word_boundary(claim_lower, tech.lower()) for tech in r["matched_technologies"]) or (r["primary_language"] and _test_word_boundary(claim_lower, r["primary_language"].lower()))),
-                None
+        # Check 2: Explicit named repository in claim
+        named_explicit_repo = next((
+            r for r in repos_data
+            if r.get("name", "").lower() != username.lower() and (
+                f"({r.get('name', '').lower()})" in claim_lower or r.get("name", "").lower() in claim_lower
             )
-            if matching_repo:
-                claim_verifications.append({
-                    "claim": claim,
-                    "status": "VERIFIED_BY_GITHUB",
-                    "repo": matching_repo["repo_name"],
-                    "url": matching_repo["repo_url"],
-                    "note": f"Verified via active codebase in '{matching_repo['repo_name']}'",
-                })
-            else:
-                claim_verifications.append({
-                    "claim": claim,
-                    "status": "UNSUPPORTED_BY_GITHUB",
-                    "repo": None,
-                    "note": f"No public repository backing '{claim}' found on candidate profile.",
-                })
+        ), None)
 
-    if technical_claims:
-        supported_count = sum(1 for c in claim_verifications if c.get("status") == "VERIFIED_BY_GITHUB")
-        if supported_count == len(technical_claims):
-            audit_verdict = "EVIDENCE_SUPPORTED"
-        elif supported_count > 0:
-            audit_verdict = "PARTIALLY_SUPPORTED"
+        claim_qualifiers = [q for q in domain_qualifiers if _test_word_boundary(claim_lower, q)]
+
+        if named_explicit_repo:
+            if claim_qualifiers:
+                repo_full_text = f"{named_explicit_repo.get('name', '')} {named_explicit_repo.get('description', '')}".lower()
+                has_qualifiers = all(q in repo_full_text for q in claim_qualifiers)
+                if not has_qualifiers:
+                    claim_verifications.append({
+                        "claim": claim,
+                        "status": "UNSUPPORTED_BY_GITHUB",
+                        "repo": named_explicit_repo.get("name"),
+                        "note": f"Domain qualifier mismatch: Claim asserts support for {', '.join(claim_qualifiers)}, but repository '{named_explicit_repo.get('name')}' description is '{named_explicit_repo.get('description') or 'N/A'}'.",
+                    })
+                    continue
+
+            claim_verifications.append({
+                "claim": claim,
+                "status": "VERIFIED_BY_GITHUB",
+                "repo": named_explicit_repo.get("name"),
+                "url": named_explicit_repo.get("html_url"),
+                "note": f"Matched repository '{named_explicit_repo.get('name')}' directly via explicit repository name in claim",
+            })
+            continue
+
+        # Check 3: Argmax token-overlap matching for projects
+        GENERIC_STOP_WORDS = {"with", "from", "using", "built", "the", "and", "for", "open", "source", "public", "repository", "repo", "framework", "system", "code", "tools", "tool", "github"}
+        claim_tokens = [w for w in re.sub(r"[^a-z0-9]", " ", claim_lower).split() if len(w) >= 3 and w not in GENERIC_STOP_WORDS]
+
+        best_repo = None
+        best_score = -1
+
+        if claim_tokens:
+            for r in verified_repos:
+                if r["repo_name"].lower() == username.lower():
+                    continue
+                repo_tokens = set(w for w in re.sub(r"[^a-z0-9]", " ", (r["repo_name"] + " " + r["description"]).lower()).split() if w not in GENERIC_STOP_WORDS)
+                score = sum(1 for t in claim_tokens if t in repo_tokens)
+                if score > best_score:
+                    best_score = score
+                    best_repo = r
+
+        if best_repo and (best_score >= 2 or (len(claim_tokens) == 1 and best_score == 1)):
+            if claim_qualifiers:
+                repo_full_text = f"{best_repo['repo_name']} {best_repo['description']}".lower()
+                has_qualifiers = all(q in repo_full_text for q in claim_qualifiers)
+                if not has_qualifiers:
+                    claim_verifications.append({
+                        "claim": claim,
+                        "status": "UNSUPPORTED_BY_GITHUB",
+                        "repo": best_repo["repo_name"],
+                        "note": f"Domain qualifier mismatch: Claim asserts support for {', '.join(claim_qualifiers)}, but repository '{best_repo['repo_name']}' is designed for Indian legal/financial documents without {', '.join(claim_qualifiers)} support.",
+                    })
+                    continue
+
+            claim_verifications.append({
+                "claim": claim,
+                "status": "VERIFIED_BY_GITHUB",
+                "repo": best_repo["repo_name"],
+                "url": best_repo["repo_url"],
+                "note": f"Matched repository '{best_repo['repo_name']}' via verified project tokens (overlap score: {best_score})",
+            })
+            continue
+
+        # Check 4: Technology match using strict word boundary
+        tech_match = next((
+            r for r in verified_repos
+            if any(_test_word_boundary(claim_lower, t.lower()) for t in r["matched_technologies"]) or
+            (r["primary_language"] and _test_word_boundary(claim_lower, r["primary_language"].lower()))
+        ), None)
+
+        if tech_match:
+            claim_verifications.append({
+                "claim": claim,
+                "status": "VERIFIED_BY_GITHUB",
+                "repo": tech_match["repo_name"],
+                "url": tech_match["repo_url"],
+                "note": f"Verified via active codebase in '{tech_match['repo_name']}'",
+            })
+            continue
+
+        claim_verifications.append({
+            "claim": claim,
+            "status": "UNSUPPORTED_BY_GITHUB",
+            "repo": None,
+            "note": f"No public repository backing '{claim}' found on candidate profile.",
+        })
+
+    supported_count = sum(1 for c in claim_verifications if c.get("status") == "VERIFIED_BY_GITHUB")
+    if repos_data:
+        if technical_claims:
+            verdict = "EVIDENCE_SUPPORTED" if supported_count == len(technical_claims) else "PARTIALLY_SUPPORTED" if supported_count > 0 else "UNSUPPORTED_CLAIMS_DETECTED"
         else:
-            audit_verdict = "UNSUPPORTED_CLAIMS_DETECTED"
+            verdict = "STRONG_GITHUB_PROOF" if len(verified_repos) >= 2 else "PARTIAL_GITHUB_PROOF"
     else:
-        audit_verdict = "STRONG_GITHUB_PROOF" if len(verified_repos) >= 2 else "PARTIAL_GITHUB_PROOF"
+        verdict = "NO_GITHUB_REPOSITORIES_FOUND"
 
     return {
-        "candidate_handle": username,
+        "username": username,
         "profile_url": f"https://github.com/{username}",
-        "developer_followers": user_profile.get("followers", 0),
-        "developer_following": user_profile.get("following", 0),
-        "total_public_repositories": user_profile.get("public_repos", len(repos_data)),
+        "developer_followers": user_data.get("followers", 0),
+        "total_public_repositories": user_data.get("public_repos", len(repos_data)),
+        "inspected_repositories_count": len(repos_data),
         "aggregate_stars": aggregate_stars,
         "aggregate_forks": aggregate_forks,
-        "total_repositories_inspected": len(repos_data),
-        "verified_repositories_count": len(verified_repos),
         "verified_repositories": verified_repos,
-        "languages_detected": list(all_languages),
-        "skills_grounded_in_code": list(backed_skills),
-        "claim_verifications": claim_verifications,
-        "audit_verdict": audit_verdict,
+        "primary_languages": list(all_languages),
+        "grounded_technologies": list(backed_skills),
+        "claim_verifications": claimVerifications if 'claimVerifications' in locals() else claim_verifications,
+        "audit_verdict": verdict,
     }

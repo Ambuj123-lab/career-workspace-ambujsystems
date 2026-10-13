@@ -54,7 +54,8 @@ evidence = null
 
 EVIDENCE QUALITY GATE:
 - Prioritize concrete project implementations, systems built, and quantifiable metrics from the EXPERIENCE or PROJECTS sections over introductory summary/bio statements.
-- If a capability is only referenced in a general bio/intro summary without concrete project implementation backing, classify it at most as PARTIAL_MATCH, explicitly noting: "(Bio summary mention without dedicated project backing)".
+- PARTIAL_MATCH requires at least MEDIUM evidence strength with concrete technical context or adjacent project backing.
+- If a capability is ONLY referenced in a general bio/intro summary without dedicated project implementation backing, classify it as MISSING or TRANSFERABLE, NOT PARTIAL_MATCH. An unsupported bio summary keyword does NOT qualify as PARTIAL_MATCH. Note explicitly: "(Bio summary mention without dedicated project backing)".
 
 ==================================================
 REQUIREMENT EXTRACTION

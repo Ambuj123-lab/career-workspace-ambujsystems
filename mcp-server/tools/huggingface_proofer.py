@@ -26,28 +26,16 @@ def _get_headers() -> dict:
     return headers
 
 
-def _extract_username(resume_or_handle: str) -> str:
-    """Extract clean Hugging Face username from URL, @handle, or text."""
-    match = re.search(r"huggingface\.co/([a-zA-Z0-9_-]+)", resume_or_handle, re.IGNORECASE)
-    if match:
-        user = match.group(1).strip()
-        if user.lower() not in ["models", "datasets", "spaces", "docs", "blog", "settings"]:
-            return user
-    handle_match = re.search(r"@([a-zA-Z0-9_-]+)", resume_or_handle)
-    if handle_match:
-        return handle_match.group(1).strip()
-    clean = resume_or_handle.strip().lstrip("@")
-    if len(clean) <= 40 and re.match(r"^[a-zA-Z0-9_-]+$", clean):
-        return clean
-    return ""
+async def huggingface_proofer(candidate_hf_or_resume: str, ai_technical_claims: list[str] = None) -> dict:
+    input_str = (candidate_hf_or_resume or "").strip()
+    username = re.sub(r"^https?://huggingface\.co/", "", input_str, flags=re.IGNORECASE)
+    username = re.sub(r"^@", "", username).split("/")[0].strip()
 
+    hf_url_match = re.search(r"huggingface\.co/([a-zA-Z0-9_-]+)", input_str, re.IGNORECASE)
+    if hf_url_match:
+        username = hf_url_match.group(1)
 
-async def huggingface_proofer(
-    candidate_hf_or_resume: str,
-    ai_technical_claims: list[str] | None = None,
-) -> dict:
-    username = _extract_username(candidate_hf_or_resume)
-    if not username:
+    if not username or username.lower() in ["models", "datasets", "spaces", "docs", "blog", "settings"]:
         return {
             "username": "NOT_PROVIDED",
             "profile_url": "",
@@ -59,11 +47,8 @@ async def huggingface_proofer(
             "verified_models": [],
             "verified_spaces": [],
             "claim_verifications": [
-                {
-                    "claim": c,
-                    "status": "RESUME_CLAIM_UNVERIFIED_ON_HF",
-                    "note": "No public Hugging Face handle detected in resume",
-                } for c in (ai_technical_claims or [])
+                {"claim": c, "status": "RESUME_CLAIM_UNVERIFIED_ON_HF", "note": "No public Hugging Face handle detected in resume"}
+                for c in (ai_technical_claims or [])
             ],
             "audit_verdict": "NO_HF_PROFILE_DETECTED",
         }
@@ -73,28 +58,26 @@ async def huggingface_proofer(
     spaces_data = []
 
     try:
-        url_m = f"{HF_API_BASE}/models?author={username}&expand[]=downloads&expand[]=downloadsAllTime&expand[]=likes"
-        req_m = urllib.request.Request(url_m, headers=headers)
-        with urllib.request.urlopen(req_m, timeout=5.0) as resp:
-            if resp.status == 200:
-                models_data = json.loads(resp.read().decode("utf-8"))
-    except Exception as e:
-        logger.warning(f"HF models fetch failed ({e}).")
+        models_url = f"{HF_API_BASE}/models?author={username}&expand[]=downloads&expand[]=downloadsAllTime&expand[]=likes"
+        req = urllib.request.Request(models_url, headers=headers)
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            models_data = json.loads(resp.read().decode("utf-8"))
 
-    try:
-        url_s = f"{HF_API_BASE}/spaces?author={username}"
-        req_s = urllib.request.Request(url_s, headers=headers)
-        with urllib.request.urlopen(req_s, timeout=5.0) as resp:
-            if resp.status == 200:
-                spaces_data = json.loads(resp.read().decode("utf-8"))
+        spaces_url = f"{HF_API_BASE}/spaces?author={username}"
+        req_sp = urllib.request.Request(spaces_url, headers=headers)
+        with urllib.request.urlopen(req_sp, timeout=8) as resp:
+            spaces_data = json.loads(resp.read().decode("utf-8"))
     except Exception as e:
-        logger.warning(f"HF spaces fetch failed ({e}).")
+        logger.warning(f"HF public API fetch error for {username}: {e}")
 
     total_monthly = sum(m.get("downloads", 0) for m in models_data)
-    total_all_time = sum(m.get("downloadsAllTime", m.get("downloads", 0)) for m in models_data)
+    total_all_time = sum(
+        m.get("downloadsAllTime") if m.get("downloadsAllTime") is not None else m.get("downloads", 0)
+        for m in models_data
+    )
     total_likes = sum(m.get("likes", 0) for m in models_data)
 
-    ai_keywords = {
+    ai_keywords_map = {
         "LoRA / QLoRA Fine-Tuning": ["lora", "qlora", "fine-tuning", "finetuning", "adapter"],
         "GGUF Quantization": ["gguf", "quantized", "quantization", "llama.cpp"],
         "Llama LLM Family (3.1 / 3.2 / 8B / 3B)": ["llama", "llama-3.1", "llama-3.2", "llama3"],
@@ -103,56 +86,76 @@ async def huggingface_proofer(
     }
 
     verified_models = []
-    backed_skills = set()
+    backed_ai_skills = set()
 
     for m in models_data:
         m_id = m.get("id", "")
         m_name = m_id.split("/")[-1] if "/" in m_id else m_id
-        monthly = m.get("downloads", 0)
-        all_time = m.get("downloadsAllTime", monthly)
+        monthly_d = m.get("downloads", 0)
+        all_time_d = m.get("downloadsAllTime") if m.get("downloadsAllTime") is not None else monthly_d
         tags = [str(t).lower() for t in m.get("tags", [])]
-        matched_caps = []
 
-        for skill, kws in ai_keywords.items():
-            if any(kw in m_name.lower() or any(kw in t for t in tags) for kw in kws):
-                matched_caps.append(skill)
-                backed_skills.add(skill)
+        matched_caps = []
+        corpus = f"{m_id} {' '.join(tags)}".lower()
+
+        for cap, kws in ai_keywords_map.items():
+            if any(kw in corpus for kw in kws):
+                matched_caps.append(cap)
+                backed_ai_skills.add(cap)
 
         verified_models.append({
             "model_id": m_id,
             "model_name": m_name,
             "model_url": f"https://huggingface.co/{m_id}",
-            "downloads_all_time": all_time,
-            "downloads_30d": monthly,
-            "likes": m.get("likes", 0),
             "pipeline_tag": m.get("pipeline_tag", "text-generation"),
-            "matched_capabilities": list(set(matched_caps)),
-            "proof_status": "VERIFIED_PUBLIC_WEIGHTS",
+            "downloads_30d": monthly_d,
+            "downloads_all_time": all_time_d,
+            "likes": m.get("likes", 0),
+            "matched_capabilities": matched_caps,
+            "is_flagship": all_time_d >= 1000,
         })
 
     verified_models.sort(key=lambda x: x["downloads_all_time"], reverse=True)
 
-    verified_spaces = []
-    for s in spaces_data:
-        backed_skills.add("Interactive AI Spaces (Gradio)")
-        verified_spaces.append({
+    verified_spaces = [
+        {
             "space_id": s.get("id"),
             "space_url": f"https://huggingface.co/spaces/{s.get('id')}",
-            "sdk": s.get("sdk", "gradio"),
-            "status": "VERIFIED_LIVE_SPACE",
-        })
+            "likes": s.get("likes", 0),
+        }
+        for s in spaces_data
+    ]
 
     claim_verifications = []
+    max_single_model_downloads = max([m["downloads_all_time"] for m in verified_models], default=0)
+
     for claim in (ai_technical_claims or []):
         claim_lower = claim.lower().strip()
 
         # Check 1: Numeric download claims
-        dl_match = re.search(r"(d+[d,]*)(?:k)?+?s*(?:models*)?downloads?", claim_lower)
-        if dl_match or ("download" in claim_lower and re.search(r"d+", claim_lower)):
-            raw_num = dl_match.group(1).replace(",", "") if dl_match else re.search(r"d+", claim_lower).group(0)
+        dl_match = re.search(r"(\d+[\d,]*)(?:k)?\+?\s*downloads?", claim_lower)
+        is_single_asset = bool(re.search(r"single\s*model|one\s*model|flagship|single\s*checkpoint|individual\s*model", claim_lower))
+
+        if dl_match:
+            raw_num = dl_match.group(1).replace(",", "")
             threshold = int(raw_num)
             if raw_num + "k" in claim_lower:
                 threshold *= 1000
+
+            if is_single_asset:
+                if max_single_model_downloads >= threshold:
+                    claim_verifications.append({
+                        "claim": claim,
+                        "status": "VERIFIED_BY_HUGGINGFACE",
+                        "note": f"Verified {max_single_model_downloads} downloads on flagship model (Claimed: {threshold}+ downloads on a single model)",
+                    })
+                else:
+                    claim_verifications.append({
+                        "claim": claim,
+                        "status": "UNSUPPORTED_BY_HUGGINGFACE",
+                        "note": f"Overclaim detected: Candidate's highest-downloaded single model has {max_single_model_downloads} downloads (Claimed: {threshold}+ on a single model). Aggregate across all models is {total_all_time}.",
+                    })
+                continue
 
             if total_all_time >= threshold:
                 claim_verifications.append({
@@ -169,7 +172,7 @@ async def huggingface_proofer(
             continue
 
         # Check 2: Numeric like claims
-        like_match = re.search(r"(d+[d,]*)+?s*likes?", claim_lower)
+        like_match = re.search(r"(\d+[\d,]*)\+?\s*likes?", claim_lower)
         if like_match:
             threshold = int(like_match.group(1).replace(",", ""))
             if total_likes >= threshold:
@@ -205,7 +208,7 @@ async def huggingface_proofer(
                 })
             continue
 
-        # Check 4: Model or capability match
+        # Check 4: Specific model or capability match
         match = next(
             (m for m in verified_models if any(c.lower() in claim_lower for c in m["matched_capabilities"]) or m["model_name"].lower() in claim_lower),
             None
@@ -227,19 +230,9 @@ async def huggingface_proofer(
 
     supported_count = sum(1 for c in claim_verifications if c.get("status") == "VERIFIED_BY_HUGGINGFACE")
     if ai_technical_claims:
-        if supported_count == len(ai_technical_claims):
-            audit_verdict = "ALL_AI_CLAIMS_VERIFIED"
-        elif supported_count > 0:
-            audit_verdict = "PARTIALLY_SUPPORTED"
-        else:
-            audit_verdict = "UNSUPPORTED_CLAIMS_DETECTED"
+        verdict = "ALL_AI_CLAIMS_VERIFIED" if supported_count == len(ai_technical_claims) else "PARTIALLY_SUPPORTED" if supported_count > 0 else "UNSUPPORTED_CLAIMS_DETECTED"
     else:
-        if total_all_time >= 100 and len(models_data) >= 3:
-            audit_verdict = "VERIFIED_PRODUCTION_WEIGHTS"
-        elif models_data or spaces_data:
-            audit_verdict = "VERIFIED_COMMUNITY_ASSETS"
-        else:
-            audit_verdict = "NO_PUBLIC_WEIGHTS_DETECTED"
+        verdict = "VERIFIED_PRODUCTION_WEIGHTS" if total_all_time >= 100 and len(models_data) >= 3 else "VERIFIED_COMMUNITY_ASSETS" if len(models_data) >= 1 or len(spaces_data) >= 1 else "NO_PUBLIC_WEIGHTS_DETECTED"
 
     return {
         "username": username,
@@ -251,7 +244,7 @@ async def huggingface_proofer(
         "aggregate_likes": total_likes,
         "verified_models": verified_models,
         "verified_spaces": verified_spaces,
-        "grounded_ai_skills": list(backed_skills),
+        "grounded_ai_skills": list(backed_ai_skills),
         "claim_verifications": claim_verifications,
-        "audit_verdict": audit_verdict,
+        "audit_verdict": verdict,
     }
