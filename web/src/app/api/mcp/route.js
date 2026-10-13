@@ -1251,7 +1251,7 @@ async function executeGitHubProofer(args) {
     const claimLower = claim.toLowerCase().trim();
 
     // Check 1: Numeric star claims
-    const starMatch = claimLower.match(/(\d+[\d,]*)\+?\s*stars?/i);
+    const starMatch = claimLower.match(/(\d+[\d,]*)\+?\s*(?:github\s*)?stars?/i);
     const isSingleRepo = /single\s*repo|one\s*repo|flagship|single\s*repository|individual\s*repo/i.test(claimLower);
 
     if (starMatch || claimLower.includes("star")) {

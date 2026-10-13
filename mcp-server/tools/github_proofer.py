@@ -146,7 +146,7 @@ async def github_proofer(candidate_gh_or_resume: str, technical_claims: list[str
         claim_lower = claim.lower().strip()
 
         # Check 1: Numeric star claims
-        star_match = re.search(r"(\d+[\d,]*)\+?\s*stars?", claim_lower)
+        star_match = re.search(r"(\d+[\d,]*)\+?\s*(?:github\s*)?stars?", claim_lower)
         is_single_repo = bool(re.search(r"single\s*repo|one\s*repo|flagship|single\s*repository|individual\s*repo", claim_lower))
 
         if star_match or "star" in claim_lower:
