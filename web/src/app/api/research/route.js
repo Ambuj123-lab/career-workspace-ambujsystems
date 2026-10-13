@@ -72,6 +72,8 @@ export async function POST(req) {
             search_depth: "advanced",
             include_answer: true,
             max_results: 8,
+            time_range: "year",
+            exclude_domains: ["teamblind.com", "rocketreach.co", "zoominfo.com", "glassdoor.com"],
           }),
         });
 

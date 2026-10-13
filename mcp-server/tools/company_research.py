@@ -34,7 +34,7 @@ async def company_research(company_name: str, focus_areas: list[str] | None = No
             "tech_stack": list[str],
             "recent_news": list[str],
             "culture_notes": str,
-            "raw_sources": [{"url": str, "title": str, "snippet": str}],
+            "sources": [{"url": str, "title": str, "snippet": str}],
             "confidence": "HIGH" | "MEDIUM" | "LOW"
         }
     """
@@ -60,7 +60,7 @@ async def company_research(company_name: str, focus_areas: list[str] | None = No
         return {
             "company": company_name,
             "error": f"Web search failed: {str(e)}",
-            "raw_sources": [],
+            "sources": [],
             "confidence": "LOW",
         }
     
@@ -82,7 +82,7 @@ async def company_research(company_name: str, focus_areas: list[str] | None = No
             "tech_stack": [],
             "recent_news": [],
             "culture_notes": "",
-            "raw_sources": [],
+            "sources": [],
             "confidence": "LOW",
         }
     
@@ -145,6 +145,6 @@ Return JSON:
         "tech_stack": data.get("tech_stack", []),
         "recent_news": data.get("recent_news", []),
         "culture_notes": data.get("culture_notes", ""),
-        "raw_sources": sources,
+        "sources": sources,
         "confidence": confidence,
     }

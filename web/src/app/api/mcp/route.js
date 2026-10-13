@@ -281,6 +281,8 @@ async function executeCompanyResearch(args) {
           search_depth: "advanced",
           include_answer: true,
           max_results: 6,
+          time_range: "year",
+          exclude_domains: ["teamblind.com", "rocketreach.co", "zoominfo.com", "glassdoor.com"],
         }),
       });
       if (tRes.ok) {
@@ -350,7 +352,6 @@ async function executeCompanyResearch(args) {
     recent_news: recentNews,
     sources_count: rawSources.length,
     sources: rawSources,
-    raw_sources: rawSources,
   };
 }
 
@@ -682,23 +683,60 @@ async function executeCoverLetterGenerator(args) {
   const role = args.role || "Software Engineer";
   const company = args.company || "Target Company";
   const matchedSkills = Array.isArray(args.matched_skills) ? args.matched_skills : [];
+  const approvedFacts = Array.isArray(args.approved_company_facts) ? args.approved_company_facts : [];
   const tone = args.tone || "professional";
 
-  const skillsSummary = matchedSkills
-    .slice(0, 4)
-    .map((s) => (typeof s === "string" ? s : s.skill || ""))
+  const skillsFormatted = matchedSkills
+    .map((s) => {
+      if (typeof s === "string") return s;
+      const title = s.skill || s.title || "";
+      const ev = s.evidence ? ` [Proof: ${s.evidence}]` : "";
+      return title ? `${title}${ev}` : "";
+    })
     .filter(Boolean)
-    .join(", ");
+    .join("\n- ");
+
+  const factsFormatted = approvedFacts
+    .map((f, i) => `[${i + 1}] ${typeof f === "string" ? f : f.fact || f.title || ""}`)
+    .filter(Boolean)
+    .join("\n");
 
   try {
-    const userPrompt = `Generate a structured, evidence-grounded cover letter for ${candidateName} applying for ${role} at ${company}. Matched technical skills: ${skillsSummary}. Tone: ${tone}.`;
+    const userPrompt = `Generate a structured, evidence-grounded cover letter strictly bounded by provided inputs:
+
+<CANDIDATE_NAME>${candidateName}</CANDIDATE_NAME>
+<TARGET_ROLE>${role}</TARGET_ROLE>
+<TARGET_COMPANY>${company}</TARGET_COMPANY>
+<TONE>${tone}</TONE>
+
+<VERIFIED_CANDIDATE_SKILLS_AND_EVIDENCE>
+${skillsFormatted ? `- ${skillsFormatted}` : "No specific candidate skills provided."}
+</VERIFIED_CANDIDATE_SKILLS_AND_EVIDENCE>
+
+<APPROVED_COMPANY_FACTS>
+${factsFormatted ? factsFormatted : "No specific company research signals provided."}
+</APPROVED_COMPANY_FACTS>
+
+STRICT INSTRUCTIONS:
+1. Use ONLY the verified candidate skills and evidence listed above. Do NOT invent other jobs, years of experience, or external case studies.
+2. In the company_fit paragraph, you MUST actively incorporate and cite the approved company facts using citations [1], [2] where applicable.
+3. Keep the tone confident, direct, and free of apologizing statements or overclaims.
+
+Return valid JSON with subject_line, greeting, and paragraphs array matching schema.
+`;
+
     const { text } = await generateWithFallback(
-      { temperature: 0.35, responseMimeType: "application/json" },
+      { temperature: 0.25, responseMimeType: "application/json" },
       userPrompt,
       COVER_LETTER_SYSTEM_INSTRUCTION
     );
     return JSON.parse(text);
   } catch (err) {
+    const skillsSummary = matchedSkills
+      .slice(0, 4)
+      .map((s) => (typeof s === "string" ? s : s.skill || ""))
+      .filter(Boolean)
+      .join(", ");
     return {
       candidate_name: candidateName,
       role,
@@ -706,9 +744,24 @@ async function executeCoverLetterGenerator(args) {
       subject_line: `Application for ${role} - ${candidateName}`,
       greeting: `Dear Hiring Team at ${company},`,
       paragraphs: [
-        `I am writing to express my strong interest in the ${role} position at ${company}. With verified engineering experience in ${skillsSummary || "distributed systems and fullstack architecture"}, my background aligns directly with your technical requirements.`,
-        `In my previous work, I have focused on building resilient, scalable systems that solve complex business bottlenecks. I look forward to bringing this engineering rigor to ${company}.`,
-        `Thank you for your consideration. I welcome the opportunity to discuss how my verified technical skills align with your goals.`,
+        {
+          type: "opening",
+          content: `I am writing to express my strong interest in the ${role} position at ${company}. With verified engineering experience in ${skillsSummary || "distributed systems and fullstack architecture"}, my background aligns directly with your technical requirements.`
+        },
+        {
+          type: "experience",
+          content: `In my engineering delivery, I have focused on building resilient, scalable systems that solve complex business bottlenecks with measurable rigor.`
+        },
+        {
+          type: "company_fit",
+          content: approvedFacts.length > 0
+            ? `Based on ${company}'s focus on ${approvedFacts[0]} [1], my verified technical foundation allows me to contribute directly to your team's objectives.`
+            : `I look forward to bringing this engineering rigor to ${company}.`
+        },
+        {
+          type: "closing",
+          content: `Thank you for your consideration. I welcome the opportunity to discuss how my verified technical skills align with your goals.`
+        }
       ],
       tone,
     };
@@ -961,10 +1014,8 @@ async function executeHuggingFaceProofer(args) {
       model_id: mId,
       model_name: mName,
       model_url: `https://huggingface.co/${mId}`,
-      downloads: allTimeD,
       downloads_all_time: allTimeD,
-      downloadsAllTime: allTimeD,
-      downloads_last_30_days: monthlyD,
+      downloads_30d: monthlyD,
       likes: m.likes || 0,
       pipeline_tag: m.pipeline_tag || "text-generation",
       matched_capabilities: Array.from(new Set(matchedCapabilities)),
@@ -1023,10 +1074,8 @@ async function executeHuggingFaceProofer(args) {
     total_models_published: modelsData.length,
     total_spaces_published: spacesData.length,
     aggregate_downloads_all_time: totalAllTimeDownloads,
-    aggregate_downloads_last_30_days: totalMonthlyDownloads,
-    aggregate_model_downloads: totalAllTimeDownloads,
-    aggregate_downloads: totalAllTimeDownloads,
-    aggregate_model_likes: totalLikes,
+    aggregate_downloads_30d: totalMonthlyDownloads,
+    aggregate_likes: totalLikes,
     verified_models: verifiedModels,
     verified_spaces: verifiedSpaces,
     grounded_ai_skills: Array.from(backedAiSkills),
