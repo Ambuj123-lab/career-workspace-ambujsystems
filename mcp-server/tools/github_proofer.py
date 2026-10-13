@@ -35,8 +35,9 @@ def _test_word_boundary(text: str, kw: str) -> bool:
     return bool(re.search(pattern, text, re.IGNORECASE))
 
 
-async def github_proofer(candidate_gh_or_resume: str, technical_claims: list[str] = None) -> dict:
-    input_str = (candidate_gh_or_resume or "").strip()
+async def github_proofer(candidate_github_or_resume: str = None, candidate_gh_or_resume: str = None, technical_claims: list[str] = None) -> dict:
+    input_str = (candidate_github_or_resume or candidate_gh_or_resume or "").strip()
+    input_str = (candidate_github_or_resume or candidate_gh_or_resume or "").strip()
     username = re.sub(r"^https?://github\.com/", "", input_str, flags=re.IGNORECASE)
     username = re.sub(r"^@", "", username).split("/")[0].strip()
 

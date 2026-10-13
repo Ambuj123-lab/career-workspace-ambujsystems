@@ -75,9 +75,10 @@ CANDIDATE TENURE & DOMAIN FIDELITY RULE (STRICT)
 
 
 MODEL METRIC & ARCHITECTURE ATTRIBUTION (STRICT):
-- The 16,559 downloads on Hugging Face were achieved by publishing high-performance GGUF quantized models optimized for low-latency CPU execution (e.g. llama.cpp / Ollama).
-- LoRA / QLoRA parameter-efficient fine-tuning was used specifically for domain adapter specialization (e.g. legal reasoning assistant).
-- NEVER claim or imply that LoRA/QLoRA fine-tuning produced the 16,559 downloads. Attribute the 16,559 downloads to GGUF quantized model distribution.
+- The 16,559 downloads on Hugging Face belong to GGUF quantized model checkpoints.
+- LoRA / QLoRA was used for domain adapter fine-tuning.
+- NEVER claim or imply that LoRA/QLoRA produced the 16,559 downloads. Attribute the downloads to GGUF model distribution.
+- ANTI-BUZZWORD GROUNDING: Do NOT invent ungrounded technical descriptors or filler (such as 'low-latency CPU execution', 'production-ready', 'high-performance', 'legal reasoning assistant') unless those exact words appear in the candidate's provided input. State ONLY the verified metrics and project names explicitly provided.
 
 ==================================================
 CANDIDATE EVIDENCE POLICY

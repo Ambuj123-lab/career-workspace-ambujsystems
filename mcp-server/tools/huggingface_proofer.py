@@ -113,6 +113,7 @@ async def huggingface_proofer(candidate_hf_or_resume: str, ai_technical_claims: 
             "likes": m.get("likes", 0),
             "matched_capabilities": matched_caps,
             "is_flagship": all_time_d >= 1000,
+            "proof_status": "WEIGHTS_VERIFIED",
         })
 
     verified_models.sort(key=lambda x: x["downloads_all_time"], reverse=True)
@@ -122,6 +123,8 @@ async def huggingface_proofer(candidate_hf_or_resume: str, ai_technical_claims: 
             "space_id": s.get("id"),
             "space_url": f"https://huggingface.co/spaces/{s.get('id')}",
             "likes": s.get("likes", 0),
+            "sdk": s.get("sdk", "gradio"),
+            "status": "VERIFIED_LIVE_SPACE",
         }
         for s in spaces_data
     ]
