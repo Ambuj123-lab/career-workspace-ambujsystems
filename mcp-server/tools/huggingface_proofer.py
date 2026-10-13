@@ -1,9 +1,7 @@
 """
 MCP Tool: huggingface_proofer
-Inspects a candidate's public Hugging Face profile, models, spaces, and datasets.
-Cross-references GenAI resume claims (fine-tuning, LoRA, GGUF, Quantization, Legal AI)
-with verifiable Hugging Face production weights and download metrics.
-Objective, factual audit-grade verification engine (100% free / read-only).
+Inspects candidate's public Hugging Face profile, models, spaces, and lifetime metrics.
+Validates production open-source model releases, architecture tags, and download milestones.
 """
 import os
 import re
@@ -39,7 +37,7 @@ def _extract_username(resume_or_handle: str) -> str:
     if handle_match:
         return handle_match.group(1).strip()
     clean = resume_or_handle.strip().lstrip("@")
-    if re.match(r"^[a-zA-Z0-9_-]{1,40}$", clean):
+    if len(clean) <= 40 and re.match(r"^[a-zA-Z0-9_-]+$", clean):
         return clean
     return ""
 
@@ -48,127 +46,55 @@ async def huggingface_proofer(
     candidate_hf_or_resume: str,
     ai_technical_claims: list[str] | None = None,
 ) -> dict:
-    """
-    Inspects candidate's public Hugging Face profile, published models, datasets, and spaces.
-    Correlates resume claims (fine-tuning, LoRA, GGUF, RAG, Quantization) with verifiable Hugging Face assets.
-    Returns objective, audit-grade verification evidence.
-    """
     username = _extract_username(candidate_hf_or_resume)
     if not username:
-        logger.info("No Hugging Face profile detected for candidate.")
         return {
-            "candidate_handle": "NOT_PROVIDED",
+            "username": "NOT_PROVIDED",
             "profile_url": "",
             "total_models_published": 0,
             "total_spaces_published": 0,
-            "aggregate_downloads_last_30_days": 0,
+            "aggregate_downloads_30d": 0,
             "aggregate_downloads_all_time": 0,
-            "aggregate_model_downloads": 0,
-            "aggregate_model_likes": 0,
+            "aggregate_likes": 0,
             "verified_models": [],
             "verified_spaces": [],
-            "grounded_ai_skills": [],
             "claim_verifications": [
                 {
                     "claim": c,
                     "status": "RESUME_CLAIM_UNVERIFIED_ON_HF",
-                    "note": "No public Hugging Face handle detected in resume.",
+                    "note": "No public Hugging Face handle detected in resume",
                 } for c in (ai_technical_claims or [])
             ],
-            "verification_status": "NOT_DETECTED",
-            "evidence_grade": "NONE",
-            "audit_verdict": "NO_HUGGINGFACE_PROFILE_DETECTED",
+            "audit_verdict": "NO_HF_PROFILE_DETECTED",
         }
 
-    logger.info(f"Auditing Hugging Face assets for candidate: {username}")
     headers = _get_headers()
     models_data = []
     spaces_data = []
 
-    # 1. Fetch Models
     try:
-        url_models = f"{HF_API_BASE}/models?author={username}&expand[]=downloads&expand[]=downloadsAllTime&expand[]=likes"
-        req_m = urllib.request.Request(url_models, headers=headers)
-        with urllib.request.urlopen(req_m, timeout=8.0) as resp:
+        url_m = f"{HF_API_BASE}/models?author={username}&expand[]=downloads&expand[]=downloadsAllTime&expand[]=likes"
+        req_m = urllib.request.Request(url_m, headers=headers)
+        with urllib.request.urlopen(req_m, timeout=5.0) as resp:
             if resp.status == 200:
                 models_data = json.loads(resp.read().decode("utf-8"))
     except Exception as e:
-        logger.warning(f"Hugging Face models fetch failed ({e}).")
-        if username.lower() in ["invincibleambuj", "ambuj"]:
-            models_data = [
-            {
-                "id": f"{username}/Ambuj-Tripathi-Indian-Legal-Llama-GGUF",
-                "downloads": 780,
-                "downloadsAllTime": 16559,
-                "likes": 38,
-                "pipeline_tag": "text-generation",
-                "tags": ["llama", "gguf", "legal", "quantization"],
-            },
-            {
-                "id": f"{username}/Ambuj-Tripathi-Llama-3.1-8B-IndianLegal-GGUF",
-                "downloads": 91,
-                "downloadsAllTime": 613,
-                "likes": 0,
-                "pipeline_tag": "text-generation",
-                "tags": ["llama-3.1", "gguf", "legal"],
-            },
-            {
-                "id": f"{username}/Ambuj-Tripathi-Indian-Legal-Llama-3B-GGUF",
-                "downloads": 65,
-                "downloadsAllTime": 649,
-                "likes": 1,
-                "pipeline_tag": "text-generation",
-                "tags": ["llama", "gguf", "legal"],
-            },
-            {
-                "id": f"{username}/llama-3.2-3b-legal-india-qlora-v2",
-                "downloads": 12,
-                "downloadsAllTime": 108,
-                "likes": 0,
-                "pipeline_tag": "text-generation",
-                "tags": ["qlora", "fine-tuning", "llama-3.2"],
-            },
-            {
-                "id": f"{username}/Ambuj-Tripathi-Llama-8B-LoRA",
-                "downloads": 5,
-                "downloadsAllTime": 177,
-                "likes": 0,
-                "pipeline_tag": "text-generation",
-                "tags": ["lora", "fine-tuning"],
-            },
-        ]
-        else:
-            models_data = []
+        logger.warning(f"HF models fetch failed ({e}).")
 
-    # 2. Fetch Spaces
     try:
-        url_spaces = f"{HF_API_BASE}/spaces?author={username}"
-        req_s = urllib.request.Request(url_spaces, headers=headers)
-        with urllib.request.urlopen(req_s, timeout=8.0) as resp:
+        url_s = f"{HF_API_BASE}/spaces?author={username}"
+        req_s = urllib.request.Request(url_s, headers=headers)
+        with urllib.request.urlopen(req_s, timeout=5.0) as resp:
             if resp.status == 200:
                 spaces_data = json.loads(resp.read().decode("utf-8"))
     except Exception as e:
-        logger.warning(f"Hugging Face spaces fetch failed ({e}).")
-        if username.lower() in ["invincibleambuj", "ambuj"]:
-            spaces_data = [
-            {"id": f"{username}/ambuj-ai-chatbot", "sdk": "gradio"},
-            {"id": f"{username}/legal-india-chatbot", "sdk": "gradio"},
-        ]
-        else:
-            spaces_data = []
+        logger.warning(f"HF spaces fetch failed ({e}).")
 
-    total_monthly_downloads = sum(m.get("downloads", 0) or 0 for m in models_data)
-    total_all_time_downloads = sum(
-        (m.get("downloadsAllTime") if m.get("downloadsAllTime") is not None else m.get("downloads", 0)) or 0
-        for m in models_data
-    )
-    total_downloads = total_all_time_downloads
-    total_likes = sum(m.get("likes", 0) or 0 for m in models_data)
+    total_monthly = sum(m.get("downloads", 0) for m in models_data)
+    total_all_time = sum(m.get("downloadsAllTime", m.get("downloads", 0)) for m in models_data)
+    total_likes = sum(m.get("likes", 0) for m in models_data)
 
-    verified_models = []
-    backed_ai_skills = set()
-
-    ai_keyword_map = {
+    ai_keywords = {
         "LoRA / QLoRA Fine-Tuning": ["lora", "qlora", "fine-tuning", "finetuning", "adapter"],
         "GGUF Quantization": ["gguf", "quantized", "quantization", "llama.cpp"],
         "Llama LLM Family (3.1 / 3.2 / 8B / 3B)": ["llama", "llama-3.1", "llama-3.2", "llama3"],
@@ -176,127 +102,156 @@ async def huggingface_proofer(
         "Interactive AI Spaces (Gradio)": ["gradio", "space", "spaces", "chatbot"],
     }
 
+    verified_models = []
+    backed_skills = set()
+
     for m in models_data:
         m_id = m.get("id", "")
         m_name = m_id.split("/")[-1] if "/" in m_id else m_id
-        downloads = m.get("downloads", 0)
-        likes = m.get("likes", 0)
-        pipeline = m.get("pipeline_tag") or "text-generation"
+        monthly = m.get("downloads", 0)
+        all_time = m.get("downloadsAllTime", monthly)
         tags = [str(t).lower() for t in m.get("tags", [])]
+        matched_caps = []
 
-        matched_skills_for_model = []
-        lower_name = m_name.lower()
-
-        for skill, kws in ai_keyword_map.items():
-            if any(kw in lower_name or any(kw in t for t in tags) for kw in kws):
-                matched_skills_for_model.append(skill)
-                backed_ai_skills.add(skill)
-
-        monthly_d = m.get("downloads", 0) or 0
-        all_time_d = m.get("downloadsAllTime") if m.get("downloadsAllTime") is not None else monthly_d
+        for skill, kws in ai_keywords.items():
+            if any(kw in m_name.lower() or any(kw in t for t in tags) for kw in kws):
+                matched_caps.append(skill)
+                backed_skills.add(skill)
 
         verified_models.append({
             "model_id": m_id,
             "model_name": m_name,
             "model_url": f"https://huggingface.co/{m_id}",
-            "downloads_last_30_days": monthly_d,
-            "downloads_all_time": all_time_d,
-            "downloads": all_time_d,
-            "likes": likes,
-            "pipeline_tag": pipeline,
-            "matched_capabilities": list(set(matched_skills_for_model)),
+            "downloads_all_time": all_time,
+            "downloads_30d": monthly,
+            "likes": m.get("likes", 0),
+            "pipeline_tag": m.get("pipeline_tag", "text-generation"),
+            "matched_capabilities": list(set(matched_caps)),
             "proof_status": "VERIFIED_PUBLIC_WEIGHTS",
         })
 
-    # Spaces
+    verified_models.sort(key=lambda x: x["downloads_all_time"], reverse=True)
+
     verified_spaces = []
     for s in spaces_data:
-        s_id = s.get("id", "")
-        s_name = s_id.split("/")[-1] if "/" in s_id else s_id
-        sdk = s.get("sdk", "gradio")
-        backed_ai_skills.add("Interactive AI Spaces (Gradio)")
+        backed_skills.add("Interactive AI Spaces (Gradio)")
         verified_spaces.append({
-            "space_id": s_id,
-            "space_url": f"https://huggingface.co/spaces/{s_id}",
-            "sdk": sdk,
+            "space_id": s.get("id"),
+            "space_url": f"https://huggingface.co/spaces/{s.get('id')}",
+            "sdk": s.get("sdk", "gradio"),
             "status": "VERIFIED_LIVE_SPACE",
         })
 
-    # Factual Claim Resolution
     claim_verifications = []
-    if ai_technical_claims:
-        for claim in ai_technical_claims:
-            claim_l = claim.lower()
-            matching_model = None
-            matching_space = None
+    for claim in (ai_technical_claims or []):
+        claim_lower = claim.lower().strip()
 
-            for m in verified_models:
-                m_tokens = (m["model_name"] + " " + " ".join(m["matched_capabilities"])).lower()
-                for skill_name, kws in ai_keyword_map.items():
-                    if any(kw in claim_l for kw in kws) and any(kw in m_tokens for kw in kws):
-                        matching_model = m
-                        break
-                if matching_model:
-                    break
+        # Check 1: Numeric download claims
+        dl_match = re.search(r"(d+[d,]*)(?:k)?+?s*(?:models*)?downloads?", claim_lower)
+        if dl_match or ("download" in claim_lower and re.search(r"d+", claim_lower)):
+            raw_num = dl_match.group(1).replace(",", "") if dl_match else re.search(r"d+", claim_lower).group(0)
+            threshold = int(raw_num)
+            if raw_num + "k" in claim_lower:
+                threshold *= 1000
 
-            if not matching_model and any(kw in claim_l for kw in ["space", "spaces", "gradio", "chatbot"]):
-                if verified_spaces:
-                    matching_space = verified_spaces[0]
-
-            if matching_model:
+            if total_all_time >= threshold:
                 claim_verifications.append({
                     "claim": claim,
                     "status": "VERIFIED_BY_HUGGINGFACE",
-                    "matched_asset": matching_model["model_id"],
-                    "asset_type": "MODEL",
-                    "downloads_all_time": matching_model["downloads_all_time"],
-                    "downloads_last_30_days": matching_model["downloads_last_30_days"],
-                    "likes": matching_model["likes"],
-                    "proof_url": matching_model["model_url"],
-                })
-            elif matching_space:
-                claim_verifications.append({
-                    "claim": claim,
-                    "status": "VERIFIED_BY_HUGGINGFACE",
-                    "matched_asset": matching_space["space_id"],
-                    "asset_type": "SPACE",
-                    "sdk": matching_space["sdk"],
-                    "proof_url": matching_space["space_url"],
+                    "note": f"Verified {total_all_time} lifetime downloads on Hugging Face (Claimed: {threshold}+ downloads)",
                 })
             else:
                 claim_verifications.append({
                     "claim": claim,
-                    "status": "RESUME_CLAIM_UNVERIFIED_ON_HF",
-                    "note": "Resume claim; no matching public Hugging Face model or space found",
+                    "status": "UNSUPPORTED_BY_HUGGINGFACE",
+                    "note": f"Claimed {threshold}+ downloads exceeds verified lifetime downloads ({total_all_time})",
                 })
+            continue
 
-    # Objective, audit-compliant verdict and grade
-    if total_downloads >= 100 and len(models_data) >= 3:
-        audit_verdict = "VERIFIED_PRODUCTION_WEIGHTS"
-        evidence_grade = "STRONG"
-        verification_status = "VERIFIED"
-    elif len(models_data) >= 1 or len(spaces_data) >= 1:
-        audit_verdict = "VERIFIED_COMMUNITY_ASSETS"
-        evidence_grade = "MODERATE"
-        verification_status = "PARTIAL"
+        # Check 2: Numeric like claims
+        like_match = re.search(r"(d+[d,]*)+?s*likes?", claim_lower)
+        if like_match:
+            threshold = int(like_match.group(1).replace(",", ""))
+            if total_likes >= threshold:
+                claim_verifications.append({
+                    "claim": claim,
+                    "status": "VERIFIED_BY_HUGGINGFACE",
+                    "note": f"Verified {total_likes} community likes across models (Claimed: {threshold}+ likes)",
+                })
+            else:
+                claim_verifications.append({
+                    "claim": claim,
+                    "status": "UNSUPPORTED_BY_HUGGINGFACE",
+                    "note": f"Claimed {threshold}+ likes exceeds verified total likes ({total_likes})",
+                })
+            continue
+
+        # Check 3: Spaces / Gradio Demo claims
+        if "space" in claim_lower or "gradio" in claim_lower:
+            if verified_spaces or spaces_data:
+                sp = verified_spaces[0] if verified_spaces else {"space_id": spaces_data[0].get("id"), "space_url": f"https://huggingface.co/spaces/{spaces_data[0].get('id')}"}
+                claim_verifications.append({
+                    "claim": claim,
+                    "status": "VERIFIED_BY_HUGGINGFACE",
+                    "matched_asset": sp["space_id"],
+                    "proof_url": sp["space_url"],
+                    "note": "Verified live interactive Gradio space hosted on Hugging Face",
+                })
+            else:
+                claim_verifications.append({
+                    "claim": claim,
+                    "status": "UNSUPPORTED_BY_HUGGINGFACE",
+                    "note": "No public Hugging Face spaces found for candidate profile",
+                })
+            continue
+
+        # Check 4: Model or capability match
+        match = next(
+            (m for m in verified_models if any(c.lower() in claim_lower for c in m["matched_capabilities"]) or m["model_name"].lower() in claim_lower),
+            None
+        )
+        if match:
+            claim_verifications.append({
+                "claim": claim,
+                "status": "VERIFIED_BY_HUGGINGFACE",
+                "matched_asset": match["model_id"],
+                "downloads_all_time": match["downloads_all_time"],
+                "proof_url": match["model_url"],
+            })
+        else:
+            claim_verifications.append({
+                "claim": claim,
+                "status": "UNSUPPORTED_BY_HUGGINGFACE",
+                "note": f"No matching public Hugging Face model or capability found for '{claim}'",
+            })
+
+    supported_count = sum(1 for c in claim_verifications if c.get("status") == "VERIFIED_BY_HUGGINGFACE")
+    if ai_technical_claims:
+        if supported_count == len(ai_technical_claims):
+            audit_verdict = "ALL_AI_CLAIMS_VERIFIED"
+        elif supported_count > 0:
+            audit_verdict = "PARTIALLY_SUPPORTED"
+        else:
+            audit_verdict = "UNSUPPORTED_CLAIMS_DETECTED"
     else:
-        audit_verdict = "NO_PUBLIC_WEIGHTS_DETECTED"
-        evidence_grade = "INSUFFICIENT"
-        verification_status = "UNVERIFIED"
+        if total_all_time >= 100 and len(models_data) >= 3:
+            audit_verdict = "VERIFIED_PRODUCTION_WEIGHTS"
+        elif models_data or spaces_data:
+            audit_verdict = "VERIFIED_COMMUNITY_ASSETS"
+        else:
+            audit_verdict = "NO_PUBLIC_WEIGHTS_DETECTED"
 
     return {
-        "candidate_handle": username,
+        "username": username,
         "profile_url": f"https://huggingface.co/{username}",
         "total_models_published": len(models_data),
         "total_spaces_published": len(spaces_data),
-        "aggregate_downloads_all_time": total_all_time_downloads,
-        "aggregate_downloads_30d": total_monthly_downloads,
+        "aggregate_downloads_all_time": total_all_time,
+        "aggregate_downloads_30d": total_monthly,
         "aggregate_likes": total_likes,
         "verified_models": verified_models,
         "verified_spaces": verified_spaces,
-        "grounded_ai_skills": sorted(list(backed_ai_skills)),
+        "grounded_ai_skills": list(backed_skills),
         "claim_verifications": claim_verifications,
-        "verification_status": verification_status,
-        "evidence_grade": evidence_grade,
         "audit_verdict": audit_verdict,
     }

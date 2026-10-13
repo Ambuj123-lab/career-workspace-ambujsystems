@@ -269,9 +269,16 @@ async function executeCompanyResearch(args) {
   const tavilyKey = process.env.TAVILY_API_KEY;
   let rawSources = [];
 
+  const noiseDomains = ["teamblind.com", "rocketreach.co", "zoominfo.com", "glassdoor.com", "kore1.com", "comparably.com", "levels.fyi"];
+  const eliteTechDomains = [
+    "pragmaticengineer.com", "stripe.com", "github.blog", "netflixtechblog.com",
+    "engineering.fb.com", "eng.lyft.com", "uber.com/blog", "aws.amazon.com/blogs",
+    "cloud.google.com/blog", "deepmind.google", "openai.com", "anthropic.com", "huggingface.co/blog"
+  ];
+
   if (tavilyKey) {
     try {
-      const query = `${companyName} company overview tech stack engineering culture recent news`;
+      const query = `${companyName} engineering blog tech stack architecture system design culture`;
       const tRes = await fetch("https://api.tavily.com/search", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -280,9 +287,9 @@ async function executeCompanyResearch(args) {
           query,
           search_depth: "advanced",
           include_answer: true,
-          max_results: 6,
+          max_results: 8,
           time_range: "year",
-          exclude_domains: ["teamblind.com", "rocketreach.co", "zoominfo.com", "glassdoor.com"],
+          exclude_domains: noiseDomains,
         }),
       });
       if (tRes.ok) {
@@ -298,16 +305,35 @@ async function executeCompanyResearch(args) {
     }
   }
 
-  let summary = `Grounded research signals retrieved for ${companyName}.`;
-  let techStack = ["Web Engineering", "Distributed Cloud", "Modern Architecture"];
-  let recentNews = [];
+  // Filter out any noisy/recruiter domains that bypassed Tavily exclusion
+  const filteredSources = rawSources.filter((s) => {
+    const url = String(s.url || "").toLowerCase();
+    return !noiseDomains.some((d) => url.includes(d));
+  });
 
-  if (rawSources.length > 0) {
+  // Classify source tiers for gating confidence
+  let hasTier1 = false;
+  let hasTier2 = false;
+  for (const s of filteredSources) {
+    const u = String(s.url || "").toLowerCase();
+    if (eliteTechDomains.some((d) => u.includes(d)) || u.includes(".gov") || u.includes(".edu")) {
+      hasTier1 = true;
+    } else if (u.includes("github.com") || u.includes("techcrunch.com") || u.includes("bloomberg.com") || u.includes("linkedin.com")) {
+      hasTier2 = true;
+    }
+  }
+
+  let summary = `Grounded research signals retrieved for ${companyName}.`;
+  let techStack = ["Distributed Systems", "Cloud Infrastructure", "Modern API Architecture"];
+  let recentNews = [];
+  let engineeringCulture = "Engineering-led culture prioritizing high reliability, automated verification, and measurable impact.";
+
+  if (filteredSources.length > 0) {
     try {
-      const combined = rawSources
+      const combined = filteredSources
         .map((s) => `Title: ${s.title}\nURL: ${s.url}\nContent: ${s.snippet}`)
         .join("\n\n---\n\n");
-      const prompt = `Summarize factual company details about "${companyName}" STRICTLY from these sources:\n\n${combined}\n\nReturn JSON:\n{\n  "description": "...",\n  "tech_stack": ["..."],\n  "recent_news": ["..."]\n}`;
+      const prompt = `Summarize factual engineering details for "${companyName}" STRICTLY from these sources:\n\n${combined}\n\nReturn JSON:\n{\n  "description": "...",\n  "tech_stack": ["..."],\n  "engineering_culture": "...",\n  "recent_news": ["..."]\n}`;
       const { text } = await generateWithFallback(
         { temperature: 0.2, responseMimeType: "application/json" },
         prompt
@@ -315,14 +341,15 @@ async function executeCompanyResearch(args) {
       const parsed = JSON.parse(text);
       if (parsed.description) summary = parsed.description;
       if (Array.isArray(parsed.tech_stack) && parsed.tech_stack.length > 0) techStack = parsed.tech_stack;
+      if (parsed.engineering_culture) engineeringCulture = parsed.engineering_culture;
       if (Array.isArray(parsed.recent_news)) recentNews = parsed.recent_news;
     } catch (llmErr) {
-      summary = rawSources[0]?.snippet?.slice(0, 300) || summary;
+      summary = filteredSources[0]?.snippet?.slice(0, 300) || summary;
     }
   } else {
-    // LLM synthesis fallback if Tavily key is absent
+    // LLM fallback
     try {
-      const fallbackPrompt = `Provide factual company overview, core engineering tech stack, and recent engineering context for "${companyName}". Return JSON: { "description": "...", "tech_stack": ["..."], "recent_news": ["..."] }`;
+      const fallbackPrompt = `Provide factual company overview, core engineering tech stack, and engineering culture principles for "${companyName}". Return JSON: { "description": "...", "tech_stack": ["..."], "engineering_culture": "...", "recent_news": ["..."] }`;
       const { text } = await generateWithFallback(
         { temperature: 0.2, responseMimeType: "application/json" },
         fallbackPrompt
@@ -330,28 +357,26 @@ async function executeCompanyResearch(args) {
       const parsed = JSON.parse(text);
       if (parsed.description) summary = parsed.description;
       if (Array.isArray(parsed.tech_stack)) techStack = parsed.tech_stack;
+      if (parsed.engineering_culture) engineeringCulture = parsed.engineering_culture;
       if (Array.isArray(parsed.recent_news)) recentNews = parsed.recent_news;
-      rawSources = [
-        {
-          url: `https://www.google.com/search?q=${encodeURIComponent(companyName)}`,
-          title: `${companyName} Official Engineering Overview`,
-          snippet: summary.slice(0, 250),
-        }
-      ];
     } catch (e) {
       summary = `${companyName} is an active technology organization.`;
     }
   }
 
-  const confidence = rawSources.length >= 3 ? "HIGH" : rawSources.length >= 1 ? "MEDIUM" : "LOW";
+  // Confidence strictly gated by Source Tiers (No blind HIGH confidence on Tier 3 scrapers)
+  const confidence = hasTier1 ? "HIGH" : hasTier2 ? "MEDIUM" : filteredSources.length >= 3 ? "MEDIUM" : "LOW";
+
   return {
     company: companyName,
     confidence,
     summary,
     tech_stack: techStack,
+    engineering_culture: engineeringCulture,
     recent_news: recentNews,
-    sources_count: rawSources.length,
-    sources: rawSources,
+    sources_count: filteredSources.length,
+    sources: filteredSources,
+    source_gating: hasTier1 ? "TIER_1_VERIFIED" : hasTier2 ? "TIER_2_REPUTABLE" : "TIER_3_SECONDARY",
   };
 }
 
@@ -377,48 +402,113 @@ function executeEvidenceValidator(args) {
     const claimWords = claimClean
       .replace(/[^a-z0-9\s]/g, " ")
       .split(/\s+/)
-      .filter((w) => w.length >= 2 && !["with", "from", "have", "been", "this", "that", "their", "into", "about", "your", "more"].includes(w));
+      .filter((w) => w.length >= 2 && !["with", "from", "have", "been", "this", "that", "their", "into", "about", "your", "more", "the"].includes(w));
 
     let bestMatch = null;
-    let tokenRatio = 0;
     let isDirectMatch = false;
+    let isNumericMismatch = false;
+    let mismatchNote = "";
 
-    // Pass 1: Direct containment & exact phrase match (handles short claims like "38 likes", "18k downloads", "Python 3.11")
-    for (const src of sources) {
+    // Extract source text corpus
+    const corpus = sources.map(src => {
       const rawText = typeof src === "string"
         ? src.toLowerCase()
         : (String(src.content || src.snippet || src.text || "") + " " + String(src.title || "")).toLowerCase();
-      const srcClean = rawText.replace(/,/g, "");
+      return { src, rawText, cleanText: rawText.replace(/,/g, "") };
+    });
 
-      if (srcClean.includes(claimClean) || (claimWords.length > 0 && claimWords.length <= 2 && claimWords.every(w => srcClean.includes(w)))) {
-        bestMatch = typeof src === "object" ? src : { url: "source://provided", content: src };
-        tokenRatio = 1.0;
-        isDirectMatch = true;
-        break;
+    // Numeric Guard: Check for numbers associated with metrics (stars, downloads, likes, users)
+    const claimNumMatch = claimLower.match(/(\d+[\d,]*)(?:k)?\+?\s*(?:github\s*)?(stars?|downloads?|users?|likes?|models?)/i);
+    const claimDurationMatch = claimLower.match(/(\d+(?:\.\d+)?)\+?\s*(years?|yrs?|months?)/i);
+
+    if (claimNumMatch) {
+      let claimVal = parseInt(claimNumMatch[1].replace(/,/g, ""), 10);
+      if (claimLower.includes(claimNumMatch[1] + "k")) claimVal *= 1000;
+      const metricName = claimNumMatch[2].toLowerCase();
+
+      let foundEvidenceMetric = null;
+      for (const item of corpus) {
+        const words = item.cleanText.replace(/[^a-z0-9\s]/g, " ").split(/\s+/);
+        const idx = words.findIndex(w => w.includes(metricName) || (metricName.endsWith("s") && w === metricName.slice(0, -1)));
+        if (idx > 0) {
+          const prev = words[idx - 1].replace(/[^0-9]/g, "");
+          const prev2 = idx > 1 ? words[idx - 2].replace(/[^0-9]/g, "") : "";
+          const numStr = prev || prev2;
+          if (numStr) {
+            let srcVal = parseInt(numStr, 10);
+            if ((words[idx - 1] && words[idx - 1].endsWith("k")) || (words[idx - 2] && words[idx - 2].endsWith("k"))) srcVal *= 1000;
+            foundEvidenceMetric = { src: item.src, val: srcVal };
+            if (claimVal <= srcVal) {
+              bestMatch = typeof item.src === "object" ? item.src : { url: "source://provided", content: item.src };
+              isDirectMatch = true;
+              break;
+            } else {
+              isNumericMismatch = true;
+              mismatchNote = "Numeric discrepancy: Claimed " + claimVal + " " + metricName + " exceeds evidence value of " + srcVal + " " + metricName;
+            }
+          }
+        }
+      }
+      if (isNumericMismatch && !isDirectMatch) {
+        unsupportedCount++;
+        claimLedger.push({
+          claim,
+          status: "UNSUPPORTED",
+          source_url: foundEvidenceMetric?.src?.url || null,
+          evidence: foundEvidenceMetric?.src?.content?.slice(0, 200) || null,
+          action: "BLOCK",
+          note: mismatchNote,
+        });
+        continue;
       }
     }
 
-    // Pass 2: Token overlap match for complex claims
+    // Temporal Guard: Career duration claims (e.g. "2.5+ years") cannot be proven by single repo snippet
+    if (claimDurationMatch && !isDirectMatch) {
+      const hasExplicitCareerSource = corpus.some(c => c.cleanText.includes(claimDurationMatch[0].toLowerCase()) || (c.cleanText.includes("experience") && c.cleanText.includes(claimDurationMatch[1])));
+      if (!hasExplicitCareerSource) {
+        partialCount++;
+        claimLedger.push({
+          claim,
+          status: "PARTIAL",
+          source_url: null,
+          evidence: null,
+          action: "FLAG",
+          note: "Duration/tenure claim cannot be proven from project snippet alone. Requires candidate career history.",
+        });
+        continue;
+      }
+    }
+
+    // Pass 1: Direct containment match
+    if (!isDirectMatch) {
+      for (const item of corpus) {
+        if (item.cleanText.includes(claimClean) || (claimWords.length > 0 && claimWords.length <= 2 && claimWords.every(w => item.cleanText.includes(w)))) {
+          bestMatch = typeof item.src === "object" ? item.src : { url: "source://provided", content: item.src };
+          isDirectMatch = true;
+          break;
+        }
+      }
+    }
+
+    // Pass 2: Distinctive token overlap
+    let tokenRatio = isDirectMatch ? 1.0 : 0.0;
     if (!isDirectMatch && claimWords.length > 0) {
       let maxMatchedTokens = 0;
-      for (const src of sources) {
-        const rawText = typeof src === "string"
-          ? src.toLowerCase()
-          : (String(src.content || src.snippet || src.text || "") + " " + String(src.title || "")).toLowerCase();
-        const srcClean = rawText.replace(/,/g, "");
+      for (const item of corpus) {
         let matchedTokens = 0;
         for (const w of claimWords) {
-          if (srcClean.includes(w)) matchedTokens++;
+          if (item.cleanText.includes(w)) matchedTokens++;
         }
         if (matchedTokens > maxMatchedTokens) {
           maxMatchedTokens = matchedTokens;
-          bestMatch = typeof src === "object" ? src : { url: "source://provided", content: src };
+          bestMatch = typeof item.src === "object" ? item.src : { url: "source://provided", content: item.src };
         }
       }
       tokenRatio = maxMatchedTokens / claimWords.length;
     }
 
-    if (tokenRatio >= 0.50 && bestMatch) {
+    if (tokenRatio >= 0.60 && bestMatch) {
       verifiedCount++;
       claimLedger.push({
         claim,
@@ -427,7 +517,7 @@ function executeEvidenceValidator(args) {
         evidence: (bestMatch.content || bestMatch.snippet || bestMatch.title || "").slice(0, 200),
         action: "USE",
       });
-    } else if (tokenRatio >= 0.25 && bestMatch) {
+    } else if (tokenRatio >= 0.35 && bestMatch) {
       partialCount++;
       claimLedger.push({
         claim,
@@ -551,7 +641,18 @@ function executeAtsReadiness(args) {
   const jd = String(args.jd_text || args.jd || "");
 
   const words = letter.trim().split(/\s+/).filter(Boolean).length;
-  const metricsFound = (letter.match(/\d+[%kKmMbB]?|\$\d+/g) || []).length;
+
+  // Sanitize text before metric counting: strip phone numbers, dates, model size tags (1B/3B/8B/70B), and section numbers
+  let sanitizedText = letter
+    .replace(/(?:\+?\d{1,4}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}/g, " ") // phones
+    .replace(/\b(19\d{2}|20\d{2})\b/g, " ") // years/dates
+    .replace(/\b\d+[bB]\b/g, " ") // model parameters like 1B, 3B, 8B
+    .replace(/\[\d+\]/g, " "); // citations [1], [2]
+
+  // Quantifiable performance/impact metrics: percentages, dollar values, multipliers (2x, 10x), volume benchmarks (ms, req/s, downloads, stars, users, arr)
+  const metricMatches = sanitizedText.match(/\d+(?:\.\d+)?%|\$\d+(?:\.\d+)?[kKmMbB]?|\b\d+x\b|\b\d+(?:,\d+)*(?:\.\d+)?\s*(?:ms|req\/s|rps|qps|users|downloads|stars|forks|clusters|services|arr)\b/gi) || [];
+  const metricsFound = metricMatches.length;
+
   const hasEmail = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/.test(letter);
   const hasPhone = /(?:\+?\d{1,4}[-.\s]?)?(?:\(?\d{2,4}\)?[-.\s]?)?\d{3,5}[-.\s]?\d{3,5}/.test(letter);
   const hasLinkedIn = /linkedin\.com\/(?:in|company)\/[a-zA-Z0-9_-]+/i.test(letter);
@@ -570,18 +671,34 @@ function executeAtsReadiness(args) {
 
   const keywordCoverage = jdKeywordsCount > 0 ? Math.round((jdKeywordsMatched / jdKeywordsCount) * 100) : 85;
 
+  // Length evaluation (Monotonic and strictly gated)
   let lengthStatus = "PASS";
+  let lengthScore = 30;
   let lengthDetail = words + " words (Optimal: Within target 350-500 words for single-page A4 scan)";
   if (words < 280) {
     lengthStatus = "FAIL";
+    lengthScore = 0;
     lengthDetail = words + " words (Too brief: target 350-500 words for complete evidence coverage)";
   } else if (words < 350) {
     lengthStatus = "WARN";
+    lengthScore = 15;
     lengthDetail = words + " words (Marginal length: recommended 350-500 words for optimal ATS keyword density)";
   } else if (words > 550) {
     lengthStatus = "WARN";
+    lengthScore = 15;
     lengthDetail = words + " words (Exceeds recommended 350-500 words single-page A4 threshold)";
   }
+
+  // Keyword score (max 30)
+  const kwScore = keywordCoverage >= 70 ? 30 : keywordCoverage >= 50 ? 15 : 0;
+  // Metrics score (max 25)
+  const metricScore = metricsFound >= 3 ? 25 : metricsFound >= 1 ? 12 : 0;
+  // Contact score (max 15)
+  const contactScore = (hasEmail && (hasPhone || hasLinkedIn)) ? 15 : hasEmail ? 8 : 0;
+
+  // Total Monotonic Score: 0 to 100
+  const readinessScore = lengthScore + kwScore + metricScore + contactScore;
+  const readinessLevel = readinessScore >= 75 ? "HIGH" : readinessScore >= 50 ? "MEDIUM" : "LOW";
 
   const checks = {
     keyword_coverage: {
@@ -595,22 +712,14 @@ function executeAtsReadiness(args) {
     },
     action_evidence: {
       value: metricsFound,
-      status: metricsFound >= 3 ? "PASS" : "WARN",
-      detail: metricsFound + " quantifiable metrics/numbers found in letter",
+      status: metricsFound >= 3 ? "PASS" : metricsFound >= 1 ? "WARN" : "FAIL",
+      detail: metricsFound + " verifiable performance/impact metrics detected (excluding phone/dates)",
     },
     contact_info: {
       status: hasEmail && (hasPhone || hasLinkedIn) ? "PASS" : "WARN",
       detail: hasEmail && (hasPhone || hasLinkedIn) ? "Contact headers (email + contact link) detected" : "Ensure candidate email and phone/LinkedIn are present in top header",
     },
   };
-
-  const statuses = Object.values(checks).map((c) => c.status);
-  const passCount = statuses.filter((s) => s === "PASS").length;
-  const failCount = statuses.filter((s) => s === "FAIL").length;
-  const warnCount = statuses.filter((s) => s === "WARN").length;
-
-  const readinessScore = Math.round((passCount / statuses.length) * 100);
-  const readinessLevel = failCount >= 2 ? "LOW" : failCount >= 1 || warnCount >= 2 ? "MEDIUM" : "HIGH";
 
   return {
     readiness_score: readinessScore,
@@ -620,7 +729,7 @@ function executeAtsReadiness(args) {
     checks,
     suggestions: [
       words < 350 ? "Expand letter length to 350-500 words to cover core technical achievements with metrics." : "Length is within standard single-page guidelines.",
-      metricsFound < 3 ? "Add more quantifiable impact metrics (e.g. % performance increase, latency reduction)." : "Strong quantifiable metrics density.",
+      metricsFound < 3 ? "Add more quantifiable impact metrics (e.g. % performance increase, latency reduction, user volume)." : "Strong quantifiable metrics density.",
       !hasEmail ? "Add candidate email address and contact phone number to top header." : "Contact headers verified.",
     ],
     disclaimer: "Deterministic ATS Heuristic evaluation based on standard ATS parser patterns.",
@@ -639,7 +748,7 @@ function executeSourceFilter(args) {
     .trim();
 
   const spamKeywords = ["discount", "coupon", "promo", "affiliate", "sponsored", "buy now", "review score", "best deals"];
-  const gossipAndScraperDomains = ["teamblind.com", "rocketreach.co", "zoominfo.com", "glassdoor.com/reviews"];
+  const gossipAndScraperDomains = ["teamblind.com", "rocketreach.co", "zoominfo.com", "glassdoor.com/reviews", "glassdoor.com", "kore1.com"];
   const eliteTechDomains = [
     "pragmaticengineer.com", "stripe.com", "github.blog", "netflixtechblog.com",
     "engineering.fb.com", "eng.lyft.com", "uber.com/blog", "aws.amazon.com/blogs",
@@ -650,7 +759,7 @@ function executeSourceFilter(args) {
   let tier1Count = 0;
   let tier2Count = 0;
   let tier3Count = 0;
-  let spamCount = 0;
+  let discardedCount = 0;
 
   for (const s of sources) {
     const rawUrl = typeof s === "string" ? s : (s.url || "");
@@ -667,9 +776,9 @@ function executeSourceFilter(args) {
 
     if (isGossip) {
       tier = "TIER_4_UNTRUSTED_GOSSIP";
-      reason = "Gossip forum or lead-gen aggregator (Filtered out for verified culture analysis)";
+      reason = "Gossip forum or lead-gen recruiter aggregator (Filtered out for verified engineering culture analysis)";
       action = "DISCARD";
-      spamCount++;
+      discardedCount++;
     } else if (companyDomain && url.includes(companyDomain)) {
       tier = "TIER_1_AUTHORITATIVE";
       reason = "Verified official company domain";
@@ -699,7 +808,7 @@ function executeSourceFilter(args) {
     }
 
     if (isSpam && !isGossip) {
-      spamCount++;
+      discardedCount++;
       action = "DISCARD";
       reason += " (Flagged: Promotional or advertising keywords detected)";
     }
@@ -709,7 +818,8 @@ function executeSourceFilter(args) {
       title: typeof s === "string" ? rawUrl : (s.title || "Untitled Source"),
       tier,
       reason,
-      is_promotional: isSpam || isGossip,
+      is_promotional: isSpam,
+      is_untrusted_forum: isGossip,
       action,
     });
   }
@@ -720,7 +830,7 @@ function executeSourceFilter(args) {
     tier_1_authoritative_count: tier1Count,
     tier_2_reputable_count: tier2Count,
     tier_3_unverified_count: tier3Count,
-    discarded_promotional_count: spamCount,
+    discarded_count: discardedCount,
     official_domain_verified: !!officialFound,
     advisory_note: (!officialFound && companyDomain) ? ("Official company domain '" + companyDomain + "' was not present in retrieved sources. Grounding is based on secondary authoritative engineering blogs.") : null,
     audit_verdict:
@@ -943,16 +1053,23 @@ async function executeGitHubProofer(args) {
     });
   }
 
-  // Cross-reference specific claims with numeric star checks and token overlap matching
+  // Sort verified repos descending by stars for optimal matching
+  verifiedRepos.sort((a, b) => b.stars - a.stars);
+
+  // Cross-reference specific claims with STRICT numeric checking
   const claimVerifications = [];
   for (const claim of technicalClaims) {
     const claimLower = String(claim).toLowerCase().trim();
 
-    // Check 1: Numeric star claims (e.g. "100+ stars" or "100 stars")
-    const starMatch = claimLower.match(/(\d+)\+?\s*stars?/);
-    if (starMatch) {
-      const threshold = parseInt(starMatch[1], 10);
-      const starRepo = verifiedRepos.find((r) => r.stars >= threshold) || (aggregateStars >= threshold ? verifiedRepos[0] : null);
+    // Check 1: Numeric star claims (Comprehensive regex matching "5000+ stars", "5000+ GitHub stars", "5k stars", "100+ stars")
+    const starMatch = claimLower.match(/(\d+[\d,]*)(?:k)?\+?\s*(?:github\s*)?stars?/i);
+    if (starMatch || (claimLower.includes("star") && /\d+/.test(claimLower))) {
+      const rawNum = starMatch ? starMatch[1].replace(/,/g, "") : (claimLower.match(/\d+/)?.[0] || "0");
+      let threshold = parseInt(rawNum, 10);
+      if (claimLower.includes(rawNum + "k")) threshold *= 1000;
+
+      // Find repo with stars >= threshold
+      const starRepo = verifiedRepos.find((r) => r.stars >= threshold);
       if (starRepo) {
         claimVerifications.push({
           claim,
@@ -961,17 +1078,32 @@ async function executeGitHubProofer(args) {
           url: starRepo.repo_url,
           note: "Verified " + starRepo.stars + " stars on " + starRepo.repo_name + " (Threshold: " + threshold + "+ stars)",
         });
-        continue;
+      } else {
+        claimVerifications.push({
+          claim,
+          status: "UNSUPPORTED_BY_GITHUB",
+          repo: null,
+          note: "Overclaim detected: Candidate has " + aggregateStars + " aggregate GitHub stars across inspected repositories (Claimed: " + threshold + "+ stars).",
+        });
       }
+      // CRITICAL: NEVER fall through to token matching for numeric star claims!
+      continue;
     }
 
-    // Check 2: Token-overlap matching for named projects (e.g. "Agentic Financial Parser with LangGraph")
-    const claimTokens = claimLower.replace(/[^a-z0-9]/g, " ").split(/\s+/).filter(w => w.length >= 3 && !["with", "from", "using", "built"].includes(w));
-    const tokenMatch = verifiedRepos.find((r) => {
-      const repoTokens = (r.repo_name + " " + r.description).toLowerCase().replace(/[^a-z0-9]/g, " ").split(/\s+/);
-      const matches = claimTokens.filter(t => repoTokens.includes(t));
-      return matches.length >= 2 || (claimTokens.length === 1 && matches.length === 1);
-    });
+    // Check 2: Token-overlap matching for named projects (with strict stop-words eliminating boilerplate words)
+    const GENERIC_STOP_WORDS = ["with", "from", "using", "built", "the", "and", "for", "open", "source", "public", "repository", "repo", "framework", "system", "code", "tools", "tool", "github"];
+    const claimTokens = claimLower.replace(/[^a-z0-9]/g, " ").split(/\s+/).filter(w => w.length >= 3 && !GENERIC_STOP_WORDS.includes(w));
+
+    let tokenMatch = null;
+    if (claimTokens.length > 0) {
+      tokenMatch = verifiedRepos.find((r) => {
+        // Do not match user profile repo for named project claims
+        if (r.repo_name.toLowerCase() === user.toLowerCase()) return false;
+        const repoTokens = (r.repo_name + " " + r.description).toLowerCase().replace(/[^a-z0-9]/g, " ").split(/\s+/).filter(w => !GENERIC_STOP_WORDS.includes(w));
+        const matches = claimTokens.filter(t => repoTokens.includes(t));
+        return matches.length >= 2 || (claimTokens.length === 1 && matches.length === 1);
+      });
+    }
     if (tokenMatch) {
       claimVerifications.push({
         claim,
@@ -983,7 +1115,7 @@ async function executeGitHubProofer(args) {
       continue;
     }
 
-    // Check 3: Technology match using word boundary checks
+    // Check 3: Technology match using strict word boundary checks
     const techMatch = verifiedRepos.find((r) =>
       r.matched_technologies.some((t) => testWordBoundary(claimLower, t.toLowerCase())) ||
       (r.primary_language && testWordBoundary(claimLower, r.primary_language.toLowerCase()))
@@ -1055,8 +1187,9 @@ async function executeHuggingFaceProofer(args) {
       profile_url: "",
       total_models_published: 0,
       total_spaces_published: 0,
-      aggregate_downloads_last_30_days: 0,
+      aggregate_downloads_30d: 0,
       aggregate_downloads_all_time: 0,
+      aggregate_likes: 0,
       verified_models: [],
       verified_spaces: [],
       claim_verifications: technicalClaims.map((c) => ({
@@ -1064,22 +1197,21 @@ async function executeHuggingFaceProofer(args) {
         status: "RESUME_CLAIM_UNVERIFIED_ON_HF",
         note: "No public Hugging Face handle detected in resume",
       })),
-      verification_status: "NOT_DETECTED",
       audit_verdict: "NO_HF_PROFILE_DETECTED",
     };
   }
 
   const token = process.env.HF_TOKEN?.trim();
   const headers = { Accept: "application/json", "User-Agent": "CoverCraft-Evidence-MCP/1.0" };
-  if (token) headers["Authorization"] = `Bearer ${token}`;
+  if (token) headers["Authorization"] = "Bearer " + token;
 
   let modelsData = [];
   let spacesData = [];
 
   try {
     const [mRes, sRes] = await Promise.all([
-      fetch(`https://huggingface.co/api/models?author=${user}&expand[]=downloads&expand[]=downloadsAllTime&expand[]=likes`, { headers }),
-      fetch(`https://huggingface.co/api/spaces?author=${user}`, { headers }),
+      fetch("https://huggingface.co/api/models?author=" + user + "&expand[]=downloads&expand[]=downloadsAllTime&expand[]=likes", { headers }),
+      fetch("https://huggingface.co/api/spaces?author=" + user, { headers }),
     ]);
     if (mRes.ok) modelsData = await mRes.json();
     if (sRes.ok) spacesData = await sRes.json();
@@ -1124,7 +1256,7 @@ async function executeHuggingFaceProofer(args) {
     verifiedModels.push({
       model_id: mId,
       model_name: mName,
-      model_url: `https://huggingface.co/${mId}`,
+      model_url: "https://huggingface.co/" + mId,
       downloads_all_time: allTimeD,
       downloads_30d: monthlyD,
       likes: m.likes || 0,
@@ -1134,22 +1266,88 @@ async function executeHuggingFaceProofer(args) {
     });
   }
 
-  // Sort descending by all-time downloads (flagship with 16k+ first)
   verifiedModels.sort((a, b) => (b.downloads_all_time || 0) - (a.downloads_all_time || 0));
 
   const verifiedSpaces = spacesData.map((s) => {
     backedAiSkills.add("Interactive AI Spaces (Gradio)");
     return {
       space_id: s.id,
-      space_url: `https://huggingface.co/spaces/${s.id}`,
+      space_url: "https://huggingface.co/spaces/" + s.id,
       sdk: s.sdk || "gradio",
       status: "VERIFIED_LIVE_SPACE",
     };
   });
 
+  // Verify technical claims with numeric downloads, likes, and spaces support
   const claimVerifications = [];
   for (const claim of technicalClaims) {
-    const claimLower = claim.toLowerCase();
+    const claimLower = String(claim).toLowerCase().trim();
+
+    // Check 1: Numeric download claims (e.g. "10,000+ downloads" or "10k downloads")
+    const dlMatch = claimLower.match(/(\d+[\d,]*)(?:k)?\+?\s*(?:model\s*)?downloads?/i);
+    if (dlMatch || (claimLower.includes("download") && /\d+/.test(claimLower))) {
+      const rawNum = dlMatch ? dlMatch[1].replace(/,/g, "") : (claimLower.match(/\d+/)?.[0] || "0");
+      let threshold = parseInt(rawNum, 10);
+      if (claimLower.includes(rawNum + "k")) threshold *= 1000;
+
+      if (totalAllTimeDownloads >= threshold) {
+        claimVerifications.push({
+          claim,
+          status: "VERIFIED_BY_HUGGINGFACE",
+          note: "Verified " + totalAllTimeDownloads + " lifetime downloads on Hugging Face (Claimed: " + threshold + "+ downloads)",
+        });
+      } else {
+        claimVerifications.push({
+          claim,
+          status: "UNSUPPORTED_BY_HUGGINGFACE",
+          note: "Claimed " + threshold + "+ downloads exceeds verified lifetime downloads (" + totalAllTimeDownloads + ")",
+        });
+      }
+      continue;
+    }
+
+    // Check 2: Numeric like claims (e.g. "30+ likes" or "38 likes")
+    const likeMatch = claimLower.match(/(\d+[\d,]*)\+?\s*likes?/i);
+    if (likeMatch) {
+      const threshold = parseInt(likeMatch[1].replace(/,/g, ""), 10);
+      if (totalLikes >= threshold) {
+        claimVerifications.push({
+          claim,
+          status: "VERIFIED_BY_HUGGINGFACE",
+          note: "Verified " + totalLikes + " community likes across models (Claimed: " + threshold + "+ likes)",
+        });
+      } else {
+        claimVerifications.push({
+          claim,
+          status: "UNSUPPORTED_BY_HUGGINGFACE",
+          note: "Claimed " + threshold + "+ likes exceeds verified total likes (" + totalLikes + ")",
+        });
+      }
+      continue;
+    }
+
+    // Check 3: Spaces / Gradio Demo claims (e.g. "live Gradio Space" or "Gradio app")
+    if (claimLower.includes("space") || claimLower.includes("gradio")) {
+      if (verifiedSpaces.length > 0 || spacesData.length > 0) {
+        const sp = verifiedSpaces[0] || { space_id: spacesData[0]?.id, space_url: "https://huggingface.co/spaces/" + spacesData[0]?.id };
+        claimVerifications.push({
+          claim,
+          status: "VERIFIED_BY_HUGGINGFACE",
+          matched_asset: sp.space_id,
+          proof_url: sp.space_url,
+          note: "Verified live interactive Gradio space hosted on Hugging Face",
+        });
+      } else {
+        claimVerifications.push({
+          claim,
+          status: "UNSUPPORTED_BY_HUGGINGFACE",
+          note: "No public Hugging Face spaces found for candidate profile",
+        });
+      }
+      continue;
+    }
+
+    // Check 4: Specific model or capability match
     const match = verifiedModels.find(
       (m) =>
         m.matched_capabilities.some((c) => claimLower.includes(c.toLowerCase())) ||
@@ -1166,22 +1364,33 @@ async function executeHuggingFaceProofer(args) {
     } else {
       claimVerifications.push({
         claim,
-        status: "RESUME_CLAIM_UNVERIFIED_ON_HF",
-        note: `No matching public Hugging Face model or space found for '${claim}'`,
+        status: "UNSUPPORTED_BY_HUGGINGFACE",
+        note: "No matching public Hugging Face model or capability found for '" + claim + "'",
       });
     }
   }
 
+  // Verdict strictly tied to claim evaluation results
+  const supportedCount = claimVerifications.filter((c) => c.status === "VERIFIED_BY_HUGGINGFACE").length;
   let verdict = "NO_PUBLIC_WEIGHTS_DETECTED";
-  if (totalAllTimeDownloads >= 100 && modelsData.length >= 3) {
-    verdict = "VERIFIED_PRODUCTION_WEIGHTS";
-  } else if (modelsData.length >= 1 || spacesData.length >= 1) {
-    verdict = "VERIFIED_COMMUNITY_ASSETS";
+  if (technicalClaims.length > 0) {
+    verdict =
+      supportedCount === technicalClaims.length
+        ? "ALL_AI_CLAIMS_VERIFIED"
+        : supportedCount > 0
+        ? "PARTIALLY_SUPPORTED"
+        : "UNSUPPORTED_CLAIMS_DETECTED";
+  } else {
+    if (totalAllTimeDownloads >= 100 && modelsData.length >= 3) {
+      verdict = "VERIFIED_PRODUCTION_WEIGHTS";
+    } else if (modelsData.length >= 1 || spacesData.length >= 1) {
+      verdict = "VERIFIED_COMMUNITY_ASSETS";
+    }
   }
 
   return {
     username: user,
-    profile_url: `https://huggingface.co/${user}`,
+    profile_url: "https://huggingface.co/" + user,
     total_models_published: modelsData.length,
     total_spaces_published: spacesData.length,
     aggregate_downloads_all_time: totalAllTimeDownloads,
@@ -1196,30 +1405,6 @@ async function executeHuggingFaceProofer(args) {
 }
 
 // ==============================================================================
-// HTTP Route Handlers
-// ==============================================================================
-
-export async function OPTIONS() {
-  return new NextResponse(null, {
-    status: 204,
-    headers: CORS_HEADERS,
-  });
-}
-
-export async function GET() {
-  return NextResponse.json(
-    {
-      status: "ok",
-      protocolVersion: "2024-11-05",
-      serverInfo: SERVER_METADATA,
-      transport: "streamable-http",
-      tools_count: MCP_TOOLS.length,
-      tools: MCP_TOOLS,
-    },
-    { headers: CORS_HEADERS }
-  );
-}
-
 export async function POST(req) {
   try {
     const body = await req.json();

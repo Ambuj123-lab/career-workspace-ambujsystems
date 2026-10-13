@@ -150,6 +150,13 @@ Use direct language:
 "I implemented..."
 "I designed..."
 
+STRICT PEDIGREE & ANTI-FLUFF RULE:
+- NEVER invent or claim formal degrees, academic credentials, or generic pedigree filler such as "solid computer science foundation", "proven ability to rapidly master", or "deep theoretical grounding" unless explicitly stated in candidate input.
+- Candidate is evaluated strictly on verified engineering artifacts, code, and systems built.
+
+METRICS INTEGRATION IN BODY PROSE:
+- Verifiable outcome metrics (e.g. 16,559 downloads, 38 likes, latency reduction %, star counts) MUST be written naturally as full sentences INSIDE the prose body of the experience paragraph, not merely inside bracket tags.
+
 Avoid corporate clichés and flattery:
 - "I'm incredibly passionate..."
 - "Your amazing company..."

@@ -165,19 +165,26 @@ async def github_proofer(
             "proof_status": "CODE_GROUNDED",
         })
 
-    # Evaluate any specific claims provided
+    # Sort descending by stars
+    verified_repos.sort(key=lambda x: x["stars"], reverse=True)
+
+    # Evaluate any specific claims provided with strict numeric star gates
     claim_verifications = []
+    GENERIC_STOP_WORDS = {"with", "from", "using", "built", "the", "and", "for", "open", "source", "public", "repository", "repo", "framework", "system", "code", "tools", "tool", "github"}
+
     if technical_claims:
         for claim in technical_claims:
             claim_lower = claim.lower().strip()
 
-            # Check 1: Numeric star claims
-            star_match = re.search(r"(\d+)\+?\s*stars?", claim_lower)
-            if star_match:
-                threshold = int(star_match.group(1))
+            # Check 1: Numeric star claims (Strict Gate: never fall through)
+            star_match = re.search(r"(d+[d,]*)(?:k)?+?s*(?:githubs*)?stars?", claim_lower)
+            if star_match or ("star" in claim_lower and re.search(r"d+", claim_lower)):
+                raw_num = star_match.group(1).replace(",", "") if star_match else re.search(r"d+", claim_lower).group(0)
+                threshold = int(raw_num)
+                if raw_num + "k" in claim_lower:
+                    threshold *= 1000
+
                 matching_repo = next((r for r in verified_repos if r["stars"] >= threshold), None)
-                if not matching_repo and aggregate_stars >= threshold and verified_repos:
-                    matching_repo = verified_repos[0]
                 if matching_repo:
                     claim_verifications.append({
                         "claim": claim,
@@ -186,17 +193,27 @@ async def github_proofer(
                         "url": matching_repo["repo_url"],
                         "note": f"Verified {matching_repo['stars']} stars on {matching_repo['repo_name']} (Threshold: {threshold}+ stars)",
                     })
-                    continue
+                else:
+                    claim_verifications.append({
+                        "claim": claim,
+                        "status": "UNSUPPORTED_BY_GITHUB",
+                        "repo": None,
+                        "note": f"Overclaim detected: Candidate has {aggregate_stars} aggregate GitHub stars across inspected repositories (Claimed: {threshold}+ stars).",
+                    })
+                continue
 
-            # Check 2: Token-overlap matching for named projects
-            claim_tokens = [w for w in re.sub(r"[^a-z0-9]", " ", claim_lower).split() if len(w) >= 3 and w not in ["with", "from", "using", "built"]]
+            # Check 2: Token-overlap matching for named projects (Ignoring generic stopwords & profile repos)
+            claim_tokens = [w for w in re.sub(r"[^a-z0-9]", " ", claim_lower).split() if len(w) >= 3 and w not in GENERIC_STOP_WORDS]
             token_match = None
-            for r in verified_repos:
-                repo_tokens = set(re.sub(r"[^a-z0-9]", " ", (r["repo_name"] + " " + r["description"]).lower()).split())
-                matched_t = [t for t in claim_tokens if t in repo_tokens]
-                if len(matched_t) >= 2 or (len(claim_tokens) == 1 and len(matched_t) == 1):
-                    token_match = r
-                    break
+            if claim_tokens:
+                for r in verified_repos:
+                    if r["repo_name"].lower() == username.lower():
+                        continue
+                    repo_tokens = set(w for w in re.sub(r"[^a-z0-9]", " ", (r["repo_name"] + " " + r["description"]).lower()).split() if w not in GENERIC_STOP_WORDS)
+                    matched_t = [t for t in claim_tokens if t in repo_tokens]
+                    if len(matched_t) >= 2 or (len(claim_tokens) == 1 and len(matched_t) == 1):
+                        token_match = r
+                        break
             if token_match:
                 claim_verifications.append({
                     "claim": claim,
