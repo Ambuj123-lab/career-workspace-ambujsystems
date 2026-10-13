@@ -372,32 +372,53 @@ function executeEvidenceValidator(args) {
   let unsupportedCount = 0;
 
   for (const claim of claims) {
-    const claimLower = String(claim).toLowerCase();
-    const claimWords = claimLower
+    const claimLower = String(claim).toLowerCase().trim();
+    const claimClean = claimLower.replace(/,/g, "");
+    const claimWords = claimClean
       .replace(/[^a-z0-9\s]/g, " ")
       .split(/\s+/)
-      .filter((w) => w.length >= 4 && !["with", "from", "have", "been", "this", "that", "their"].includes(w));
+      .filter((w) => w.length >= 2 && !["with", "from", "have", "been", "this", "that", "their", "into", "about", "your", "more"].includes(w));
 
     let bestMatch = null;
-    let maxMatchedTokens = 0;
+    let tokenRatio = 0;
+    let isDirectMatch = false;
 
+    // Pass 1: Direct containment & exact phrase match (handles short claims like "38 likes", "18k downloads", "Python 3.11")
     for (const src of sources) {
-      const srcText = typeof src === "string" 
-        ? src.toLowerCase() 
+      const rawText = typeof src === "string"
+        ? src.toLowerCase()
         : (String(src.content || src.snippet || src.text || "") + " " + String(src.title || "")).toLowerCase();
-      let matchedTokens = 0;
-      for (const w of claimWords) {
-        if (srcText.includes(w)) matchedTokens++;
-      }
-      if (matchedTokens > maxMatchedTokens) {
-        maxMatchedTokens = matchedTokens;
-        bestMatch = typeof src === "object" ? src : { url: "source://text", content: src };
+      const srcClean = rawText.replace(/,/g, "");
+
+      if (srcClean.includes(claimClean) || (claimWords.length > 0 && claimWords.length <= 2 && claimWords.every(w => srcClean.includes(w)))) {
+        bestMatch = typeof src === "object" ? src : { url: "source://provided", content: src };
+        tokenRatio = 1.0;
+        isDirectMatch = true;
+        break;
       }
     }
 
-    const tokenRatio = claimWords.length > 0 ? maxMatchedTokens / claimWords.length : 0;
+    // Pass 2: Token overlap match for complex claims
+    if (!isDirectMatch && claimWords.length > 0) {
+      let maxMatchedTokens = 0;
+      for (const src of sources) {
+        const rawText = typeof src === "string"
+          ? src.toLowerCase()
+          : (String(src.content || src.snippet || src.text || "") + " " + String(src.title || "")).toLowerCase();
+        const srcClean = rawText.replace(/,/g, "");
+        let matchedTokens = 0;
+        for (const w of claimWords) {
+          if (srcClean.includes(w)) matchedTokens++;
+        }
+        if (matchedTokens > maxMatchedTokens) {
+          maxMatchedTokens = matchedTokens;
+          bestMatch = typeof src === "object" ? src : { url: "source://provided", content: src };
+        }
+      }
+      tokenRatio = maxMatchedTokens / claimWords.length;
+    }
 
-    if (tokenRatio >= 0.55 && bestMatch) {
+    if (tokenRatio >= 0.50 && bestMatch) {
       verifiedCount++;
       claimLedger.push({
         claim,
@@ -531,8 +552,9 @@ function executeAtsReadiness(args) {
 
   const words = letter.trim().split(/\s+/).filter(Boolean).length;
   const metricsFound = (letter.match(/\d+[%kKmMbB]?|\$\d+/g) || []).length;
-  const hasEmail = /[\w.-]+@[\w.-]+\.\w+/.test(letter);
-  const hasPhone = /\+?\d[\d -]{8,}\d/.test(letter);
+  const hasEmail = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/.test(letter);
+  const hasPhone = /(?:\+?\d{1,4}[-.\s]?)?(?:\(?\d{2,4}\)?[-.\s]?)?\d{3,5}[-.\s]?\d{3,5}/.test(letter);
+  const hasLinkedIn = /linkedin\.com\/(?:in|company)\/[a-zA-Z0-9_-]+/i.test(letter);
 
   let jdKeywordsCount = 0;
   let jdKeywordsMatched = 0;
@@ -548,24 +570,37 @@ function executeAtsReadiness(args) {
 
   const keywordCoverage = jdKeywordsCount > 0 ? Math.round((jdKeywordsMatched / jdKeywordsCount) * 100) : 85;
 
+  let lengthStatus = "PASS";
+  let lengthDetail = words + " words (Optimal: Within target 350-500 words for single-page A4 scan)";
+  if (words < 280) {
+    lengthStatus = "FAIL";
+    lengthDetail = words + " words (Too brief: target 350-500 words for complete evidence coverage)";
+  } else if (words < 350) {
+    lengthStatus = "WARN";
+    lengthDetail = words + " words (Marginal length: recommended 350-500 words for optimal ATS keyword density)";
+  } else if (words > 550) {
+    lengthStatus = "WARN";
+    lengthDetail = words + " words (Exceeds recommended 350-500 words single-page A4 threshold)";
+  }
+
   const checks = {
     keyword_coverage: {
       value: keywordCoverage,
       status: keywordCoverage >= 70 ? "PASS" : keywordCoverage >= 50 ? "WARN" : "FAIL",
-      detail: jdKeywordsCount > 0 ? `${jdKeywordsMatched} of ${jdKeywordsCount} top JD keywords detected` : "Baseline keyword match verified",
+      detail: jdKeywordsCount > 0 ? (jdKeywordsMatched + " of " + jdKeywordsCount + " top JD keywords detected") : "Baseline keyword match verified",
     },
     letter_length: {
-      status: words >= 280 && words <= 500 ? "PASS" : "WARN",
-      detail: `${words} words (recommended target: 350-500 words for single-page A4 scan)`,
+      status: lengthStatus,
+      detail: lengthDetail,
     },
     action_evidence: {
       value: metricsFound,
       status: metricsFound >= 3 ? "PASS" : "WARN",
-      detail: `${metricsFound} quantifiable metrics/numbers found in letter`,
+      detail: metricsFound + " quantifiable metrics/numbers found in letter",
     },
     contact_info: {
-      status: hasEmail && hasPhone ? "PASS" : "WARN",
-      detail: hasEmail && hasPhone ? "Contact headers (email + phone) present" : "Ensure email and phone are present in header",
+      status: hasEmail && (hasPhone || hasLinkedIn) ? "PASS" : "WARN",
+      detail: hasEmail && (hasPhone || hasLinkedIn) ? "Contact headers (email + contact link) detected" : "Ensure candidate email and phone/LinkedIn are present in top header",
     },
   };
 
@@ -584,9 +619,9 @@ function executeAtsReadiness(args) {
     metrics_found: metricsFound,
     checks,
     suggestions: [
-      words < 280 ? "Expand letter length to at least 300 words to cover key technical achievements." : "Length is within standard single-page guidelines.",
+      words < 350 ? "Expand letter length to 350-500 words to cover core technical achievements with metrics." : "Length is within standard single-page guidelines.",
       metricsFound < 3 ? "Add more quantifiable impact metrics (e.g. % performance increase, latency reduction)." : "Strong quantifiable metrics density.",
-      !hasEmail || !hasPhone ? "Add candidate email address and contact phone number to top header." : "Contact headers verified.",
+      !hasEmail ? "Add candidate email address and contact phone number to top header." : "Contact headers verified.",
     ],
     disclaimer: "Deterministic ATS Heuristic evaluation based on standard ATS parser patterns.",
   };
@@ -604,6 +639,12 @@ function executeSourceFilter(args) {
     .trim();
 
   const spamKeywords = ["discount", "coupon", "promo", "affiliate", "sponsored", "buy now", "review score", "best deals"];
+  const gossipAndScraperDomains = ["teamblind.com", "rocketreach.co", "zoominfo.com", "glassdoor.com/reviews"];
+  const eliteTechDomains = [
+    "pragmaticengineer.com", "stripe.com", "github.blog", "netflixtechblog.com",
+    "engineering.fb.com", "eng.lyft.com", "uber.com/blog", "aws.amazon.com/blogs",
+    "cloud.google.com/blog", "deepmind.google", "openai.com", "anthropic.com", "huggingface.co/blog"
+  ];
 
   const filteredSources = [];
   let tier1Count = 0;
@@ -612,60 +653,76 @@ function executeSourceFilter(args) {
   let spamCount = 0;
 
   for (const s of sources) {
-    const url = String(s.url || "").toLowerCase();
-    const title = String(s.title || "").toLowerCase();
-    const content = String(s.content || "").toLowerCase();
+    const rawUrl = typeof s === "string" ? s : (s.url || "");
+    const url = String(rawUrl).toLowerCase();
+    const title = typeof s === "string" ? "" : String(s.title || "").toLowerCase();
+    const content = typeof s === "string" ? "" : String(s.content || s.snippet || "").toLowerCase();
 
     const isSpam = spamKeywords.some((kw) => title.includes(kw) || content.includes(kw));
+    const isGossip = gossipAndScraperDomains.some((d) => url.includes(d));
+
     let tier = "TIER_3_UNVERIFIED";
     let reason = "General web aggregator or third-party forum";
+    let action = "RETAIN";
 
-    if (companyDomain && url.includes(companyDomain)) {
+    if (isGossip) {
+      tier = "TIER_4_UNTRUSTED_GOSSIP";
+      reason = "Gossip forum or lead-gen aggregator (Filtered out for verified culture analysis)";
+      action = "DISCARD";
+      spamCount++;
+    } else if (companyDomain && url.includes(companyDomain)) {
       tier = "TIER_1_AUTHORITATIVE";
       reason = "Verified official company domain";
       tier1Count++;
-    } else if (url.includes(".gov") || url.includes(".edu") || url.includes("sec.gov")) {
+    } else if (eliteTechDomains.some((d) => url.includes(d)) || url.includes("sec.gov") || url.includes(".edu")) {
       tier = "TIER_1_AUTHORITATIVE";
-      reason = "Government or regulatory publication";
+      reason = "Verified elite engineering publication or primary source";
       tier1Count++;
     } else if (
       url.includes("github.com") ||
       url.includes("techcrunch.com") ||
       url.includes("bloomberg.com") ||
       url.includes("reuters.com") ||
-      url.includes("linkedin.com") ||
       url.includes("forbes.com") ||
       url.includes("wsj.com") ||
       url.includes("cnbc.com")
     ) {
       tier = "TIER_2_REPUTABLE";
-      reason = "Reputable secondary tech media or professional repository";
+      reason = "Reputable secondary tech media or technical repository";
+      tier2Count++;
+    } else if (url.includes("linkedin.com")) {
+      tier = "TIER_2_REPUTABLE";
+      reason = "Professional network post";
       tier2Count++;
     } else {
       tier3Count++;
     }
 
-    if (isSpam) {
+    if (isSpam && !isGossip) {
       spamCount++;
+      action = "DISCARD";
       reason += " (Flagged: Promotional or advertising keywords detected)";
     }
 
     filteredSources.push({
-      url: s.url,
-      title: s.title,
+      url: rawUrl,
+      title: typeof s === "string" ? rawUrl : (s.title || "Untitled Source"),
       tier,
       reason,
-      is_promotional: isSpam,
-      action: isSpam ? "DISCARD" : "RETAIN",
+      is_promotional: isSpam || isGossip,
+      action,
     });
   }
 
+  const officialFound = companyDomain && filteredSources.some(s => s.url && String(s.url).toLowerCase().includes(companyDomain));
   return {
     filtered_sources: filteredSources,
     tier_1_authoritative_count: tier1Count,
     tier_2_reputable_count: tier2Count,
     tier_3_unverified_count: tier3Count,
     discarded_promotional_count: spamCount,
+    official_domain_verified: !!officialFound,
+    advisory_note: (!officialFound && companyDomain) ? ("Official company domain '" + companyDomain + "' was not present in retrieved sources. Grounding is based on secondary authoritative engineering blogs.") : null,
     audit_verdict:
       tier1Count > 0
         ? "HIGH_QUALITY_SOURCES_GROUNDED"
@@ -777,7 +834,11 @@ async function executeGitHubProofer(args) {
 
   let user = input.replace(/^https?:\/\/github\.com\//i, "").replace(/^@/, "").split("/")[0].trim();
   const match = input.match(/github\.com\/([a-zA-Z0-9_-]+)/i);
-  if (match) user = match[1];
+  if (match) {
+    user = match[1];
+  } else if (input.length > 60) {
+    user = "";
+  }
 
   if (!user || ["features", "pricing", "explore", "about", "contact"].includes(user.toLowerCase())) {
     return {
@@ -802,15 +863,15 @@ async function executeGitHubProofer(args) {
     Accept: "application/vnd.github.v3+json",
     "User-Agent": "CoverCraft-Evidence-MCP/1.0",
   };
-  if (token) headers["Authorization"] = `Bearer ${token}`;
+  if (token) headers["Authorization"] = "Bearer " + token;
 
   let userProfile = {};
   let reposData = [];
 
   try {
     const [uRes, rRes] = await Promise.all([
-      fetch(`https://api.github.com/users/${user}`, { headers }),
-      fetch(`https://api.github.com/users/${user}/repos?sort=updated&per_page=15`, { headers }),
+      fetch("https://api.github.com/users/" + user, { headers }),
+      fetch("https://api.github.com/users/" + user + "/repos?sort=updated&per_page=100", { headers }),
     ]);
     if (uRes.ok) userProfile = await uRes.json();
     if (rRes.ok) reposData = await rRes.json();
@@ -822,76 +883,128 @@ async function executeGitHubProofer(args) {
   const backedSkills = new Set();
   const allLanguages = new Set();
 
+  function testWordBoundary(text, kw) {
+    if (!text || !kw) return false;
+    const escaped = kw.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&");
+    const regex = new RegExp("(^|[^a-zA-Z0-9])" + escaped + "([^a-zA-Z0-9]|$)", "i");
+    return regex.test(text);
+  }
+
   const keywordsMap = {
-    Python: ["python", "fastapi", "langgraph", "langchain", "rag", "pandas", "numpy"],
-    JavaScript: ["nextjs", "react", "javascript", "node", "typescript", "tailwind"],
+    Python: ["python", "langgraph", "langchain", "pandas", "numpy"],
+    JavaScript: ["nextjs", "react", "javascript", "node", "tailwind"],
     TypeScript: ["typescript", "nextjs", "react", "node"],
-    MCP: ["mcp", "model context protocol", "stdio", "tool"],
-    RAG: ["rag", "retrieval", "vector", "embeddings", "pinecone"],
-    Docker: ["docker", "container", "dockerfile"],
-    FastAPI: ["fastapi", "api", "backend", "rest"],
+    MCP: ["mcp", "model context protocol", "model-context-protocol"],
+    RAG: ["rag", "retrieval augmented", "retrieval-augmented", "vector-search", "embeddings", "pinecone", "chromadb", "qdrant"],
+    Docker: ["docker", "dockerfile", "containerized"],
+    FastAPI: ["fastapi"],
+    LangGraph: ["langgraph", "stategraph"],
   };
+
+  let aggregateStars = 0;
+  let aggregateForks = 0;
 
   for (const repo of reposData) {
     const name = repo.name || "";
-    const desc = (repo.description || "").toLowerCase();
-    const lang = repo.language || "Code";
+    const desc = repo.description || "";
+    const lang = (repo.language && repo.language !== "Code") ? repo.language : null;
     const topics = (repo.topics || []).map((t) => String(t).toLowerCase());
-    allLanguages.add(lang);
+    const stars = repo.stargazers_count || 0;
+    const forks = repo.forks_count || 0;
+    aggregateStars += stars;
+    aggregateForks += forks;
 
     const matchedTechs = [];
     for (const [skill, kws] of Object.entries(keywordsMap)) {
-      if (lang.toLowerCase() === skill.toLowerCase()) {
+      if (lang && lang.toLowerCase() === skill.toLowerCase()) {
         matchedTechs.push(skill);
         backedSkills.add(skill);
-      } else if (kws.some((kw) => desc.includes(kw) || name.toLowerCase().includes(kw) || topics.includes(kw))) {
+      } else if (kws.some((kw) => testWordBoundary(desc, kw) || testWordBoundary(name, kw) || topics.includes(kw.toLowerCase()))) {
         matchedTechs.push(skill);
         backedSkills.add(skill);
       }
     }
 
-    if (matchedTechs.length > 0 || repo.stargazers_count > 0) {
-      verifiedRepos.push({
-        repo_name: name,
-        repo_url: repo.html_url,
-        description: repo.description || "Public open-source repository",
-        primary_language: lang,
-        stars: repo.stargazers_count || 0,
-        forks: repo.forks_count || 0,
-        license: repo.license?.spdx_id || repo.license?.name || "None",
-        last_pushed_at: repo.pushed_at || "",
-        matched_technologies: Array.from(new Set(matchedTechs)),
-        proof_status: "CODE_GROUNDED",
-      });
-    }
+    const finalLang = lang || (matchedTechs.includes("Python") ? "Python" : matchedTechs.includes("TypeScript") ? "TypeScript" : matchedTechs.includes("JavaScript") ? "JavaScript" : "Polyglot / Docs");
+    allLanguages.add(finalLang);
+
+    verifiedRepos.push({
+      repo_name: name,
+      repo_url: repo.html_url,
+      description: repo.description || "Public open-source repository",
+      primary_language: finalLang,
+      stars,
+      forks,
+      is_fork: !!repo.fork,
+      license: repo.license?.spdx_id || repo.license?.name || "None",
+      last_pushed_at: repo.pushed_at || "",
+      matched_technologies: Array.from(new Set(matchedTechs)),
+      proof_status: "CODE_GROUNDED",
+    });
   }
 
-  // Cross-reference specific claims!
+  // Cross-reference specific claims with numeric star checks and token overlap matching
   const claimVerifications = [];
   for (const claim of technicalClaims) {
-    const claimLower = claim.toLowerCase();
-    const match = verifiedRepos.find(
-      (r) =>
-        r.matched_technologies.some((t) => claimLower.includes(t.toLowerCase())) ||
-        r.primary_language.toLowerCase().includes(claimLower) ||
-        r.repo_name.toLowerCase().includes(claimLower)
-    );
+    const claimLower = String(claim).toLowerCase().trim();
 
-    if (match) {
+    // Check 1: Numeric star claims (e.g. "100+ stars" or "100 stars")
+    const starMatch = claimLower.match(/(\d+)\+?\s*stars?/);
+    if (starMatch) {
+      const threshold = parseInt(starMatch[1], 10);
+      const starRepo = verifiedRepos.find((r) => r.stars >= threshold) || (aggregateStars >= threshold ? verifiedRepos[0] : null);
+      if (starRepo) {
+        claimVerifications.push({
+          claim,
+          status: "VERIFIED_BY_GITHUB",
+          repo: starRepo.repo_name,
+          url: starRepo.repo_url,
+          note: "Verified " + starRepo.stars + " stars on " + starRepo.repo_name + " (Threshold: " + threshold + "+ stars)",
+        });
+        continue;
+      }
+    }
+
+    // Check 2: Token-overlap matching for named projects (e.g. "Agentic Financial Parser with LangGraph")
+    const claimTokens = claimLower.replace(/[^a-z0-9]/g, " ").split(/\s+/).filter(w => w.length >= 3 && !["with", "from", "using", "built"].includes(w));
+    const tokenMatch = verifiedRepos.find((r) => {
+      const repoTokens = (r.repo_name + " " + r.description).toLowerCase().replace(/[^a-z0-9]/g, " ").split(/\s+/);
+      const matches = claimTokens.filter(t => repoTokens.includes(t));
+      return matches.length >= 2 || (claimTokens.length === 1 && matches.length === 1);
+    });
+    if (tokenMatch) {
       claimVerifications.push({
         claim,
         status: "VERIFIED_BY_GITHUB",
-        repo: match.repo_name,
-        url: match.repo_url,
+        repo: tokenMatch.repo_name,
+        url: tokenMatch.repo_url,
+        note: "Matched repository '" + tokenMatch.repo_name + "' via verified project tokens",
       });
-    } else {
+      continue;
+    }
+
+    // Check 3: Technology match using word boundary checks
+    const techMatch = verifiedRepos.find((r) =>
+      r.matched_technologies.some((t) => testWordBoundary(claimLower, t.toLowerCase())) ||
+      (r.primary_language && testWordBoundary(claimLower, r.primary_language.toLowerCase()))
+    );
+    if (techMatch) {
       claimVerifications.push({
         claim,
-        status: "UNSUPPORTED_BY_GITHUB",
-        repo: null,
-        note: `No public repository backing '${claim}' found on candidate profile.`,
+        status: "VERIFIED_BY_GITHUB",
+        repo: techMatch.repo_name,
+        url: techMatch.repo_url,
+        note: "Verified via active codebase in '" + techMatch.repo_name + "'",
       });
+      continue;
     }
+
+    claimVerifications.push({
+      claim,
+      status: "UNSUPPORTED_BY_GITHUB",
+      repo: null,
+      note: "No public repository backing '" + claim + "' found on candidate profile.",
+    });
   }
 
   const supportedCount = claimVerifications.filter((c) => c.status === "VERIFIED_BY_GITHUB").length;
@@ -911,17 +1024,15 @@ async function executeGitHubProofer(args) {
 
   return {
     username: user,
-    profile_url: `https://github.com/${user}`,
+    profile_url: "https://github.com/" + user,
     developer_followers: userProfile.followers || 0,
-    developer_following: userProfile.following || 0,
     total_public_repositories: userProfile.public_repos || reposData.length,
-    aggregate_stars: verifiedRepos.reduce((acc, r) => acc + (r.stars || 0), 0),
-    aggregate_forks: verifiedRepos.reduce((acc, r) => acc + (r.forks || 0), 0),
-    total_repositories_inspected: reposData.length,
-    verified_repositories_count: verifiedRepos.length,
+    inspected_repositories_count: reposData.length,
+    aggregate_stars: aggregateStars,
+    aggregate_forks: aggregateForks,
     verified_repositories: verifiedRepos,
-    languages_detected: Array.from(allLanguages),
-    skills_grounded_in_code: Array.from(backedSkills),
+    primary_languages: Array.from(allLanguages),
+    grounded_technologies: Array.from(backedSkills),
     claim_verifications: claimVerifications,
     audit_verdict: verdict,
   };

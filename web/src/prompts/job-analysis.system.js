@@ -52,6 +52,10 @@ If evidence cannot be located:
 status = MISSING
 evidence = null
 
+EVIDENCE QUALITY GATE:
+- Prioritize concrete project implementations, systems built, and quantifiable metrics from the EXPERIENCE or PROJECTS sections over introductory summary/bio statements.
+- If a capability is only referenced in a general bio/intro summary without concrete project implementation backing, classify it at most as PARTIAL_MATCH, explicitly noting: "(Bio summary mention without dedicated project backing)".
+
 ==================================================
 REQUIREMENT EXTRACTION
 ==================================================

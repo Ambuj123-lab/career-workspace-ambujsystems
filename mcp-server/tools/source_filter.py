@@ -6,12 +6,16 @@ from urllib.parse import urlparse
 import re
 
 TIER1_DOMAINS = {
-    "github.com", "sec.gov", "greenhouse.io", "lever.co", "workday.com",
+    "pragmaticengineer.com", "stripe.com", "github.blog", "netflixtechblog.com",
+    "engineering.fb.com", "eng.lyft.com", "uber.com/blog", "aws.amazon.com/blogs",
+    "cloud.google.com/blog", "deepmind.google", "openai.com", "anthropic.com", "huggingface.co/blog",
+    "sec.gov", "greenhouse.io", "lever.co", "workday.com",
     "reuters.com", "techcrunch.com", "bloomberg.com", "forbes.com", "cnbc.com",
     "theinformation.com", "wsj.com", "ft.com"
 }
 
 NOISE_DOMAINS = {
+    "teamblind.com", "rocketreach.co", "zoominfo.com", "glassdoor.com/reviews",
     "pinterest.com", "quora.com", "facebook.com", "instagram.com", "tiktok.com"
 }
 
@@ -48,7 +52,7 @@ async def source_filter(sources: list[dict], company_domain: str = "") -> dict:
         elif any(t1 in hostname for t1 in TIER1_DOMAINS):
             tier = 1
             trust_score = 90
-            category = "Verified Newsroom / Primary Source"
+            category = "Verified Elite Tech Blog / Primary Source"
         elif any(jb in hostname for jb in ["naukri.com", "ambitionbox.com", "indeed.com", "glassdoor.com", "linkedin.com"]):
             tier = 2
             trust_score = 75
@@ -58,7 +62,6 @@ async def source_filter(sources: list[dict], company_domain: str = "") -> dict:
             trust_score = 55
             category = "Supporting Context"
 
-        # Outdated News & Stale Tech Filter: <9m Initiatives, <18m Tech Stack
         blob = (s.get("title", "") + " " + s.get("snippet", "") + " " + s.get("content", "")).lower()
         pub_date = s.get("published_date") or ""
         old_match = re.search(r"\b(201[0-9]|202[0-3])\b", blob + " " + pub_date)
@@ -86,7 +89,6 @@ async def source_filter(sources: list[dict], company_domain: str = "") -> dict:
             "recommended_action": "RETAIN" if trust_score >= 60 else "OPTIONAL_SUPPORT"
         })
 
-    # Sort descending by trust_score
     filtered.sort(key=lambda x: x["trust_score"], reverse=True)
 
     return {

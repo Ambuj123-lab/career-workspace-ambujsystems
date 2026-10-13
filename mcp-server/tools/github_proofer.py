@@ -32,17 +32,23 @@ def _extract_username(resume_or_handle: str) -> str:
     match = re.search(r"github\.com/([a-zA-Z0-9_-]+)", resume_or_handle, re.IGNORECASE)
     if match:
         user = match.group(1).strip()
-        # Exclude common non-user URL segments
         if user.lower() not in ["features", "pricing", "explore", "about", "contact"]:
             return user
     handle_match = re.search(r"@([a-zA-Z0-9_-]+)", resume_or_handle)
     if handle_match:
         return handle_match.group(1).strip()
-    # If a plain username was passed
     clean = resume_or_handle.strip().lstrip("@")
-    if re.match(r"^[a-zA-Z0-9_-]{1,39}$", clean):
+    if len(clean) <= 40 and re.match(r"^[a-zA-Z0-9_-]+$", clean):
         return clean
     return ""
+
+
+def _test_word_boundary(text: str, kw: str) -> bool:
+    """Check if kw appears as a discrete word or kebab/snake token in text."""
+    if not text or not kw:
+        return False
+    escaped = re.escape(kw)
+    return bool(re.search(rf"(^|[^a-zA-Z0-9]){escaped}([^a-zA-Z0-9]|$)", text, re.IGNORECASE))
 
 
 async def github_proofer(
@@ -83,7 +89,7 @@ async def github_proofer(
     user_profile = {}
     repos_data = []
 
-    # 1. Fetch Candidate Profile Metrics (Followers, Total Public Repos)
+    # 1. Fetch Candidate Profile Metrics
     try:
         url_u = f"{GITHUB_API_BASE}/users/{username}"
         req_u = urllib.request.Request(url_u, headers=headers)
@@ -93,9 +99,9 @@ async def github_proofer(
     except Exception as e:
         logger.warning(f"GitHub user profile metadata fetch failed ({e}).")
 
-    # 2. Fetch Public Repositories
+    # 2. Fetch Public Repositories (up to 100)
     try:
-        url = f"{GITHUB_API_BASE}/users/{username}/repos?sort=updated&per_page=12"
+        url = f"{GITHUB_API_BASE}/users/{username}/repos?sort=updated&per_page=100"
         req = urllib.request.Request(url, headers=headers)
         with urllib.request.urlopen(req, timeout=6.0) as response:
             if response.status == 200:
@@ -103,97 +109,107 @@ async def github_proofer(
                 repos_data = json.loads(raw)
     except Exception as e:
         logger.warning(f"GitHub API live fetch failed ({e}).")
-        if username.lower() in ["ambuj123-lab", "ambuj"]:
-            repos_data = [
-            {
-                "name": "Agentic-Financial-Parser",
-                "html_url": f"https://github.com/{username}/Agentic-Financial-Parser",
-                "description": "Autonomous Agentic RAG system for dense financial documents using LangGraph",
-                "language": "Python",
-                "stargazers_count": 14,
-                "forks_count": 3,
-                "topics": ["langgraph", "rag", "fastapi", "mcp"],
-            },
-            {
-                "name": "career-workspace-ambujsystems",
-                "html_url": f"https://github.com/{username}/career-workspace-ambujsystems",
-                "description": "Multi-Agent Evidence-Grounded Cover Letter Engine & MCP Server",
-                "language": "JavaScript",
-                "stargazers_count": 9,
-                "forks_count": 2,
-                "topics": ["nextjs", "gemini", "mcp", "typescript"],
-            },
-            {
-                "name": "Agentic-MCP-Chatbot",
-                "html_url": f"https://github.com/{username}/Agentic-MCP-Chatbot",
-                "description": "ReAct agent with direct Model Context Protocol stdio transport",
-                "language": "Python",
-                "stargazers_count": 8,
-                "forks_count": 1,
-                "topics": ["mcp", "agent", "python"],
-            },
-        ]
-        else:
-            repos_data = []
+        repos_data = []
 
-    # Analyze repositories and correlate with technical claims
     verified_repos = []
     all_languages = set()
     backed_skills = set()
 
     keywords_map = {
-        "Python": ["python", "fastapi", "langgraph", "langchain", "rag", "pandas", "numpy"],
-        "JavaScript": ["nextjs", "react", "javascript", "node", "typescript", "tailwind"],
+        "Python": ["python", "langgraph", "langchain", "pandas", "numpy"],
+        "JavaScript": ["nextjs", "react", "javascript", "node", "tailwind"],
         "TypeScript": ["typescript", "nextjs", "react", "node"],
-        "MCP": ["mcp", "model context protocol", "stdio", "tool"],
-        "RAG": ["rag", "retrieval", "vector", "embeddings", "pinecone"],
-        "Docker": ["docker", "container", "dockerfile"],
-        "FastAPI": ["fastapi", "api", "backend", "rest"],
+        "MCP": ["mcp", "model context protocol", "model-context-protocol"],
+        "RAG": ["rag", "retrieval augmented", "retrieval-augmented", "vector-search", "embeddings", "pinecone", "chromadb", "qdrant"],
+        "Docker": ["docker", "dockerfile", "containerized"],
+        "FastAPI": ["fastapi"],
+        "LangGraph": ["langgraph", "stategraph"],
     }
+
+    aggregate_stars = 0
+    aggregate_forks = 0
 
     for repo in repos_data:
         repo_name = repo.get("name", "")
-        desc = (repo.get("description") or "").lower()
-        lang = repo.get("language") or "Code"
-        topics = [t.lower() for t in repo.get("topics", [])]
-        all_languages.add(lang)
+        desc = repo.get("description") or ""
+        lang = repo.get("language") if repo.get("language") != "Code" else None
+        topics = [str(t).lower() for t in repo.get("topics", [])]
+        stars = repo.get("stargazers_count", 0)
+        forks = repo.get("forks_count", 0)
+        aggregate_stars += stars
+        aggregate_forks += forks
 
         matched_skills_for_repo = []
         for skill, kws in keywords_map.items():
-            if lang.lower() == skill.lower():
+            if lang and lang.lower() == skill.lower():
                 matched_skills_for_repo.append(skill)
                 backed_skills.add(skill)
-            elif any(kw in desc or kw in repo_name.lower() or kw in topics for kw in kws):
+            elif any(_test_word_boundary(desc, kw) or _test_word_boundary(repo_name, kw) or kw.lower() in topics for kw in kws):
                 matched_skills_for_repo.append(skill)
                 backed_skills.add(skill)
 
-        if matched_skills_for_repo:
-            forks_count = repo.get("forks_count", 0)
-            open_issues = repo.get("open_issues_count", 0)
-            pushed_at = repo.get("pushed_at", "")
-            license_info = (repo.get("license") or {}).get("spdx_id") or (repo.get("license") or {}).get("name") or "None"
+        final_lang = lang or ("Python" if "Python" in matched_skills_for_repo else "TypeScript" if "TypeScript" in matched_skills_for_repo else "JavaScript" if "JavaScript" in matched_skills_for_repo else "Polyglot / Docs")
+        all_languages.add(final_lang)
 
-            verified_repos.append({
-                "repo_name": repo_name,
-                "repo_url": repo.get("html_url", f"https://github.com/{username}/{repo_name}"),
-                "description": repo.get("description", "Public open-source repository"),
-                "primary_language": lang,
-                "stars": repo.get("stargazers_count", 0),
-                "forks": forks_count,
-                "open_issues": open_issues,
-                "license": license_info,
-                "last_pushed_at": pushed_at,
-                "matched_technologies": list(set(matched_skills_for_repo)),
-                "proof_status": "CODE_GROUNDED",
-            })
+        verified_repos.append({
+            "repo_name": repo_name,
+            "repo_url": repo.get("html_url", f"https://github.com/{username}/{repo_name}"),
+            "description": repo.get("description", "Public open-source repository"),
+            "primary_language": final_lang,
+            "stars": stars,
+            "forks": forks,
+            "open_issues": repo.get("open_issues_count", 0),
+            "license": (repo.get("license") or {}).get("spdx_id") or (repo.get("license") or {}).get("name") or "None",
+            "last_pushed_at": repo.get("pushed_at", ""),
+            "matched_technologies": list(set(matched_skills_for_repo)),
+            "proof_status": "CODE_GROUNDED",
+        })
 
     # Evaluate any specific claims provided
     claim_verifications = []
     if technical_claims:
         for claim in technical_claims:
-            claim_lower = claim.lower()
+            claim_lower = claim.lower().strip()
+
+            # Check 1: Numeric star claims
+            star_match = re.search(r"(\d+)\+?\s*stars?", claim_lower)
+            if star_match:
+                threshold = int(star_match.group(1))
+                matching_repo = next((r for r in verified_repos if r["stars"] >= threshold), None)
+                if not matching_repo and aggregate_stars >= threshold and verified_repos:
+                    matching_repo = verified_repos[0]
+                if matching_repo:
+                    claim_verifications.append({
+                        "claim": claim,
+                        "status": "VERIFIED_BY_GITHUB",
+                        "repo": matching_repo["repo_name"],
+                        "url": matching_repo["repo_url"],
+                        "note": f"Verified {matching_repo['stars']} stars on {matching_repo['repo_name']} (Threshold: {threshold}+ stars)",
+                    })
+                    continue
+
+            # Check 2: Token-overlap matching for named projects
+            claim_tokens = [w for w in re.sub(r"[^a-z0-9]", " ", claim_lower).split() if len(w) >= 3 and w not in ["with", "from", "using", "built"]]
+            token_match = None
+            for r in verified_repos:
+                repo_tokens = set(re.sub(r"[^a-z0-9]", " ", (r["repo_name"] + " " + r["description"]).lower()).split())
+                matched_t = [t for t in claim_tokens if t in repo_tokens]
+                if len(matched_t) >= 2 or (len(claim_tokens) == 1 and len(matched_t) == 1):
+                    token_match = r
+                    break
+            if token_match:
+                claim_verifications.append({
+                    "claim": claim,
+                    "status": "VERIFIED_BY_GITHUB",
+                    "repo": token_match["repo_name"],
+                    "url": token_match["repo_url"],
+                    "note": f"Matched repository '{token_match['repo_name']}' via verified project tokens",
+                })
+                continue
+
+            # Check 3: Technology match
             matching_repo = next(
-                (r for r in verified_repos if any(tech.lower() in claim_lower for tech in r["matched_technologies"])),
+                (r for r in verified_repos if any(_test_word_boundary(claim_lower, tech.lower()) for tech in r["matched_technologies"]) or (r["primary_language"] and _test_word_boundary(claim_lower, r["primary_language"].lower()))),
                 None
             )
             if matching_repo:
@@ -202,16 +218,15 @@ async def github_proofer(
                     "status": "VERIFIED_BY_GITHUB",
                     "repo": matching_repo["repo_name"],
                     "url": matching_repo["repo_url"],
+                    "note": f"Verified via active codebase in '{matching_repo['repo_name']}'",
                 })
             else:
                 claim_verifications.append({
                     "claim": claim,
-                    "status": "RESUME_ONLY",
-                    "note": "Authentic resume claim; no matching public GitHub repository detected",
+                    "status": "UNSUPPORTED_BY_GITHUB",
+                    "repo": None,
+                    "note": f"No public repository backing '{claim}' found on candidate profile.",
                 })
-
-    total_stars = sum(r.get("stars", 0) for r in verified_repos)
-    total_forks = sum(r.get("forks", 0) for r in verified_repos)
 
     if technical_claims:
         supported_count = sum(1 for c in claim_verifications if c.get("status") == "VERIFIED_BY_GITHUB")
@@ -230,8 +245,8 @@ async def github_proofer(
         "developer_followers": user_profile.get("followers", 0),
         "developer_following": user_profile.get("following", 0),
         "total_public_repositories": user_profile.get("public_repos", len(repos_data)),
-        "aggregate_stars": total_stars,
-        "aggregate_forks": total_forks,
+        "aggregate_stars": aggregate_stars,
+        "aggregate_forks": aggregate_forks,
         "total_repositories_inspected": len(repos_data),
         "verified_repositories_count": len(verified_repos),
         "verified_repositories": verified_repos,
