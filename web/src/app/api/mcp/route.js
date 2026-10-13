@@ -804,7 +804,7 @@ function executeAtsReadiness(args) {
 
   // Quantifiable performance metrics: downloads, likes, stars, forks, users, uptime, chunks, tokens, rps, ms, %, $, x
   const metricMatches = sanitizedText.match(
-    /\d+(?:\.\d+)?%|\$\d+(?:\.\d+)?[kKmMbB]?|\b\d+x\b|\b\d+(?:,\d+)*(?:\.\d+)?\s*(?:downloads?|likes?|stars?|forks?|users?|models?|chunks?|parameters?|tokens?|ms|req\/s|rps|qps|uptime|arr|mrr|services|clusters)\b/gi
+    /\d+(?:\.\d+)?%|\$\d+(?:\.\d+)?[kKmMbB]?|\b\d+x\b|\b\d+(?:,\d+)*(?:\.\d+)?\+?\s*(?:(?:all-time|lifetime|monthly|total|model|active)\s+)?(?:downloads?|likes?|stars?|forks?|users?|models?|chunks?|parameters?|tokens?|ms|req\/s|rps|qps|uptime|arr|mrr|services|clusters)\b/gi
   ) || [];
   const metricsFound = metricMatches.length;
 
