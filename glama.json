@@ -1,0 +1,9 @@
+{
+  "$schema": "https://glama.ai/mcp/schemas/server.json",
+  "maintainers": [
+    "Ambuj123-lab"
+  ],
+  "name": "Ambuj Systems - Career Workspace",
+  "description": "Production FastMCP server with 8 tools for company research, candidate claim validation, ATS readiness, JD matching, GitHub and Hugging Face audits.",
+  "type": "mcp_server"
+}
